@@ -1,0 +1,16 @@
+{
+    "category": "turret",
+    "health": 1500,
+    "size": 4,
+    "reloadTime": 90,
+    "range": 300,
+    "inaccuracy": 0,
+    "spread": 12,
+    "shots": 30,
+    "rotateSpeed": 1000,
+    "targetInterval": 0,
+    "velocityInaccuracy": 1,
+    "shootCone": 360,
+    "shootSound": "shoot",
+    "requirements": []
+}

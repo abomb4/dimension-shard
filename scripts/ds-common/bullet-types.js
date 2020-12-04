@@ -70,19 +70,20 @@ exports.newElectricStormBulletType = (requestOptions) => {
         init(b) {
             if (!b) { return; }
             if (!b.data) { b.data = {}; }
-            b.vel.trns(b.vel.angle(), mergedOptions.speedStart);
-            b.data.speed = mergedOptions.speedStart;
+            var speedStart = mergedOptions.speedStart * (b.vel.len() / this.speed);
+            b.vel.trns(b.vel.angle(), speedStart);
+            b.data.speed = speedStart;
             b.data.lightningCooldown = mergedOptions.lightningCooldown;
         },
         update(b) {
-            if (b.time >= this.homingDelay) {
+            if (this.homingPower >= 0.0001 && b.time >= this.homingDelay) {
                 if (b.data.target == null) {
                     b.data.target = Units.closestTarget(b.team, b.x, b.y, this.homingRange, boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir), boolf(t => this.collidesGround)));
                 }
 
                 if (b.data.target != null) {
-                    var acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
-                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(b.data.target), this.homingPower * (1 + acceleratePercent)));
+                    // var acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
+                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(b.data.target), this.homingPower * (1 + Math.max(0, b.time - 60) / 10)));
                     // accelerate bullet
                     b.data.speed = Mathf.clamp(b.data.speed + mergedOptions.accelerate, 0, mergedOptions.speedFull);
                     b.vel.trns(b.vel.angle(), b.data.speed);
@@ -147,6 +148,3 @@ exports.newElectricStormBulletType = (requestOptions) => {
     }
     return v;
 };
-
-Blocks.fuse.ammoTypes.put(dimensionAlloy, exports.newElectricStormBulletType({
-}));
