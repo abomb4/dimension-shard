@@ -41,6 +41,7 @@ exports.TURRET_PROPERTIES = TURRET_PROPERTIES;
 exports.newNoRotatingTurret = (requestOptions) => {
     const options = Object.assign({
         turretType: ItemTurret,
+        buildVisibility: BuildVisibility.shown,
         shootCone: 360,
         buildingOverrides: {},
         blockOverrides: {},

@@ -1,6 +1,8 @@
 
 exports.modName = "dimension-shard";
 
+exports.mod = Vars.mods.locateMod(exports.modName);
+
 exports.defineMultiCrafter = require('abomb4/multi-crafter').defineMultiCrafter;
 
 exports.loadSound = (path) => Vars.mods.scripts.loadSound(path)
@@ -23,6 +25,47 @@ exports.int = (v) => new java.lang.Integer(v);
 exports.getMessage = (type, key) => Core.bundle.get(type + "." + exports.modName + "." + key);
 
 /**
+ * Add content to research tree
+ *
+ * @param {Content} content Such as Block, Turret
+ * @param {{parent: string, requirements: ItemStack[]}} research
+ *        Research Info is an object with parent and requirements
+ */
+exports.addToResearch = (content, research) => {
+    if (!research.parent) {
+        throw 'research.parent is empty!';
+    }
+    var researchName = research.parent;
+    var customRequirements = research.requirements;
+
+    var lastNode = TechTree.all.find(boolf(t => t.content == content));
+    if (lastNode != null) {
+        lastNode.remove();
+    }
+
+    var node = new TechTree.TechNode(null, content, customRequirements == null ? content.researchRequirements() : customRequirements);
+    var currentMod = exports.mod;
+
+    if (node.parent != null) {
+        node.parent.children.remove(node);
+    }
+
+    // find parent node.
+    var parent = TechTree.all.find(boolf(t => t.content.name.equals(researchName) || t.content.name.equals(currentMod.name + "-" + researchName)));
+
+    if (parent == null) {
+        throw ("Content '" + researchName + "' isn't in the tech tree, but '" + content.name + "' requires it to be researched.");
+    }
+
+    // add this node to the parent
+    if (!parent.children.contains(node)) {
+        parent.children.add(node);
+    }
+    // reparent the node
+    node.parent = parent;
+};
+
+/**
  * lib.setBuilding(extend(CoreBlock, "my-core", {}), () => extend(CoreBlock.CoreBuilding, {}))
  *
  * @param {Block} blockType The block type
@@ -30,7 +73,7 @@ exports.getMessage = (type, key) => Core.bundle.get(type + "." + exports.modName
  *        A function receives block type, return Building instance;
  *        don't use prov (this function will use prov once)
  */
-exports.setBuilding = function(blockType, buildingCreator) {
+exports.setBuilding = function (blockType, buildingCreator) {
     blockType.buildType = prov(() => buildingCreator(blockType));
 }
 
@@ -41,12 +84,12 @@ exports.setBuilding = function(blockType, buildingCreator) {
  * @param {Class<Building>} buildingType The building type
  * @param {Object} overrides Object that as second parameter of extend()
  */
-exports.setBuildingSimple = function(blockType, buildingType, overrides) {
+exports.setBuildingSimple = function (blockType, buildingType, overrides) {
     blockType.buildType = prov(() => new JavaAdapter(buildingType, overrides, blockType));
 }
 
 /** Random item picker, use add() to add items with integer probability */
-exports.createProbabilitySelector = function() {
+exports.createProbabilitySelector = function () {
     const objects = [];
     const probabilities = [];
     var maxProbabilitySum = 0;
@@ -70,7 +113,7 @@ exports.createProbabilitySelector = function() {
             objects.push(obj);
             probabilities.push(maxProbabilitySum);
         },
-        random: function() {
+        random: function () {
             const random = Math.floor(Math.random() * maxProbabilitySum);
             // Can use binary search
             for (var i = 0; i < probabilities.length; i++) {

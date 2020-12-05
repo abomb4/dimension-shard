@@ -13,6 +13,27 @@ const {
 const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',
     turretType: ItemTurret,
+    category: Category.turret,
+    health: 3500,
+    size: 4,
+    reloadTime: 150,
+    range: 400,
+    inaccuracy: 0,
+    spread: 60,
+    shots: 6,
+    rotateSpeed: 1000,
+    velocityInaccuracy: 1,
+    shootCone: 360,
+    shootSound: lib.loadSound('electric-shot'),
+    requirements: ItemStack.with(
+        Items.copper, 1000,
+        Items.lead, 1800,
+        Items.silicon, 800,
+        Items.phaseFabric, 700,
+        Items.surgeAlloy, 600,
+        items.dimensionShard, 1000,
+        items.dimensionAlloy, 150
+    ),
     coolantMultiplier: 2,
     buildingOverrides: {
         bullet(type, angle) {
