@@ -11,7 +11,7 @@
     "targetInterval": 0,
     "velocityInaccuracy": 1,
     "shootCone": 360,
-    "shootSound": "shoot",
+    "shootSound": "electric-shot",
     "requirements": [
         { "item": "copper", "amount": 1000 },
         { "item": "lead", "amount": 1600 },

@@ -39,7 +39,6 @@ exports.TURRET_PROPERTIES = TURRET_PROPERTIES;
  * @param {object} requestOptions
  */
 exports.newNoRotatingTurret = (requestOptions) => {
-
     const options = Object.assign({
         turretType: ItemTurret,
         shootCone: 360,
