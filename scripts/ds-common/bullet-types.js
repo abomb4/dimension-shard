@@ -47,21 +47,21 @@ exports.newElectricStormBulletType = (requestOptions) => {
         height: 8,
         shrinkY: 0,
         shrinkX: 0,
-        homingDelay: 40,
-        homingPower: 0.15,
+        homingDelay: 30,
+        homingPower: 0.025,
         homingRange: 500,
-        splashDamageRadius: 32,
-        splashDamage: 30,
-        lightning: 10,
+        splashDamageRadius: 48,
+        splashDamage: 20,
+        lightning: 8,
         lightningLength: 8,
-        lightningLengthRand: 1,
+        lightningLengthRand: 5,
         lightningCone: 360,
         lightningAngle: 0,
-        lightningDamage: 22,
+        lightningDamage: 18,
         lightningColor: Color.valueOf("69dcee"),
         lightningChance: 0.1,
         lightningCooldown: 10,
-        hitEffect: Fx.sapExplosion,
+        // hitEffect: Fx.sapExplosion,
         backColor: new Color(255, 255, 255, 0),
         frontColor: new Color(200, 200, 200, 1),
     }, requestOptions);
@@ -73,24 +73,27 @@ exports.newElectricStormBulletType = (requestOptions) => {
             var speedStart = mergedOptions.speedStart * (b.vel.len() / this.speed);
             b.vel.trns(b.vel.angle(), speedStart);
             b.data.speed = speedStart;
+            b.data.homingSpeedUp = 0;
             b.data.lightningCooldown = mergedOptions.lightningCooldown;
         },
         update(b) {
             if (this.homingPower >= 0.0001 && b.time >= this.homingDelay) {
+                // var acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
                 if (b.data.target == null) {
                     b.data.target = Units.closestTarget(b.team, b.x, b.y, this.homingRange, boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir), boolf(t => this.collidesGround)));
                 }
 
                 if (b.data.target != null) {
-                    // var acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
-                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(b.data.target), this.homingPower * (1 + Math.max(0, b.time - 60) / 10)));
+                    // 1/4 seconds to increase homing power
+                    b.vel.setAngle(Mathf.slerpDelta(b.rotation(), b.angleTo(b.data.target), this.homingPower + (Math.max(0, b.data.homingSpeedUp - 15)) * this.homingPower) );
                     // accelerate bullet
                     b.data.speed = Mathf.clamp(b.data.speed + mergedOptions.accelerate, 0, mergedOptions.speedFull);
                     b.vel.trns(b.vel.angle(), b.data.speed);
+                    b.data.homingSpeedUp += 1;
                 }
             }
 
-            if (b.data.target && b.dst(b.data.target) <= 4) {
+            if (b.data.target && b.dst(b.data.target) <= 6) {
                 b.remove();
                 return;
             }
@@ -128,7 +131,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
                 Lightning.create(
                     b,
                     mergedOptions.lightningColor,
-                    mergedOptions.lightningDamage < 0 ? mergedOptions.damage : mergedOptions.lightningDamage,
+                    mergedOptions.lightningDamage < 0 ? mergedOptions.damage : mergedOptions.lightningDamage / 4,
                     b.x + tmp.x,
                     b.y + tmp.y,
                     tmp.inv().angle(),
