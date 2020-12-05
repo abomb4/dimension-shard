@@ -14,3 +14,5 @@ require('ds-common/bullet-types')
 // dimension technology
 require('tech-ds/electric-storm-turret')
 require('tech-ds/hard-thorium-alloy-walls')
+require('tech-ds/hard-thorium-drill')
+require('tech-ds/factories')
