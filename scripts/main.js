@@ -8,12 +8,13 @@ tech-*: Specific technology
 
 // common
 require('ds-common/items')
-require('ds-common/origin-ammos')
+require('ds-common/overrides')
 require('ds-common/bullet-types')
 
 // dimension technology
 require('tech-ds/electric-storm-turret')
-require('tech-ds/hard-thorium-alloy-walls')
-require('tech-ds/hard-thorium-drill')
-require('tech-ds/factories')
+require('tech-ds/wall-buildings')
+require('tech-ds/drill-buildings')
+require('tech-ds/factory-buildings')
 require('tech-ds/liquid-buildings')
+require('tech-ds/power-buildings')
