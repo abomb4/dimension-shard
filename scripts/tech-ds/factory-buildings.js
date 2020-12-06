@@ -211,13 +211,13 @@ ionCollector.buildVisibility = BuildVisibility.shown;
 ionCollector.category = Category.crafting;
 
 ionCollector.craftEffect = Fx.smeltsmoke;
-ionCollector.outputLiquid = new LiquidStack(ionLiquid, 0.2);
+ionCollector.outputLiquid = new LiquidStack(ionLiquid, 0.1);
 ionCollector.craftTime = 60;
 ionCollector.hasPower = true;
 
 ionCollector.consumes.items(ItemStack.with(
     Items.surgeAlloy, 1,
 ));
-ionCollector.consumes.liquid(timeFlow, 0.4);
+ionCollector.consumes.liquid(timeFlow, 0.2);
 ionCollector.consumes.power(10);
 exports.ionCollector = ionCollector;

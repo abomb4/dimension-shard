@@ -1,7 +1,7 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const {
-    dimensionAlloy
+    ionLiquid
 } = items;
 
 const BULLET_PROPERTIES = [
@@ -77,7 +77,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         splashDamage: 20,
         weaveMag: 6,
         weaveScale: 6,
-        lightning: 10,
+        lightning: 8,
         lightningLength: 10,
         lightningLengthRand: 6,
         lightningCone: 360,
@@ -172,6 +172,85 @@ exports.newElectricStormBulletType = (requestOptions) => {
             b.data.flyingLightningCooldown = Math.max(b.data.flyingLightningCooldown - 1, 0);
         },
     }, mergedOptions.speed, mergedOptions.damage, lib.modName + '-electric-storm');
+
+    for (var p of BULLET_PROPERTIES) {
+        var value = mergedOptions[p];
+        if (value !== undefined && value !== null) {
+            v[p] = value;
+        }
+    }
+    return v;
+};
+
+
+exports.newIonBoltBulletType = (requestOptions) => {
+    const tmp = new Vec2();
+    const tmp2 = new Vec2();
+
+    // const fxLightningBall = new Effect(10, 500, cons(e => {
+    //     Lines.stroke(3 * e.fout());
+    //     Draw.color(e.color, Color.white, e.fin());
+    //     // select two point at circle, draw line between them
+    //     const radius = 4;
+    //     const radiusRandom = 12;
+    //     for (var i = 0; i < 3; i++) {
+    //         var angle = Mathf.range(360);
+    //         var angle2 = Mathf.range(120) + 120;
+    //         tmp.trns(angle, radius + Mathf.range(radiusRandom));
+    //         tmp2.trns(angle2, radius + Mathf.range(radiusRandom));
+    //         Lines.line(e.data.getX() + tmp.x, e.data.getY() + tmp.y, e.data.getX() + tmp2.x, e.data.getY() + tmp2.y, false);
+    //         Fill.circle(e.data.getX() + tmp.x, e.data.getY() + tmp.y, Lines.getStroke() / 2);
+    //         Fill.circle(e.data.getX() + tmp2.x, e.data.getY() + tmp2.y, Lines.getStroke() / 2);
+    //     }
+    // }));
+
+    const mergedOptions = Object.assign({
+        damage: 20,
+        speed: 5.2,
+        lifetime: 50,
+        width: 4,
+        height: 12,
+        shrinkY: 0,
+        shrinkX: 0,
+        ammoMultiplier: 1,
+        hitEffect: Fx.massiveExplosion,
+        splashDamageRadius: 40,
+        splashDamage: 30,
+        lightning: 4,
+        lightningLength: 6,
+        lightningLengthRand: 3,
+        lightningCone: 360,
+        lightningAngle: 90,
+        lightningDamage: 12,
+        lightningColor: ionLiquid.color,
+        puddles: 3,
+        puddleRange: 8,
+        puddleAmount: 8,
+        puddleLiquid: ionLiquid,
+        status: items.ionBurningEffect,
+        statusDuration: 150,
+        fragBullets: 1,
+        fragBullet: exports.newElectricStormBulletType({
+            lifetime: 20,
+            speedStart: 2.5,
+            damage: 24,
+            pierceCap: 2,
+            splashDamage: 8,
+            splashDamageRadius: 24,
+            lightning: 4,
+            lightningLength: 3,
+            lightningDamage: 8,
+            lightningColor: ionLiquid.color,
+            flyingLightningDamage: 6,
+            flyingLightninColor: ionLiquid.color,
+            flyingLightningChange: 0.01,
+        }),
+        backColor: ionLiquid.color,
+        frontColor: ionLiquid.color,
+    }, requestOptions);
+
+    const v = new JavaAdapter(LaserBoltBulletType, {
+    }, mergedOptions.speed, mergedOptions.damage);
 
     for (var p of BULLET_PROPERTIES) {
         var value = mergedOptions[p];
