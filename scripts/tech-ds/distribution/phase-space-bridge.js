@@ -1,0 +1,188 @@
+const lib = require('abomb4/lib');
+const items = require('ds-common/items');
+
+var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
+
+    drawPlace(x, y, rotation, valid) {
+        const range = this.range;
+        const tilesize = Vars.tilesize;
+        Drawf.dashCircle(x * tilesize, y * tilesize, range * tilesize, Pal.accent);
+
+        // check if a mass driver is selected while placing this driver
+        if (!Vars.control.input.frag.config.isShown()) return;
+        var selected = Vars.control.input.frag.config.getSelectedTile();
+        if (selected == null || (selected.block != this) || !(selected.within(x * tilesize, y * tilesize, range * tilesize))) return;
+
+        // if so, draw a dotted line towards it while it is in range
+        var sin = Mathf.absin(Time.time, 6, 1);
+        Tmp.v1.set(x * tilesize + this.offset, y * tilesize + this.offset).sub(selected.x, selected.y).limit((this.size / 2 + 1) * tilesize + sin + 0.5);
+        var x2 = x * tilesize - Tmp.v1.x, y2 = y * tilesize - Tmp.v1.y,
+            x1 = selected.x + Tmp.v1.x, y1 = selected.y + Tmp.v1.y;
+        var segs = (selected.dst(x * tilesize, y * tilesize) / tilesize);
+
+        Lines.stroke(2, Pal.gray);
+        Lines.dashLine(x1, y1, x2, y2, segs);
+        Lines.stroke(1, Pal.placing);
+        Lines.dashLine(x1, y1, x2, y2, segs);
+        Draw.reset();
+    },
+    linkValid(tile, other, checkDouble) {
+        if (other == null || tile == null) return false;
+
+        if (checkDouble === undefined) { checkDouble = true; }
+        return other.block() == this
+            && (!checkDouble || other.bc().link != tile.pos())
+            && tile.within(other, this.range * Vars.tilesize);
+    },
+});
+phaseSpaceBridge.buildVisibility = BuildVisibility.shown;
+phaseSpaceBridge.category = Category.distribution;
+phaseSpaceBridge.size = 1;
+phaseSpaceBridge.health = 220;
+phaseSpaceBridge.hasItems = true;
+phaseSpaceBridge.hasLiquids = true;
+phaseSpaceBridge.outputsLiquid = true;
+phaseSpaceBridge.itemCapacity = 20;
+phaseSpaceBridge.liquidCapacity = 20;
+phaseSpaceBridge.range = 15;
+phaseSpaceBridge.transportTime = 0.01;
+phaseSpaceBridge.requirements = ItemStack.with(
+    Items.lead, 80,
+    Items.metaglass, 100,
+    Items.titanium, 100,
+    Items.silicon, 40,
+    Items.phaseFabric, 40,
+    items.dimensionShard, 80
+);
+phaseSpaceBridge.consumes.power(0.5);
+
+lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
+
+    drawConfigure() {
+        var entity = this;
+        var tile = this.tile;
+        var block = this.block;
+        var x = this.x;
+        var y = this.y;
+
+        Draw.color(Pal.accent);
+        Lines.stroke(1);
+        Lines.square(x, y, block.size * Vars.tilesize / 2 + 1);
+
+        var target;
+        if (entity.link != -1 && (target = Vars.world.tile(entity.link)) != null && this.block.linkValid(tile, target, true)) {
+            Draw.color(Pal.place);
+            Lines.square(target.x * Vars.tilesize, target.y * Vars.tilesize, block.size * Vars.tilesize / 2 + 1 + (Mathf.absin(Time.time, 4, 1)));
+        }
+
+        Drawf.dashCircle(x, y, this.block.range * Vars.tilesize, Pal.accent);
+    },
+    draw() {
+        Draw.rect(this.block.region, this.x, this.y, this.block.rotate ? this.rotdeg() : 0);
+        this.drawTeamTop();
+
+        Draw.z(Layer.power);
+        // Link each
+        const tile = this.tile;
+        const tilesize = Vars.tilesize;
+        var entity = this;
+
+        var other = Vars.world.tile(entity.link);
+        if (!this.block.linkValid(tile, other)) return;
+
+        var opacity = Core.settings.getInt("bridgeopacity") / 100;
+        if (Mathf.zero(opacity)) return;
+
+        // draw it
+
+        var angle = Angles.angle(tile.worldx(), tile.worldy(), other.worldx(), other.worldy());
+        Draw.color(Color.white, Color.black, Mathf.absin(Time.time, 6, 0.07));
+        Draw.alpha(Math.max(entity.uptime, 0.25) * opacity);
+
+        Draw.rect(this.block.endRegion, tile.x, tile.y, angle + 90);
+        Draw.rect(this.block.endRegion, other.x, other.y, angle + 270);
+
+        Lines.stroke(8);
+        Lines.line(this.block.bridgeRegion, tile.worldx(), tile.worldy(), other.worldx(), other.worldy(), false);
+
+        var dist = Math.max(Math.abs(other.x - tile.x), Math.abs(other.y - tile.y));
+
+        var time = entity.time2 / 1.7;
+        var arrows = (dist) * tilesize / 4 - 2;
+
+        Draw.color();
+
+        for (var a = 0; a < arrows; a++) {
+            Draw.alpha(Mathf.absin(a / arrows - entity.time / 100, 0.1, 1) * entity.uptime * opacity);
+            Draw.rect(this.block.arrowRegion,
+                tile.worldx() + Angles.trnsx(angle, (tilesize / 2 + a * 4 + time % 4)),
+                tile.worldy() + Angles.trnsy(angle, (tilesize / 2 + a * 4 + time % 4)), angle);
+        }
+        Draw.reset();
+    },
+    canDump(to, item) {
+        // 4 direction output
+        return true;
+    },
+    acceptItem(source, item) {
+        const tile = this.tile;
+        if (this.team != source.team) return false;
+        const itemCapacity = this.block.itemCapacity;
+
+        var entity = this;
+        var other = Vars.world.tile(entity.link);
+
+        if (this.block.linkValid(tile, other)) {
+            return this.items.total() < itemCapacity;
+        } else {
+            return source.block == this.block && source.link == tile.pos() && this.items.total() < itemCapacity;
+        }
+
+    },
+    updateTile() {
+        this.super$updateTile();
+        // Try dump liquid if not be connected
+        var entity = this;
+        var tile = this.tile;
+        var other = Vars.world.tile(entity.link);
+        if (!this.block.linkValid(tile, other)) {
+            this.dumpLiquid(entity.liquids.current());
+        }
+    },
+    acceptLiquid(source, liquid) {
+        if (this.team != source.team || !this.block.hasLiquids) return false;
+
+        var entity = this;
+        var tile = this.tile;
+        var other = Vars.world.tile(entity.link);
+
+        if (this.block.linkValid(tile, other)) {
+            return true;
+        } else if (!(source.block == this.block && source.link == tile.pos())) {
+            return false;
+        }
+
+        return this.liquids.get(liquid) < this.block.liquidCapacity
+            && (this.liquids.current() == liquid || this.liquids.get(this.liquids.current()) < 0.2);
+    },
+    updateTransport(other) {
+        var entity = this;
+
+        if (entity.uptime >= 0.5 && entity.timer.get(this.block.timerTransport, this.block.transportTime)) {
+            // transport items
+            var item = entity.items.take();
+            if (item != null && other.acceptItem(this, item)) {
+                other.handleItem(this, item);
+                entity.cycleSpeed = Mathf.lerpDelta(entity.cycleSpeed, 4, 0.05);
+            } else {
+                entity.cycleSpeed = Mathf.lerpDelta(entity.cycleSpeed, 1, 0.01);
+                if (item != null) entity.items.add(item, 1);
+            }
+
+            // transport liquid
+            this.moveLiquid(other, this.liquids.current());
+        }
+    }
+});
+
+exports.phaseSpaceBridge = phaseSpaceBridge;

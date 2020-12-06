@@ -34,7 +34,8 @@ const turret = blockTypes.newNoRotatingTurret({
         items.dimensionShard, 1000,
         items.dimensionAlloy, 150
     ),
-    coolantMultiplier: 1.5,
+    coolantMultiplier: 0.1,
+    coolantUsage: 2,
     buildingOverrides: {
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
