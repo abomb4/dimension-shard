@@ -34,7 +34,7 @@ const turret = blockTypes.newNoRotatingTurret({
         items.dimensionShard, 1000,
         items.dimensionAlloy, 150
     ),
-    coolantMultiplier: 2,
+    coolantMultiplier: 1.5,
     buildingOverrides: {
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
@@ -61,3 +61,5 @@ turret.ammo(dimensionAlloy, newElectricStormBulletType({
     lifetime: 150,
     homingRange: 400,
 }));
+
+turret.consumes.powerCond(75, boolf(b => b.isActive()));

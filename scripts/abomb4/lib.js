@@ -21,8 +21,9 @@ exports.int = (v) => new java.lang.Integer(v);
  * Get message from bundle, 'type.mod-name.key'
  * @param {string} type the prefix such as block, unit, mech
  * @param {string} key  the suffix
+ * @param {string[]} msgs  messages
  */
-exports.getMessage = (type, key) => Core.bundle.get(type + "." + exports.modName + "." + key);
+exports.getMessage = (type, key, msgs) => Core.bundle.format(type + "." + exports.modName + "." + key, msgs);
 
 /**
  * Add content to research tree
