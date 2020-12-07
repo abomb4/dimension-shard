@@ -23,6 +23,7 @@ turret.reloadTime = 60;
 turret.range = 220;
 turret.inaccuracy = 2;
 turret.shots = 3;
+turret.rotateSpeed = 8;
 turret.burstSpacing = 6;
 turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');

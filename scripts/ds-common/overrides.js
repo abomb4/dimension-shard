@@ -11,31 +11,11 @@ const {
     hardThoriumAlloy,
     dimensionAlloy,
     timeFlow,
-    ionLiquid
+    ionLiquid,
+    fxDimensionShardExplosion,
 } = items;
 
 // -=-=-=-=-=-=-=-=-=-=-=-= Dimension Shard =-=-=-=-=-=-=-=-=-=-=-=-
-const fxDimensionShardExplosion = lib.newEffect(24, e => {
-    Draw.color(items.dimensionShardColorLight);
-
-    e.scaled(7, cons(i => {
-        Lines.stroke(3 * i.fout());
-        Lines.circle(e.x, e.y, 3 + i.fin() * 24);
-    }));
-
-    Draw.color(Color.gray);
-
-    Angles.randLenVectors(e.id, 7, 2 + 28 * e.finpow(), lib.floatc2((x, y) => {
-        Fill.circle(e.x + x, e.y + y, e.fout() * 4 + 0.5);
-    }));
-
-    Draw.color(items.dimensionShardColor);
-    Lines.stroke(1 * e.fout());
-
-    Angles.randLenVectors(e.id + 1, 4, 1 + 25 * e.finpow(), lib.floatc2((x, y) => {
-        Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 3);
-    }));
-});
 
 Blocks.scatter.ammoTypes.put(dimensionShard, (() => {
     const v = new FlakBulletType(4.2, 12);

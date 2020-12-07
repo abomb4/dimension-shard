@@ -36,5 +36,6 @@ timeCompressedRtg.requirements = ItemStack.with(
 timeCompressedRtg.category = Category.power;
 timeCompressedRtg.powerProduction = Blocks.rtgGenerator.powerProduction * rtgMultipler;
 timeCompressedRtg.itemDuration = Blocks.rtgGenerator.itemDuration / (rtgMultipler * (7 / 8));
+timeCompressedRtg.canOverdrive = false;
 
 exports.timeCompressedRtg = timeCompressedRtg;

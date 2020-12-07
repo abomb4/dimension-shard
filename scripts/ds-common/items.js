@@ -1,4 +1,4 @@
-
+const floatc2 = (func) => new Floatc2({ get: (v1, v2) => func(v1, v2) });
 exports.dimensionShardColor = Color.valueOf("165282");
 exports.dimensionShardColorLight = Color.valueOf("719ec1");
 exports.dimensionShard = (() => {
@@ -14,6 +14,27 @@ exports.dimensionShard = (() => {
     ore.oreScale = 26;
     return v;
 })();
+exports.fxDimensionShardExplosion = new Effect(24, cons(e => {
+    Draw.color(exports.dimensionShardColorLight);
+
+    e.scaled(7, cons(i => {
+        Lines.stroke(3 * i.fout());
+        Lines.circle(e.x, e.y, 3 + i.fin() * 24);
+    }));
+
+    Draw.color(Color.gray);
+
+    Angles.randLenVectors(e.id, 7, 2 + 28 * e.finpow(), floatc2((x, y) => {
+        Fill.circle(e.x + x, e.y + y, e.fout() * 4 + 0.5);
+    }));
+
+    Draw.color(exports.dimensionShardColor);
+    Lines.stroke(1 * e.fout());
+
+    Angles.randLenVectors(e.id + 1, 4, 1 + 25 * e.finpow(), floatc2((x, y) => {
+        Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 3);
+    }));
+}));
 
 exports.spaceCrystalColor = Color.valueOf("4064e9");
 exports.spaceCrystalColorLight = Color.valueOf("92a2dc");
