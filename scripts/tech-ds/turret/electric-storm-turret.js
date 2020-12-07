@@ -14,28 +14,38 @@ const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',
     turretType: ItemTurret,
     category: Category.turret,
-    health: 3500,
-    size: 4,
+    liquidCapacity: 120,
+    health: 4200,
+    size: 5,
     reloadTime: 150,
     range: 400,
     inaccuracy: 0,
     spread: 60,
     shots: 6,
     rotateSpeed: 1000,
-    velocityInaccuracy: 1,
+    velocityInaccuracy: 0.8,
     shootCone: 360,
     shootSound: lib.loadSound('electric-shot'),
     requirements: ItemStack.with(
-        Items.copper, 1000,
-        Items.lead, 1800,
-        Items.silicon, 800,
-        Items.phaseFabric, 700,
-        Items.surgeAlloy, 600,
-        items.dimensionShard, 1000,
-        items.dimensionAlloy, 150
+        Items.copper, 2500,
+        Items.lead, 2000,
+        Items.metaglass, 1500,
+        Items.silicon, 1200,
+        Items.plastanium, 1000,
+        Items.phaseFabric, 800,
+        Items.surgeAlloy, 1000,
+        items.dimensionShard, 1600,
+        items.hardThoriumAlloy, 800,
+        items.dimensionAlloy, 300
     ),
-    coolantMultiplier: 0.1,
+    coolantMultiplier: 0.15,
     coolantUsage: 2,
+    blockOverrides: {
+        load() {
+            this.super$load();
+            this.baseRegion = lib.loadRegion("block-5");
+        }
+    },
     buildingOverrides: {
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
@@ -57,7 +67,7 @@ const turret = blockTypes.newNoRotatingTurret({
 });
 
 turret.ammo(dimensionAlloy, newElectricStormBulletType({
-    speedStart: 0.7,
+    speedStart: 0.8,
     homingDelay: 30,
     lifetime: 150,
     homingRange: 400,

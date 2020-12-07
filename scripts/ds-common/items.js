@@ -42,7 +42,6 @@ exports.spaceCrystal = (() => {
     const v = new Item("space-crystal", exports.spaceCrystalColor);
     v.explosiveness = 0.5;
     v.hardness = 6;
-    v.radioactivity = 0.8;
     v.cost = 1;
     return v;
 })();
@@ -50,7 +49,7 @@ exports.spaceCrystal = (() => {
 exports.timeCrystal = (() => {
     const v = new Item("time-crystal", Color.valueOf("9b3db0"));
     v.hardness = 7;
-    v.radioactivity = 0.2;
+    v.radioactivity = 0.7;
     v.cost = 1;
     return v;
 })();
@@ -70,7 +69,6 @@ exports.dimensionAlloyColorLight = Color.valueOf("69dcee");
 exports.dimensionAlloy = (() => {
     const v = new Item("dimension-alloy", exports.dimensionAlloyColor);
     v.hardness = 12;
-    v.radioactivity = 1.2;
     v.cost = 1.2;
     return v;
 })();
@@ -125,7 +123,7 @@ exports.ionBurningEffect = (() => {
 
     v.color = Color.valueOf("cee0e9");
     v.damage = 0.6;
-    v.healthMultiplier = 0.75;
+    v.healthMultiplier = 0.8;
     v.effect = fxIonBurning;
 
     v.init(run(() => {

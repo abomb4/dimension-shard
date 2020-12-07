@@ -182,6 +182,7 @@ timeCondenser.requirements = ItemStack.with(
 );
 timeCondenser.buildVisibility = BuildVisibility.shown;
 timeCondenser.category = Category.crafting;
+timeCondenser.itemCapacity = 20;
 
 timeCondenser.craftEffect = Fx.smeltsmoke;
 timeCondenser.outputLiquid = new LiquidStack(timeFlow, 0.2);

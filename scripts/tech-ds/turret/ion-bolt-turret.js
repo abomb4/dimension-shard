@@ -29,11 +29,13 @@ turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');
 turret.requirements = ItemStack.with(
     Items.copper, 1200,
-    Items.lead, 1500,
+    Items.lead, 1600,
     Items.graphite, 800,
-    Items.plastanium, 500,
-    Items.surgeAlloy, 400,
-    items.timeCrystal, 160
+    Items.plastanium, 1200,
+    Items.surgeAlloy, 600,
+    items.timeCrystal, 160,
+    items.hardThoriumAlloy, 700,
+    items.dimensionAlloy, 200
 );
 turret.ammo(ionLiquid, newIonBoltBulletType({
     ammoMultiplier: 1,
