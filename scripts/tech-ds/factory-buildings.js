@@ -77,6 +77,36 @@ hardThoriumAlloySmelter.consumes.power(6);
 exports.hardThoriumAlloySmelter = hardThoriumAlloySmelter;
 
 
+// -=-=-=-=-=-=-=-=-=-=-=- Time Condenser -=-=-=-=-=-=-=-=-=-=-=-
+const timeCondenser = extend(LiquidConverter, "time-condenser", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
+timeCondenser.size = 3;
+// timeCondenser.health = 600;
+timeCondenser.requirements = ItemStack.with(
+    Items.lead, 300,
+    Items.silicon, 150,
+    dimensionShard, 200,
+    hardThoriumAlloy, 120
+);
+timeCondenser.buildVisibility = BuildVisibility.shown;
+timeCondenser.category = Category.crafting;
+timeCondenser.itemCapacity = 20;
+
+timeCondenser.craftEffect = Fx.smeltsmoke;
+timeCondenser.outputLiquid = new LiquidStack(timeFlow, 0.2);
+timeCondenser.craftTime = 60;
+timeCondenser.hasPower = true;
+
+timeCondenser.consumes.items(ItemStack.with(
+    dimensionShard, 6,
+    Items.phaseFabric, 2,
+));
+timeCondenser.consumes.liquid(Liquids.cryofluid, 0.2);
+timeCondenser.consumes.power(6);
+exports.timeCondenser = timeCondenser;
+
+
 // -=-=-=-=-=-=-=-=-=-=-=- Time Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
 const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -110,8 +140,6 @@ timeCrystallizer.consumes.items(ItemStack.with(
 timeCrystallizer.consumes.power(6);
 timeCrystallizer.consumes.liquid(timeFlow, 0.2);
 exports.timeCrystallizer = timeCrystallizer;
-
-// TODO big phase fabric factory, dimension alloy, liquids
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Radioisotope Weaver -=-=-=-=-=-=-=-=-=-=-=-
@@ -147,6 +175,34 @@ radioisotopeWeaver.consumes.power(10);
 exports.radioisotopeWeaver = radioisotopeWeaver;
 
 
+// -=-=-=-=-=-=-=-=-=-=-=- Ion Collector -=-=-=-=-=-=-=-=-=-=-=-
+const ionCollector = extend(LiquidConverter, "ion-collector", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
+ionCollector.size = 3;
+// ionCollector.health = 600;
+ionCollector.requirements = ItemStack.with(
+    Items.lead, 300,
+    Items.silicon, 150,
+    dimensionShard, 200,
+    hardThoriumAlloy, 120
+);
+ionCollector.buildVisibility = BuildVisibility.shown;
+ionCollector.category = Category.crafting;
+
+ionCollector.craftEffect = Fx.smeltsmoke;
+ionCollector.outputLiquid = new LiquidStack(ionLiquid, 0.1);
+ionCollector.craftTime = 60;
+ionCollector.hasPower = true;
+
+ionCollector.consumes.items(ItemStack.with(
+    Items.surgeAlloy, 1,
+));
+ionCollector.consumes.liquid(timeFlow, 0.2);
+ionCollector.consumes.power(10);
+exports.ionCollector = ionCollector;
+
+
 // -=-=-=-=-=-=-=-=-=-=-=- Dimension Alloy Smelter -=-=-=-=-=-=-=-=-=-=-=-
 const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -179,61 +235,3 @@ dimensionAlloySmelter.consumes.items(ItemStack.with(
 dimensionAlloySmelter.consumes.liquid(ionLiquid, 0.2);
 dimensionAlloySmelter.consumes.power(8);
 exports.dimensionAlloySmelter = dimensionAlloySmelter;
-
-
-// -=-=-=-=-=-=-=-=-=-=-=- Time Condenser -=-=-=-=-=-=-=-=-=-=-=-
-const timeCondenser = extend(LiquidConverter, "time-condenser", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
-});
-timeCondenser.size = 3;
-// timeCondenser.health = 600;
-timeCondenser.requirements = ItemStack.with(
-    Items.lead, 300,
-    Items.silicon, 150,
-    dimensionShard, 200,
-    hardThoriumAlloy, 120
-);
-timeCondenser.buildVisibility = BuildVisibility.shown;
-timeCondenser.category = Category.crafting;
-timeCondenser.itemCapacity = 20;
-
-timeCondenser.craftEffect = Fx.smeltsmoke;
-timeCondenser.outputLiquid = new LiquidStack(timeFlow, 0.2);
-timeCondenser.craftTime = 60;
-timeCondenser.hasPower = true;
-
-timeCondenser.consumes.items(ItemStack.with(
-    dimensionShard, 6,
-    Items.phaseFabric, 2,
-));
-timeCondenser.consumes.liquid(Liquids.cryofluid, 0.2);
-timeCondenser.consumes.power(6);
-exports.timeCondenser = timeCondenser;
-
-
-// -=-=-=-=-=-=-=-=-=-=-=- Ion Collector -=-=-=-=-=-=-=-=-=-=-=-
-const ionCollector = extend(LiquidConverter, "ion-collector", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
-});
-ionCollector.size = 3;
-// ionCollector.health = 600;
-ionCollector.requirements = ItemStack.with(
-    Items.lead, 300,
-    Items.silicon, 150,
-    dimensionShard, 200,
-    hardThoriumAlloy, 120
-);
-ionCollector.buildVisibility = BuildVisibility.shown;
-ionCollector.category = Category.crafting;
-
-ionCollector.craftEffect = Fx.smeltsmoke;
-ionCollector.outputLiquid = new LiquidStack(ionLiquid, 0.1);
-ionCollector.craftTime = 60;
-ionCollector.hasPower = true;
-
-ionCollector.consumes.items(ItemStack.with(
-    Items.surgeAlloy, 1,
-));
-ionCollector.consumes.liquid(timeFlow, 0.2);
-ionCollector.consumes.power(10);
-exports.ionCollector = ionCollector;
