@@ -1,8 +1,10 @@
 const lib = require('abomb4/lib');
 
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const turret = new JavaAdapter(ItemTurret, {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'bomb-teleporter');
 
 turret.recoilAmount = 2;
@@ -122,3 +124,5 @@ turret.consumes.powerCond(8, boolf(b => b.isActive()));
 
 lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, {
 });
+
+exports.bombTeleporter = turret;

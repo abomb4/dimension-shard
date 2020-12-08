@@ -8,6 +8,7 @@ tech-*: Specific technology
 
 // common
 require('ds-common/items')
+require('ds-common/ds-global')
 require('ds-common/overrides')
 require('ds-common/bullet-types')
 
@@ -26,3 +27,7 @@ require('tech-ds/distribution/phase-space-bridge')
 
 require('tech-ds/effect/deflect-force-projector')
 require('tech-ds/effect/time-overdrive')
+require('tech-ds/effect/dimension-technology-core')
+
+require('tech-ds/research-tree')
+require('tech-ds/maps')

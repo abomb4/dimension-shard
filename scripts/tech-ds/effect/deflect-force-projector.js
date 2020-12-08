@@ -1,5 +1,6 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const chanceDeflect = 15;
 const deflectAngle = 60;
@@ -42,7 +43,8 @@ const block = new JavaAdapter(ForceProjector, {
     setStats() {
         this.super$setStats();
         if (chanceDeflect > 0) this.stats.add(Stat.baseDeflectChance, chanceDeflect, StatUnit.none);
-    }
+    },
+    isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'deflect-force-projector');
 
 block.buildVisibility = BuildVisibility.shown;
@@ -162,3 +164,5 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, {
         Draw.reset();
     },
 });
+
+exports.deflectForceProjector = block;

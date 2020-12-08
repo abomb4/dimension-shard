@@ -6,9 +6,12 @@ const {
     dimensionShard, spaceCrystal, timeCrystal, hardThoriumAlloy,
     dimensionAlloy, timeFlow, ionLiquid
 } = items;
+const dsGlobal = require('ds-common/ds-global');
 
 // -=-=-=-=-=-=-=-=-=-=-=- Space Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
-const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {});
+const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 spaceCrystallizer.size = 3;
 // spaceCrystallizer.health = 600;
 spaceCrystallizer.requirements = ItemStack.with(
@@ -40,7 +43,9 @@ exports.spaceCrystallizer = spaceCrystallizer;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Hard Thorium Alloy Slelter -=-=-=-=-=-=-=-=-=-=-=-
-const hardThoriumAlloySmelter = extend(GenericSmelter, "hard-thorium-alloy-smelter", {});
+const hardThoriumAlloySmelter = extend(GenericSmelter, "hard-thorium-alloy-smelter", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 hardThoriumAlloySmelter.size = 3;
 // hardThoriumAlloySmelter.health = 600;
 hardThoriumAlloySmelter.requirements = ItemStack.with(
@@ -73,7 +78,9 @@ exports.hardThoriumAlloySmelter = hardThoriumAlloySmelter;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Time Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
-const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {});
+const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 timeCrystallizer.size = 3;
 // timeCrystallizer.health = 600;
 timeCrystallizer.requirements = ItemStack.with(
@@ -108,7 +115,9 @@ exports.timeCrystallizer = timeCrystallizer;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Radioisotope Weaver -=-=-=-=-=-=-=-=-=-=-=-
-const radioisotopeWeaver = extend(GenericSmelter, "radioisotope-weaver", {});
+const radioisotopeWeaver = extend(GenericSmelter, "radioisotope-weaver", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 radioisotopeWeaver.size = 3;
 // radioisotopeWeaver.health = 600;
 radioisotopeWeaver.requirements = ItemStack.with(
@@ -139,7 +148,9 @@ exports.radioisotopeWeaver = radioisotopeWeaver;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Dimension Alloy Smelter -=-=-=-=-=-=-=-=-=-=-=-
-const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", {});
+const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 dimensionAlloySmelter.size = 4;
 // dimensionAlloySmelter.health = 600;
 dimensionAlloySmelter.requirements = ItemStack.with(
@@ -171,7 +182,9 @@ exports.dimensionAlloySmelter = dimensionAlloySmelter;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Time Condenser -=-=-=-=-=-=-=-=-=-=-=-
-const timeCondenser = extend(LiquidConverter, "time-condenser", {});
+const timeCondenser = extend(LiquidConverter, "time-condenser", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 timeCondenser.size = 3;
 // timeCondenser.health = 600;
 timeCondenser.requirements = ItemStack.with(
@@ -199,7 +212,9 @@ exports.timeCondenser = timeCondenser;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Ion Collector -=-=-=-=-=-=-=-=-=-=-=-
-const ionCollector = extend(LiquidConverter, "ion-collector", {});
+const ionCollector = extend(LiquidConverter, "ion-collector", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 ionCollector.size = 3;
 // ionCollector.health = 600;
 ionCollector.requirements = ItemStack.with(

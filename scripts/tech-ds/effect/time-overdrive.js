@@ -1,7 +1,9 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const block = new JavaAdapter(OverdriveProjector, {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'time-overdrive');
 
 block.hasLiquid = true;
@@ -27,3 +29,5 @@ block.speedBoostPhase = 1.8;
 block.useTime = 180;
 block.hasBoost = true;
 block.consumes.liquid(items.timeFlow, 0.1).boost();
+
+exports.timeOverdrive = block;

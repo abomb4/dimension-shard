@@ -5,12 +5,14 @@ const items = require('ds-common/items');
 const {
     ionLiquid
 } = items;
+const dsGlobal = require('ds-common/ds-global');
 
 const {
     newIonBoltBulletType
 } = require('ds-common/bullet-types');
 
 const turret = new JavaAdapter(LiquidTurret, {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'ion-bolt-turret');
 
 turret.recoilAmount = 2;
@@ -54,3 +56,5 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
             ));
     }
 });
+
+exports.ionBoltTurret = turret;

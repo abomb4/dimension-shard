@@ -5,6 +5,7 @@ const items = require('ds-common/items');
 const {
     dimensionAlloy
 } = items;
+const dsGlobal = require('ds-common/ds-global');
 
 const {
     newElectricStormBulletType
@@ -13,6 +14,7 @@ const {
 const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',
     turretType: ItemTurret,
+    buildVisibility: BuildVisibility.shown,
     category: Category.turret,
     liquidCapacity: 120,
     health: 4200,
@@ -44,7 +46,8 @@ const turret = blockTypes.newNoRotatingTurret({
         load() {
             this.super$load();
             this.baseRegion = lib.loadRegion("block-5");
-        }
+        },
+        isHidden() { return !dsGlobal.techDsAvailable(); },
     },
     buildingOverrides: {
         bullet(type, angle) {
@@ -74,3 +77,5 @@ turret.ammo(dimensionAlloy, newElectricStormBulletType({
 }));
 
 turret.consumes.powerCond(75, boolf(b => b.isActive()));
+
+exports.electricStormTurret = turret;

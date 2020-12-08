@@ -1,8 +1,11 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 
+const dsGlobal = require('ds-common/ds-global');
 
-var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {});
+var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 dimensionCrystalBattery.buildVisibility = BuildVisibility.shown;
 dimensionCrystalBattery.size = 3;
 dimensionCrystalBattery.requirements = ItemStack.with(
@@ -18,7 +21,9 @@ dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getP
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
 
 
-var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {});
+var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 const rtgMultipler = 12;
 const rtgItemMultipler = 10;
 timeCompressedRtg.buildVisibility = BuildVisibility.shown;

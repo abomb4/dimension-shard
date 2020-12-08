@@ -1,6 +1,8 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 
+const dsGlobal = require('ds-common/ds-global');
+
 var shardWall = extend(Wall, 'shard-phase-wall', {});
 shardWall.size = 1;
 shardWall.health = Blocks.phaseWall.health * (9 / 8);
@@ -24,10 +26,9 @@ shardWallLarge.chanceDeflect = shardWall.chanceDeflect;
 exports.shardPhaseWall = shardWall;
 exports.shardPhaseWallLarge = shardWallLarge;
 
-lib.addToResearch(shardWall, { parent: 'phase-wall-large' });
-lib.addToResearch(shardWallLarge, { parent: shardWall.name });
-
-var wall = extend(Wall, 'hard-thorium-alloy-wall', {});
+var wall = extend(Wall, 'hard-thorium-alloy-wall', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 wall.size = 1;
 wall.health = 1100;
 wall.requirements = ItemStack.with(items.hardThoriumAlloy, 6);
@@ -45,6 +46,3 @@ wallLarge.buildCostMultiplier = wall.buildCostMultiplier;
 
 exports.hardThoriumAlloyWall = wall;
 exports.hardThoriumAlloyWallLarge = wallLarge;
-
-lib.addToResearch(wall, { parent: 'thorium-wall-large' });
-lib.addToResearch(wallLarge, { parent: wall.name });

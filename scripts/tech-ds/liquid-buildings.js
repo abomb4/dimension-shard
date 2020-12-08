@@ -1,8 +1,11 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 
+const dsGlobal = require('ds-common/ds-global');
 
-var hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {});
+var hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 hardThoriumConduit.buildVisibility = BuildVisibility.shown;
 hardThoriumConduit.size = 1;
 hardThoriumConduit.health = 300;
@@ -52,7 +55,9 @@ lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, {
 exports.hardThoriumConduit = hardThoriumConduit;
 
 
-var hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router', {});
+var hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 hardThoriumLiquidRouter.buildVisibility = BuildVisibility.shown;
 hardThoriumLiquidRouter.size = 1;
 hardThoriumLiquidRouter.health = 300;
@@ -103,7 +108,9 @@ lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, {
 exports.hardThoriumLiquidRouter = hardThoriumLiquidRouter;
 
 
-var spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {});
+var spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 spaceLiquidTank.buildVisibility = BuildVisibility.shown;
 spaceLiquidTank.size = 3;
 spaceLiquidTank.health = 1400;

@@ -1,7 +1,10 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
-var block = extend(Drill, 'hard-thorium-drill', {});
+var block = extend(Drill, 'hard-thorium-drill', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
 block.buildVisibility = BuildVisibility.shown;
 block.size = 4;
 block.health = 800;
