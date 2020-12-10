@@ -13,6 +13,8 @@ require('ds-common/overrides')
 require('ds-common/bullet-types')
 
 // dimension technology
+require('tech-ds/unit/equa');
+
 require('tech-ds/wall-buildings')
 require('tech-ds/drill-buildings')
 require('tech-ds/factory-buildings')

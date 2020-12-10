@@ -71,6 +71,7 @@ block.consumes.power(12);
 
 const shieldConsumer = (paramEntity) => cons(trait => {
     if (trait.team != paramEntity.team
+        && trait.type.absorbable
         && Intersector.isInsideHexagon(paramEntity.x, paramEntity.y, paramEntity.realRadius() * 2, trait.x, trait.y)) {
         if (!deflect(paramEntity, chanceDeflect, trait)) {
             trait.absorb();
