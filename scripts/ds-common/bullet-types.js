@@ -25,6 +25,7 @@ const BULLET_PROPERTIES = [
     'trailEffect', 'trailParam', 'weaveMag', 'weaveScale', 'width',
 ];
 
+const transparentColor = new Color(255, 255, 255, 0);
 /**
  * options 支持：
  * 基础属性 damage speed width height
@@ -50,7 +51,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
     //     }
     // }));
 
-    const fxLightningLine = new Effect(10, 500, cons(e => {
+    const fxLightningLine = new Effect(8, 500, cons(e => {
         Lines.stroke(3 * e.fout());
         Draw.color(e.color, Color.white, e.fin());
 
@@ -66,8 +67,8 @@ exports.newElectricStormBulletType = (requestOptions) => {
         pierceCap: 10,
         pierce: true,
         pierceBuilding: false,
-        width: 8,
-        height: 8,
+        width: 20,
+        height: 20,
         shrinkY: 0,
         shrinkX: 0,
         homingDelay: 30,
@@ -77,6 +78,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         splashDamage: 30,
         weaveMag: 8,
         weaveScale: 6,
+        spin: 32.31234,
         lightning: 6,
         lightningLength: 10,
         lightningLengthRand: 6,
@@ -84,8 +86,8 @@ exports.newElectricStormBulletType = (requestOptions) => {
         lightningAngle: 0,
         lightningDamage: 20,
         lightningColor: Color.valueOf("69dcee"),
-        backColor: new Color(255, 255, 255, 0),
-        frontColor: new Color(255, 255, 255, 1),
+        backColor: transparentColor,
+        frontColor: Color.valueOf("79ecfe"),
 
         // custom
         accelerate: 0.25,
@@ -98,6 +100,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         flyingLightningCooldown: 5,
     }, requestOptions);
 
+    const shouldDisableAnimation = () => Core.graphics.getFramesPerSecond() <= 45;
     const v = new JavaAdapter(BasicBulletType, {
         init(b) {
             if (!b) { return; }
@@ -107,6 +110,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
             b.data.speed = speedStart;
             b.data.homingSpeedUp = 0;
             b.data.flyingLightningCooldown = mergedOptions.flyingLightningCooldown;
+            b.data.animationDisabled = shouldDisableAnimation();
         },
         update(b) {
             if (this.homingPower >= 0.0001 && b.time >= this.homingDelay) {
@@ -150,8 +154,9 @@ exports.newElectricStormBulletType = (requestOptions) => {
                 }
             }
 
-            if (!Vars.headless && Core.settings.getBool("bloom") && !Core.settings.getBool("pixelate")) {
+            if (!Vars.headless && Core.settings.getBool("bloom") && !Core.settings.getBool("pixelate") && !b.data.animationDisabled) {
                 // effect
+                b.data.animationDisabled = shouldDisableAnimation();
                 const radius = 4;
                 const radiusRandom = 12;
                 for (var i = 0; i < 3; i++) {

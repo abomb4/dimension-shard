@@ -58,7 +58,7 @@ const turret = blockTypes.newNoRotatingTurret({
             //     target: !this.isControlled() && this.target ? this.target : new Vec2(targetPos.getX(), targetPos.getY())
             // });
 
-            if (this.isControlled() || this.logicShooting) {
+            if ((targetPos && targetPos.getX() != 0 && targetPos.getY() != 0) && (this.isControlled() || this.logicShooting)) {
                 type.create(this, team, x + tr.x, y + tr.y, angle, -1, 1 + Mathf.range(velocityInaccuracy), lifeScl, {
                     target: new Vec2(targetPos.getX(), targetPos.getY())
                 });
