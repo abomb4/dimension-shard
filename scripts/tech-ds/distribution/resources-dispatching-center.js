@@ -1,6 +1,7 @@
-const lib = require('super-cheat/lib');
+const lib = require('abomb4/lib');
+const items = require('ds-common/items');
 
-const range = 1200;
+const range = 480;
 const warmupSpeed = 0.05;
 
 // Must load region in 'load()'
@@ -29,12 +30,12 @@ const inEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(StorageBlock, "chrono-pusher", {
+const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
     load() {
         this.super$load();
-        topRegion = lib.loadRegion("chrono-pusher-top");
-        bottomRegion = lib.loadRegion("chrono-pusher-bottom");
-        rotatorRegion = lib.loadRegion("chrono-pusher-rotator");
+        topRegion = lib.loadRegion("resources-dispatching-center-top");
+        bottomRegion = lib.loadRegion("resources-dispatching-center-bottom");
+        rotatorRegion = lib.loadRegion("resources-dispatching-center-rotator");
     },
     setBars() {
         this.super$setBars();
@@ -77,13 +78,29 @@ const blockType = extendContent(StorageBlock, "chrono-pusher", {
         }
     },
 });
+blockType.buildVisibility = BuildVisibility.shown;
+blockType.category = Category.distribution;
+blockType.size = 6;
+blockType.health = 4000;
+
 blockType.update = true;
 blockType.solid = true;
 blockType.hasItems = true;
 blockType.configurable = true;
 blockType.saveConfig = false;
-blockType.itemCapacity = 100;
+blockType.itemCapacity = 200;
 blockType.noUpdateDisabled = true;
+blockType.requirements = ItemStack.with(
+    Items.copper, 6000,
+    Items.metaglass, 3200,
+    Items.silicon, 2200,
+    Items.phaseFabric, 3000,
+    items.spaceCrystal, 2800,
+    items.timeCrystal, 1600,
+    items.hardThoriumAlloy, 2000,
+    items.dimensionAlloy, 1200
+);
+blockType.consumes.power(100);
 blockType.config(IntSeq, lib.cons2((tile, sq) => {
     // This seems only used by coping block
     var links = new Seq(java.lang.Integer);
@@ -275,3 +292,5 @@ blockType.buildType = prov(() => {
         },
     }, blockType);
 });
+
+exports.resourcesDispatchingCenter = blockType;
