@@ -36,15 +36,13 @@ turret.requirements = ItemStack.with(
     Items.plastanium, 1200,
     Items.surgeAlloy, 600,
     items.timeCrystal, 160,
-    items.hardThoriumAlloy, 700,
-    items.dimensionAlloy, 200
+    items.hardThoriumAlloy, 700
 );
 turret.ammo(ionLiquid, newIonBoltBulletType({
     ammoMultiplier: 1,
     damage: 50,
 }));
-
-turret.consumes.powerCond(50, boolf(b => b.isActive()));
+// turret.consumes.powerCond(50, boolf(b => b.isActive()));
 
 lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
     acceptLiquid(source, liquid) {

@@ -19,6 +19,7 @@ const { ionBoltTurret } = require('tech-ds/turret/ion-bolt-turret')
 const { electricStormTurret } = require('tech-ds/turret/electric-storm-turret')
 
 const { phaseSpaceBridge } = require('tech-ds/distribution/phase-space-bridge')
+const { spaceUnloader } = require('tech-ds/distribution/space-unloader')
 
 const { deflectForceProjector } = require('tech-ds/effect/deflect-force-projector')
 const { timeOverdrive } = require('tech-ds/effect/time-overdrive')
@@ -39,6 +40,9 @@ lib.addToResearch(timeCrystallizer, { parent: timeCondenser.name, });
 lib.addToResearch(radioisotopeWeaver, { parent: hardThoriumAlloySmelter.name, });
 lib.addToResearch(ionCollector, { parent: timeCondenser.name, });
 lib.addToResearch(dimensionAlloySmelter, { parent: ionCollector.name, });
+
+// distribution line
+lib.addToResearch(spaceUnloader, { parent: dimensionTechnologyCore.name, });
 
 // power line
 lib.addToResearch(dimensionCrystalBattery, { parent: dimensionTechnologyCore.name, });

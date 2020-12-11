@@ -27,9 +27,9 @@ require('tech-ds/turret/electric-storm-turret')
 
 require('tech-ds/distribution/phase-space-bridge')
 
+require('tech-ds/effect/dimension-technology-core')
 require('tech-ds/effect/deflect-force-projector')
 require('tech-ds/effect/time-overdrive')
-require('tech-ds/effect/dimension-technology-core')
 
 require('tech-ds/research-tree')
 require('tech-ds/maps')
