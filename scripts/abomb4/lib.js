@@ -33,8 +33,11 @@ exports.getMessage = (type, key, msgs) => Core.bundle.format(type + "." + export
  *        Research Info is an object with parent and requirements
  */
 exports.addToResearch = (content, research) => {
+    if (!content) {
+        throw new Error('content is null!');
+    }
     if (!research.parent) {
-        throw 'research.parent is empty!';
+        throw new Error('research.parent is empty!');
     }
     var researchName = research.parent;
     var customRequirements = research.requirements;
@@ -55,7 +58,7 @@ exports.addToResearch = (content, research) => {
     var parent = TechTree.all.find(boolf(t => t.content.name.equals(researchName) || t.content.name.equals(currentMod.name + "-" + researchName)));
 
     if (parent == null) {
-        throw ("Content '" + researchName + "' isn't in the tech tree, but '" + content.name + "' requires it to be researched.");
+        throw new Error("Content '" + researchName + "' isn't in the tech tree, but '" + content.name + "' requires it to be researched.");
     }
 
     // add this node to the parent

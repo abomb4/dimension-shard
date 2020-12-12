@@ -8,27 +8,6 @@ exports.newDeflectForceFieldAbility = (() => {
     var paramField;
     var paramOptions;
 
-    const shieldConsumer = cons(trait => {
-        if (paramUnit && paramField && paramUnit
-            && trait.team != paramUnit.team
-            && trait.type.absorbable
-            && paramUnit.shield > 0
-            && Intersector.isInsideHexagon(paramUnit.x, paramUnit.y, realRad * 2, trait.x, trait.y)) {
-            if (!deflect(paramUnit, paramOptions.chanceDeflect, trait)) {
-                trait.absorb();
-                Fx.absorb.at(trait);
-            }
-            //break shield
-            if (paramUnit.shield <= trait.damage) {
-                paramUnit.shield -= paramOptions.cooldown * paramOptions.regen;
-                Fx.shieldBreak.at(paramUnit.x, paramUnit.y, paramOptions.radius || 0, paramUnit.team.color);
-            }
-
-            paramUnit.shield -= trait.damage;
-            paramField.setAlpha(1);
-        }
-    });
-
     function deflect(paramUnit, chanceDeflect, bullet) {
         //deflect bullets if necessary
         if (chanceDeflect > 0) {
@@ -57,6 +36,27 @@ exports.newDeflectForceFieldAbility = (() => {
         }
         return false;
     }
+
+    const shieldConsumer = cons(trait => {
+        if (paramUnit && paramField && paramUnit
+            && trait.team != paramUnit.team
+            && trait.type.absorbable
+            && paramUnit.shield > 0
+            && Intersector.isInsideHexagon(paramUnit.x, paramUnit.y, realRad * 2, trait.x, trait.y)) {
+            if (!deflect(paramUnit, paramOptions.chanceDeflect, trait)) {
+                trait.absorb();
+                Fx.absorb.at(trait);
+            }
+            //break shield
+            if (paramUnit.shield <= trait.damage) {
+                paramUnit.shield -= paramOptions.cooldown * paramOptions.regen;
+                Fx.shieldBreak.at(paramUnit.x, paramUnit.y, paramOptions.radius || 0, paramUnit.team.color);
+            }
+
+            paramUnit.shield -= trait.damage;
+            paramField.setAlpha(1);
+        }
+    });
 
     return (originOptions) => {
 

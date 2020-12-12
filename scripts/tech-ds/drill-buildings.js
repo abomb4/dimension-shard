@@ -3,6 +3,12 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
 var block = extend(Drill, 'hard-thorium-drill', {
+    load() {
+        this.super$load();
+        this.rotatorRegion = lib.loadRegion('hard-thorium-drill-rotator');
+        this.rotatorRegion.packedHeight += 10;
+        this.rotatorRegion.packedWidth -= 102;
+    },
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 block.buildVisibility = BuildVisibility.shown;

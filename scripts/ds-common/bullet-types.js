@@ -100,7 +100,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         flyingLightningCooldown: 5,
     }, requestOptions);
 
-    const shouldDisableAnimation = () => Core.graphics.getFramesPerSecond() <= 45;
+    const shouldDisableAnimation = () => Core.graphics.getFramesPerSecond() <= 50;
     const v = new JavaAdapter(BasicBulletType, {
         init(b) {
             if (!b) { return; }

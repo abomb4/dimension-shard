@@ -1,13 +1,40 @@
 const lib = require('abomb4/lib')
 const { newDeflectForceFieldAbility } = require('abomb4/abilities');
+const { payloadConstructor } = require('abomb4/skill-framework');
 
+const skilledMap = {
+
+};
+Events.on(UnitDestroyEvent, cons(e => {
+    const unit = e.unit;
+    delete unit.id;
+}));
 const unitType = (() => {
     const m = extendContent(UnitType, 'equa', {
-
+        getSkillDefinitions() {
+            return [
+                {
+                    name: 'teleport',
+                    range: 200,
+                    icon: Icon.githubSquare,
+                    cooldown: 60 * 2,
+                    active(skill, unit, data) {
+                        var targetX = data.x;
+                        var targetY = data.y;
+                        Tmp.v1.set(targetX, targetY).sub(unit.x, unit.y);
+                        Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
+                        unit.x += Tmp.v1.x;
+                        unit.y += Tmp.v1.y;
+                        // find commands
+                        unit.controlling.each(cons(mem => { mem.x += Tmp.v1.x; mem.y += Tmp.v1.y; }));
+                    },
+                    update() {},
+                }
+            ];
+        },
     });
 
-    m.constructor = prov(() => extend(UnitTypes.oct.constructor.get().class, {
-    }));
+    m.constructor = payloadConstructor;
 
     m.armor = 16;
     m.health = 22000;
@@ -35,8 +62,7 @@ const unitType = (() => {
             regen: 4,
             max: 6500,
             cooldown: 60 * 8
-        }),
-        new ShieldRegenFieldAbility(80, 160, 60 * 3, 140)
+        })
     );
 
     return m;
