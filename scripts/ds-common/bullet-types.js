@@ -246,6 +246,7 @@ exports.newIonBoltBulletType = (requestOptions) => {
             lightningLength: 3,
             lightningDamage: 8,
             lightningColor: ionLiquid.color,
+            frontColor: ionLiquid.color,
             flyingLightningDamage: 6,
             flyingLightninColor: ionLiquid.color,
             flyingLightningChange: 0.01,

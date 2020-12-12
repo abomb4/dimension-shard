@@ -29,6 +29,7 @@ turret.rotateSpeed = 8;
 turret.burstSpacing = 6;
 turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');
+turret.loopSound = Sounds.none;
 turret.requirements = ItemStack.with(
     Items.copper, 1200,
     Items.lead, 1600,

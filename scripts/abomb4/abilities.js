@@ -110,9 +110,9 @@ exports.newDeflectForceFieldAbility = (() => {
                     } else {
                         Lines.stroke(1.5);
                         Draw.alpha(0.09);
-                        Fill.poly(unit.x, unit.y, 6, radius);
+                        Fill.poly(unit.x, unit.y, 6, options.radius);
                         Draw.alpha(1);
-                        Lines.poly(unit.x, unit.y, 6, radius);
+                        Lines.poly(unit.x, unit.y, 6, options.radius);
                     }
                 }
             },

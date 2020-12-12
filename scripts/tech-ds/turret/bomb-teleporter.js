@@ -120,7 +120,7 @@ items.dimensionShard, (() => {
 })(),
 );
 
-turret.consumes.powerCond(8, boolf(b => b.isActive()));
+turret.consumes.powerCond(1, boolf(b => b.isActive()));
 
 lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, {
 });
