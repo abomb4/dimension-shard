@@ -37,6 +37,7 @@ const skillFrag = (() => {
     var skillList;
     var fragment;
     var toggler;
+    var marginBottom = 0;
 
     function trySelectSkill(index) {
         if (skillList && skillList.length > index) {
@@ -64,10 +65,17 @@ const skillFrag = (() => {
                         Vars.player.unit().activeSkill(skill.def.name, {
                             x: Core.input.mouseWorldX(),
                             y: Core.input.mouseWorldY(),
-                        });
+                        }, false);
                     }
                     selectSkill = -1;
                     rebuild();
+                } else if (Core.input.keyRelease(Binding.break_block) || Core.input.keyRelease(Binding.schematic_select) || Core.input.keyTap(Binding.clear_building)) {
+                    // var is80 = Vars.control.input.lastSchematic || (Vars.ui.hudfrag.shown && Core.settings.getBool("hints") && Vars.player.unit().isBuilding());
+                    // var m = is80 ? 80 : 0;
+                    // if (m != marginBottom) {
+                    //     marginBottom = m;
+                    //     rebuild();
+                    // }
                 } else if (haveKeyboard()) {
                     if (Core.input.keyTap(Packages.arc.input.KeyCode.f1)) {
                         trySelectSkill(0);
@@ -102,7 +110,7 @@ const skillFrag = (() => {
         build(parent) {
             parent.fill(cons(full => {
                 toggler = full;
-                full.center().bottom().visibility = boolp(() => Vars.state.isGame() && Vars.ui.hudfrag.shown);
+                full.center().left().marginBottom(marginBottom).visibility = boolp(() => Vars.state.isGame() && Vars.ui.hudfrag.shown && skillList);
 
                 if (skillList) {
                     for (var i in skillList) {
@@ -231,7 +239,7 @@ function _define_constructor_(clazz, classId) {
             },
             classId() { return classId; },
             isSkilled() { return statusList.length > 0; },
-            activeSkill(skillName, data) {
+            activeSkill(skillName, data, fromServer) {
                 const skill = skillStatusMap[skillName];
                 // print('skill: ' + skillName + ', reload: ' + skill.reload + ', skill.def.cooldown: ' + skill.def.cooldown);
                 if (skill && skill.reload >= skill.def.cooldown) {

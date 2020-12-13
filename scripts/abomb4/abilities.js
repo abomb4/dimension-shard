@@ -58,7 +58,7 @@ exports.newDeflectForceFieldAbility = (() => {
         }
     });
 
-    return (originOptions) => {
+    const createAbility = (originOptions) => {
 
         const options = Object.assign({
             radius: 60,
@@ -75,7 +75,9 @@ exports.newDeflectForceFieldAbility = (() => {
         var alpha = 0;
 
         function checkRadius(unit) {
-            realRad = radiusScale * options.radius;
+            var r = radiusScale * options.radius;
+            realRad = r;
+            return r;
         }
 
         return new JavaAdapter(Ability, {
@@ -101,12 +103,12 @@ exports.newDeflectForceFieldAbility = (() => {
                 }
             },
             draw(unit) {
-                checkRadius(unit);
+                var r = checkRadius(unit);
                 if (unit.shield > 0) {
                     Draw.z(Layer.shields);
                     Draw.color(options.shieldColor, Color.white, Mathf.clamp(alpha));
                     if (Core.settings.getBool("animatedshields")) {
-                        Fill.poly(unit.x, unit.y, 6, realRad);
+                        Fill.poly(unit.x, unit.y, 6, r);
                     } else {
                         Lines.stroke(1.5);
                         Draw.alpha(0.09);
@@ -116,6 +118,10 @@ exports.newDeflectForceFieldAbility = (() => {
                     }
                 }
             },
+            copy() {
+                return createAbility(options);
+            },
         });
     };
+    return createAbility;
 })();

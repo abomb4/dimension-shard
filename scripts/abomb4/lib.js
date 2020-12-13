@@ -25,6 +25,14 @@ exports.int = (v) => new java.lang.Integer(v);
  */
 exports.getMessage = (type, key, msgs) => Core.bundle.format(type + "." + exports.modName + "." + key, msgs);
 
+/** Cannot use java.lang.reflect.Array, but Arrays.copyOf available! Lucky! */
+exports.createUnitPlan = (unitFrom, unitTo) => {
+    var a = java.util.Arrays.copyOf(Blocks.tetrativeReconstructor.upgrades.get(0), 2);
+    a[0] = unitFrom;
+    a[1] = unitTo;
+    return a;
+}
+
 /**
  * Add content to research tree
  *

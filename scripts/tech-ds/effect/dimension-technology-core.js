@@ -11,7 +11,7 @@ block.health = 8500;
 block.itemCapacity = 18000;
 block.unitCapModifier = 30;
 block.researchCostMultiplier = 0.08;
-block.unitType = equa;
+block.unitType = UnitTypes.gamma;
 
 block.requirements = ItemStack.with(
     Items.copper, 10000,

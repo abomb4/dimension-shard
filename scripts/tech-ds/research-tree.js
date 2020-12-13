@@ -26,6 +26,8 @@ const { deflectForceProjector } = require('tech-ds/effect/deflect-force-projecto
 const { timeOverdrive } = require('tech-ds/effect/time-overdrive')
 const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology-core')
 
+const { t5Factory } = require('tech-ds/unit/t5-factory')
+
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
 lib.addToResearch(shardPhaseWall, { parent: 'phase-wall-large', });
@@ -70,3 +72,6 @@ lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, });
 // effect line
 lib.addToResearch(deflectForceProjector, { parent: dimensionTechnologyCore.name, });
 lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
+
+// unit line
+lib.addToResearch(t5Factory, { parent: dimensionTechnologyCore.name, });

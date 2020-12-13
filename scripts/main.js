@@ -33,5 +33,7 @@ require('tech-ds/effect/dimension-technology-core')
 require('tech-ds/effect/deflect-force-projector')
 require('tech-ds/effect/time-overdrive')
 
+require('tech-ds/unit/t5-factory')
+
 require('tech-ds/research-tree')
 require('tech-ds/maps')
