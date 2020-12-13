@@ -72,6 +72,9 @@ const skillFrag = (() => {
             toggler.setZIndex(index);
         }
     }
+    const unfinish = new Color(0, 0, 0, 0.3);
+    const finish = new Color(0, 0, 0, 0.8);
+    const disabledColor = new Color(1, 1, 1, 0.4);
     fragment = new JavaAdapter(Fragment, {
         build(parent) {
             parent.fill(cons(full => {
@@ -82,10 +85,43 @@ const skillFrag = (() => {
                     for (var i in skillList) {
                         ((index) => {
                             const skill = skillList[index];
-                            full.button(skill.def.icon, Styles.clearTogglei, run(() => {
+                            const imageStyle = new ImageButton.ImageButtonStyle();
+                            imageStyle.down = Styles.flatDown;
+                            imageStyle.up = Styles.black;
+                            imageStyle.over = Styles.flatOver;
+                            imageStyle.imageDisabledColor = disabledColor;
+                            imageStyle.imageUpColor = Color.white;
+                            imageStyle.disabled = Styles.black3;
+                            imageStyle.checked = Styles.flatDown;
+
+                            var disabled = new JavaAdapter(TextureRegionDrawable, {
+                                draw(x, y, width, height) {
+                                    var cooldownProgress = skill.reload / skill.def.cooldown;
+                                    // draw top
+                                    var cooldownProgressNega = (1 - cooldownProgress)
+                                    Draw.color(Tmp.c1.set(unfinish).toFloatBits());
+                                    Draw.rect(this.region, x + width / 2.0, y + height - height * cooldownProgressNega / 2, width, height * cooldownProgressNega);
+
+                                    // draw bottom
+                                    Draw.color(Tmp.c1.set(finish).toFloatBits());
+                                    Draw.rect(this.region, x + width / 2.0, y + height * cooldownProgress / 2, width, height * cooldownProgress);
+
+                                    // Maybe draw a seconds left?
+                                },
+                            });
+                            disabled.region = Tex.whiteui.region;
+                            imageStyle.disabled = disabled;
+
+                            const skillButton = new JavaAdapter(ImageButton, {
+                            }, skill.def.icon, imageStyle);
+                            skillButton.changed(run(() => {
                                 selectSkill = selectSkill == index ? -1 : index;
                                 rebuild();
-                            })).update(cons(v => v.setChecked(selectSkill == index))).width(80).height(80);
+                            }));
+                            full.add(skillButton).update(cons(v => {
+                                v.setChecked(selectSkill == index);
+                                v.setDisabled(skill.reload < skill.def.cooldown);
+                            })).width(80).height(80);
                         })(i);
                     }
                 }
@@ -156,6 +192,14 @@ function _define_constructor_(clazz, classId) {
                 }
                 while (statusList.pop() !== undefined) {}
             },
+            update() {
+                this.super$update();
+                if (statusList) {
+                    statusList.forEach(skill => {
+                        skill.reload = Math.min(skill.def.cooldown, skill.reload + Time.delta);
+                    });
+                }
+            },
             classId() { return classId; },
             isSkilled() { return statusList.length > 0; },
             activeSkill(skillName, data) {
@@ -163,6 +207,7 @@ function _define_constructor_(clazz, classId) {
                 // print('skill: ' + skillName + ', reload: ' + skill.reload + ', skill.def.cooldown: ' + skill.def.cooldown);
                 if (skill && skill.reload >= skill.def.cooldown) {
                     skill.def.active(skill, this, data);
+                    skill.reload = 0;
                 }
             },
         });
