@@ -39,6 +39,8 @@ const skillFrag = (() => {
     var toggler;
     var marginBottom = 0;
 
+    const fIcons = [];
+
     function trySelectSkill(index) {
         if (skillList && skillList.length > index) {
             const skill = skillList[index];
@@ -92,6 +94,10 @@ const skillFrag = (() => {
     });
     Events.on(ClientLoadEvent, cons(event => {
         Vars.platform.add(listener);
+        fIcons.push(lib.loadRegion('f1'));
+        fIcons.push(lib.loadRegion('f2'));
+        fIcons.push(lib.loadRegion('f3'));
+        fIcons.push(lib.loadRegion('f4'));
     }));
 
     function rebuild() {
@@ -149,7 +155,7 @@ const skillFrag = (() => {
                                     var width = 16;
                                     var height = 16;
                                     Draw.color(new Color(1, 1, 1, 0.6));
-                                    Draw.rect(lib.loadRegion('f1'), this.x + 4 + width / 2.0, this.y + this.getHeight() - 4 - height / 2, width, height);
+                                    Draw.rect(fIcons[index], this.x + 4 + width / 2.0, this.y + this.getHeight() - 4 - height / 2, width, height);
                                 },
                             }, skill.def.icon, imageStyle);
                             skillButton.changed(run(() => {
@@ -160,6 +166,7 @@ const skillFrag = (() => {
                                 v.setChecked(selectSkill == index);
                                 v.setDisabled(skill.reload < skill.def.cooldown);
                             })).width(80).height(80);
+                            full.row()
                         })(i);
                     }
                 }
