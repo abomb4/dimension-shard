@@ -82,10 +82,10 @@ const skillFrag = (() => {
                     for (var i in skillList) {
                         ((index) => {
                             const skill = skillList[index];
-                            full.button(skill.def.icon, selectSkill === index ? Styles.righti : Styles.clearTogglei, run(() => {
+                            full.button(skill.def.icon, Styles.clearTogglei, run(() => {
                                 selectSkill = selectSkill == index ? -1 : index;
                                 rebuild();
-                            })).width(80).height(80);
+                            })).update(cons(v => v.setChecked(selectSkill == index))).width(80).height(80);
                         })(i);
                     }
                 }

@@ -61,7 +61,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
     }));
 
     const mergedOptions = Object.assign({
-        damage: 12,
+        damage: 40,
         speed: 3,
         lifetime: 180,
         pierceCap: 10,
@@ -75,7 +75,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         homingPower: 0.025,
         homingRange: 200,
         splashDamageRadius: 38,
-        splashDamage: 30,
+        splashDamage: 12,
         weaveMag: 8,
         weaveScale: 6,
         spin: 32.31234,

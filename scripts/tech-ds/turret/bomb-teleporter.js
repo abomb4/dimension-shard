@@ -113,7 +113,7 @@ items.dimensionShard, (() => {
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
     bt.splashDamageRadius = 38;
-    bt.splashDamage = 80;
+    bt.splashDamage = 70;
     bt.speed = turret.range;
     bt.hitShake = 1.6;
     return bt;
