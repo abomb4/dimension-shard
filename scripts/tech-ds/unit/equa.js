@@ -26,7 +26,7 @@ const unitType = (() => {
                 {
                     name: 'teleport',
                     range: 200,
-                    icon: Icon.githubSquare,
+                    icon: lib.loadRegion('teleport'),
                     cooldown: 60 * 2,
                     active(skill, unit, data) {
                         teleportEffect.at(unit.x, unit.y);
@@ -57,8 +57,8 @@ const unitType = (() => {
 
     m.constructor = payloadConstructor;
 
-    m.armor = 16;
-    m.health = 22000;
+    m.armor = 15;
+    m.health = 20000;
     m.speed = 0.8;
     m.rotateSpeed = 1;
     m.accel = 0.04;

@@ -38,13 +38,26 @@ const skillFrag = (() => {
     var fragment;
     var toggler;
 
+    function trySelectSkill(index) {
+        if (skillList && skillList.length > index) {
+            const skill = skillList[index];
+            if (skill.reload >= skill.def.cooldown) {
+                selectSkill = selectSkill == index ? -1 : index;
+                rebuild();
+            }
+        }
+    }
     function notClickedAtOtherFrag() {
         return !Core.scene.hit(Core.input.mouseX(), Core.input.mouseY(), true);
+    }
+    function haveKeyboard() {
+        // TODO
+        return true;
     }
     // Seems not possible to implement Application Listener, so uses ApplicationCore
     const listener = new JavaAdapter(ApplicationCore, {
         update: function() {
-            if (Vars.state.state == GameState.State.playing) {
+            if (Vars.state.state == GameState.State.playing && skillList) {
                 if (selectSkill >= 0 && Core.input.keyTap(Binding.select) && notClickedAtOtherFrag()) {
                     var skill = skillList[selectSkill];
                     if (skill) {
@@ -55,6 +68,16 @@ const skillFrag = (() => {
                     }
                     selectSkill = -1;
                     rebuild();
+                } else if (haveKeyboard()) {
+                    if (Core.input.keyTap(Packages.arc.input.KeyCode.f1)) {
+                        trySelectSkill(0);
+                    } else if (Core.input.keyTap(Packages.arc.input.KeyCode.f2)) {
+                        trySelectSkill(1);
+                    } else if (Core.input.keyTap(Packages.arc.input.KeyCode.f3)) {
+                        trySelectSkill(2);
+                    } else if (Core.input.keyTap(Packages.arc.input.KeyCode.f4)) {
+                        trySelectSkill(3);
+                    }
                 }
             }
         },
@@ -113,6 +136,13 @@ const skillFrag = (() => {
                             imageStyle.disabled = disabled;
 
                             const skillButton = new JavaAdapter(ImageButton, {
+                                draw() {
+                                    this.super$draw();
+                                    var width = 16;
+                                    var height = 16;
+                                    Draw.color(new Color(1, 1, 1, 0.6));
+                                    Draw.rect(lib.loadRegion('f1'), this.x + 4 + width / 2.0, this.y + this.getHeight() - 4 - height / 2, width, height);
+                                },
                             }, skill.def.icon, imageStyle);
                             skillButton.changed(run(() => {
                                 selectSkill = selectSkill == index ? -1 : index;
@@ -138,7 +168,6 @@ const skillFrag = (() => {
     }));
     Events.on(UnitChangeEvent, cons(event => {
         // Build fragments by unit
-        print('change to unit: ' + event.unit + ', getSkills: ' + event.unit.getSkills);
         if (event.unit.getSkills) {
             const sk = event.unit.getSkills();
             skillList = sk;
