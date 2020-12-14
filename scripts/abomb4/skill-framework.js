@@ -22,14 +22,72 @@ Skill can:
   - affect nearby units
  */
 
-var skill = {
-    def: {
-        name: 'batch-teleport',
-        cooldown: 60 * 10,
-        icon: Icon.eyeSmall,
-    },
-    reload: 0,
-};
+/** Send packet, assume skill is fired in local */
+const Call_ActiveSkill = (() => {
+    const TYPE = 'sfActiveSkill';
+    const DELIMITER = ', ';
+
+    function makePackage(unit, skillName, data) {
+        // return JSON.stringify([unit.id, skillName, { x: data.x, y: data.y }]);
+        const datas = unit.id + DELIMITER + skillName + DELIMITER + data.x + DELIMITER + data.y;
+        return datas;
+    }
+
+    /**
+     * Read packet to objects
+     *
+     * @param {string} str the packet
+     * @returns {{unit: Unit, skillName: string, data: SkillData}} contains 3
+     */
+    function readPackage(str) {
+        const datas = str.split(DELIMITER);
+        const unitId = datas[0];
+        const skillName = datas[1];
+        const dataX = datas[2];
+        const dataY = datas[3];
+        // find unit by id
+        const unit = Groups.unit.getByID(unitId);
+        return {
+            unit: unit == null ? Nulls.unit : unit,
+            skillName: skillName,
+            data: { x: dataX, y: dataY }
+        };
+    }
+
+    /** Forwawd to other clients */
+    function forwardPackage(player, pack) {
+        // Send to EVERY client if i'm server except sender
+        // FIXME This is not
+        Call.clientPacketReliable(TYPE, pack);
+    }
+
+    /** Client receives skill active packet, deal self */
+    Vars.netClient.addPacketHandler(TYPE, cons(pack => {
+        const info = readPackage(pack);
+        if (info.unit != null && info.unit.activeSkill !== undefined) {
+            // Avoid twice active
+            if (Vars.player.unit() == info.unit) { return; }
+            info.unit.activeSkill(info.skillName, info.data, true);
+        }
+    }));
+
+    /** Server receives skill active packet, deal self and forward packet */
+    Vars.netServer.addPacketHandler(TYPE, lib.cons2((player, pack) => {
+        const info = readPackage(pack);
+        if (info.unit != null && info.unit.activeSkill !== undefined) {
+            info.unit.activeSkill(info.skillName, info.data, true);
+            forwardPackage(player, pack);
+        }
+    }));
+
+    return (unit, skillName, data) => {
+        const pack = makePackage(unit, skillName, data);
+        // Send to EVERY client if i'm server
+        Call.clientPacketReliable(TYPE, pack);
+        // Send to  THE  server if i'm client
+        Call.serverPacketReliable(TYPE, pack);
+    }
+})();
 
 const skillFrag = (() => {
 
@@ -63,10 +121,10 @@ const skillFrag = (() => {
                 if (selectSkill >= 0 && Core.input.keyTap(Binding.select) && notClickedAtOtherFrag()) {
                     var skill = skillList[selectSkill];
                     if (skill) {
-                        Vars.player.unit().activeSkill(skill.def.name, {
+                        Vars.player.unit().tryActiveSkill(skill.def.name, {
                             x: Core.input.mouseWorldX(),
                             y: Core.input.mouseWorldY(),
-                        }, false);
+                        });
                     }
                     selectSkill = -1;
                     rebuild();
@@ -177,13 +235,15 @@ const skillFrag = (() => {
     }));
     Events.on(UnitChangeEvent, cons(event => {
         // Build fragments by unit
-        if (event.unit.getSkills) {
-            const sk = event.unit.getSkills();
-            skillList = sk;
-        } else {
-            skillList = undefined;
+        if (!Vars.headless && Vars.player && Vars.player.unit() == event.unit) {
+            if (event.unit.getSkills) {
+                const sk = event.unit.getSkills();
+                skillList = sk;
+            } else {
+                skillList = undefined;
+            }
+            rebuild();
         }
-        rebuild();
     }));
     return fragment;
 })();
@@ -240,13 +300,17 @@ function _define_constructor_(clazz, classId) {
             },
             classId() { return classId; },
             isSkilled() { return statusList.length > 0; },
-            activeSkill(skillName, data, fromServer) {
+            tryActiveSkill(skillName, data) {
                 const skill = skillStatusMap[skillName];
-                // print('skill: ' + skillName + ', reload: ' + skill.reload + ', skill.def.cooldown: ' + skill.def.cooldown);
                 if (skill && skill.reload >= skill.def.cooldown) {
-                    skill.def.active(skill, this, data);
-                    skill.reload = 0;
+                    Call_ActiveSkill(this, skillName, data);
+                    this.activeSkill(skillName, data, false);
                 }
+            },
+            activeSkill(skillName, data, fromRemote) {
+                const skill = skillStatusMap[skillName];
+                skill.def.active(skill, this, data);
+                skill.reload = 0;
             },
         });
         return u;
