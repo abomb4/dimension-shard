@@ -54,8 +54,7 @@ const skillFrag = (() => {
         return !Core.scene.hit(Core.input.mouseX(), Core.input.mouseY(), true);
     }
     function haveKeyboard() {
-        // TODO
-        return true;
+        return !Vars.mobile;
     }
     // Seems not possible to implement Application Listener, so uses ApplicationCore
     const listener = new JavaAdapter(ApplicationCore, {
@@ -71,13 +70,6 @@ const skillFrag = (() => {
                     }
                     selectSkill = -1;
                     rebuild();
-                } else if (Core.input.keyRelease(Binding.break_block) || Core.input.keyRelease(Binding.schematic_select) || Core.input.keyTap(Binding.clear_building)) {
-                    // var is80 = Vars.control.input.lastSchematic || (Vars.ui.hudfrag.shown && Core.settings.getBool("hints") && Vars.player.unit().isBuilding());
-                    // var m = is80 ? 80 : 0;
-                    // if (m != marginBottom) {
-                    //     marginBottom = m;
-                    //     rebuild();
-                    // }
                 } else if (haveKeyboard()) {
                     if (Core.input.keyTap(Packages.arc.input.KeyCode.f1)) {
                         trySelectSkill(0);
@@ -116,7 +108,7 @@ const skillFrag = (() => {
         build(parent) {
             parent.fill(cons(full => {
                 toggler = full;
-                full.center().left().marginBottom(marginBottom).visibility = boolp(() => Vars.state.isGame() && Vars.ui.hudfrag.shown && skillList);
+                full.center().left().marginBottom(marginBottom).visibility = boolp(() => Vars.state.isGame() && Vars.ui.hudfrag.shown && skillList != undefined);
 
                 if (skillList) {
                     for (var i in skillList) {
@@ -155,7 +147,9 @@ const skillFrag = (() => {
                                     var width = 16;
                                     var height = 16;
                                     Draw.color(new Color(1, 1, 1, 0.6));
-                                    Draw.rect(fIcons[index], this.x + 4 + width / 2.0, this.y + this.getHeight() - 4 - height / 2, width, height);
+                                    if (haveKeyboard()) {
+                                        Draw.rect(fIcons[index], this.x + 4 + width / 2.0, this.y + this.getHeight() - 4 - height / 2, width, height);
+                                    }
                                 },
                             }, skill.def.icon, imageStyle);
                             skillButton.changed(run(() => {
