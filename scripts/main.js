@@ -35,5 +35,6 @@ require('tech-ds/effect/time-overdrive')
 
 require('tech-ds/unit/t5-factory')
 
+require('tech-ds/campaign')
+
 require('tech-ds/research-tree')
-require('tech-ds/maps')

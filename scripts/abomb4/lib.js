@@ -37,7 +37,7 @@ exports.createUnitPlan = (unitFrom, unitTo) => {
  * Add content to research tree
  *
  * @param {Content} content Such as Block, Turret
- * @param {{parent: string, requirements: ItemStack[]}} research
+ * @param {{parent: string, requirements: ItemStack[], objectives: Seq<Objective>}} research
  *        Research Info is an object with parent and requirements
  */
 exports.addToResearch = (content, research) => {
@@ -49,14 +49,18 @@ exports.addToResearch = (content, research) => {
     }
     var researchName = research.parent;
     var customRequirements = research.requirements;
+    var objectives = research.objectives;
 
     var lastNode = TechTree.all.find(boolf(t => t.content == content));
     if (lastNode != null) {
         lastNode.remove();
     }
 
-    var node = new TechTree.TechNode(null, content, customRequirements == null ? content.researchRequirements() : customRequirements);
+    var node = new TechTree.TechNode(null, content, customRequirements !== undefined ? customRequirements : content.researchRequirements());
     var currentMod = exports.mod;
+    if (objectives) {
+        node.objectives.addAll(objectives);
+    }
 
     if (node.parent != null) {
         node.parent.children.remove(node);

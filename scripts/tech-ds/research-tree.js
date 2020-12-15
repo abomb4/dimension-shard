@@ -9,7 +9,7 @@ const { hardThoriumDrill } = require('tech-ds/drill-buildings')
 const {
     spaceCrystallizer, hardThoriumAlloySmelter, timeCrystallizer,
     radioisotopeWeaver, dimensionAlloySmelter, timeCondenser,
-    ionCollector,
+    ionCollector, shardReceiver
 } = require('tech-ds/factory-buildings')
 const { hardThoriumConduit, hardThoriumLiquidRouter, spaceLiquidTank } = require('tech-ds/liquid-buildings')
 const { dimensionCrystalBattery, timeCompressedRtg } = require('tech-ds/power-buildings')
@@ -28,6 +28,8 @@ const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology
 
 const { t5Factory } = require('tech-ds/unit/t5-factory')
 
+const { dimensionFall262 } = require('tech-ds/campaign')
+
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
 lib.addToResearch(shardPhaseWall, { parent: 'phase-wall-large', });
@@ -36,6 +38,16 @@ lib.addToResearch(dimensionTechnologyCore, { parent: 'core-nucleus', });
 
 // -=-=-=-=-=-=-=-=-=-=-=- After core -=-=-=-=-=-=-=-=-=-=-=-
 // factory line
+lib.addToResearch(shardReceiver, {
+    parent: 'phase-weaver',
+    requirements: ItemStack.with(
+        Items.silicon, 200 * 30,
+        Items.thorium, 320 * 30,
+        Items.phaseFabric, 330 * 30,
+        Items.surgeAlloy, 100 * 30,
+    ),
+    objectives: Seq.with(new Objectives.Research(items.dimensionShard))
+});
 lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore.name, });
 lib.addToResearch(hardThoriumAlloySmelter, { parent: spaceCrystallizer.name, });
 lib.addToResearch(timeCondenser, { parent: hardThoriumAlloySmelter.name, });
@@ -75,3 +87,6 @@ lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 
 // unit line
 lib.addToResearch(t5Factory, { parent: dimensionTechnologyCore.name, });
+
+// zones
+lib.addToResearch(dimensionFall262, { parent: SectorPresets.nuclearComplex.name, });

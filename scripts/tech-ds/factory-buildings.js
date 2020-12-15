@@ -8,6 +8,31 @@ const {
 } = items;
 const dsGlobal = require('ds-common/ds-global');
 
+// -=-=-=-=-=-=-=-=-=-=-=- Shard Receiver -=-=-=-=-=-=-=-=-=-=-=-
+const shardReceiver = extend(AttributeSmelter, "shard-receiver", {
+});
+shardReceiver.size = 4;
+// shardReceiver.health = 600;
+shardReceiver.requirements = ItemStack.with(
+    Items.silicon, 200,
+    Items.thorium, 320,
+    Items.phaseFabric, 330,
+    Items.surgeAlloy, 100,
+);
+shardReceiver.buildVisibility = BuildVisibility.shown;
+shardReceiver.category = Category.crafting;
+
+shardReceiver.craftEffect = Fx.smeltsmoke;
+shardReceiver.outputItem = new ItemStack(dimensionShard, 1);
+shardReceiver.craftTime = 150;
+shardReceiver.hasPower = true;
+shardReceiver.flameColor = dimensionShard.color;
+shardReceiver.itemCapacity = 10;
+shardReceiver.boostScale = 0.15;
+shardReceiver.consumes.power(3.5);
+
+exports.shardReceiver = shardReceiver;
+
 // -=-=-=-=-=-=-=-=-=-=-=- Space Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
 const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {
     isHidden() { return !dsGlobal.techDsAvailable(); },
