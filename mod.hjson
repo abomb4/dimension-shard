@@ -2,6 +2,9 @@ name: "Dimension Shard"
 displayName: Dimension Shard 次元碎片
 author: 滞人
 description: '''
+(This mod is UNFINISHED)
+（本 Mod 尚未完成）
+
 一定是更高维度发生了战争。我们在一片残骸中找到了某种碎片，这些碎片看起来虚无缥缈，蕴含着超越我们所处维度的力量，合理利用似乎可以操作时间和空间...
 我们将其命名为“次元碎片”。
 
@@ -12,6 +15,9 @@ We named it "Dimension Shard."
 
 (English translated by Google Translate)
 
+Github: https://github.com/abomb4/dimension-shard
+QQ: 779147200
+email: abomb4@163.com
 '''
-version: 0.0.0.3
-minGameVersion: 120
+version: 0.0.1
+minGameVersion: 121

@@ -89,4 +89,7 @@ lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 lib.addToResearch(t5Factory, { parent: dimensionTechnologyCore.name, });
 
 // zones
-lib.addToResearch(dimensionFall262, { parent: SectorPresets.nuclearComplex.name, });
+lib.addToResearch(dimensionFall262, {
+    parent: SectorPresets.nuclearComplex.name,
+    objectives: Seq.with(new Objectives.SectorComplete(SectorPresets.nuclearComplex))
+});
