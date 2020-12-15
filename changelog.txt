@@ -1,0 +1,6 @@
+0.0.1:
+Publish a unfinished unstable version, as if somebody will play this.
+
+0.0.2:
+Fix Phase Space Bridge crash bug;
+Mod display name and description localized.
