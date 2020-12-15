@@ -7,6 +7,8 @@ tech-*: Specific technology
 */
 
 // common
+const lib = require('abomb4/lib')
+
 require('ds-common/items')
 require('ds-common/ds-global')
 require('ds-common/overrides')
@@ -38,3 +40,6 @@ require('tech-ds/unit/t5-factory')
 require('tech-ds/campaign')
 
 require('tech-ds/research-tree')
+
+lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
+lib.mod.meta.description = lib.getMessage('mod', 'description');
