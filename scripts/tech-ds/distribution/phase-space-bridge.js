@@ -30,8 +30,9 @@ var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
         if (other == null || tile == null) return false;
 
         if (checkDouble === undefined) { checkDouble = true; }
-        return other.block() == this
-            && (!checkDouble || other.bc().link != tile.pos())
+        return other.block() === phaseSpaceBridge
+            && tile.block() === phaseSpaceBridge
+            && (!checkDouble || other.build.link != tile.pos())
             && tile.within(other, this.range * Vars.tilesize);
     },
 });
