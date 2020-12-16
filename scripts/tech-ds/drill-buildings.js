@@ -27,6 +27,7 @@ block.category = Category.production;
 block.drillTime = 320;
 block.drawRim = true;
 block.hasPower = true;
+block.canBoost = false;
 block.tier = 8;
 block.updateEffect = Fx.pulverizeRed;
 block.updateEffectChance = 0.01;

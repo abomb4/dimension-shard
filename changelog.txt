@@ -4,3 +4,6 @@ Publish a unfinished unstable version, as if somebody will play this.
 0.0.2:
 Fix Phase Space Bridge crash bug;
 Mod display name and description localized.
+
+0.0.3:
+Hard Thorium Drill CANNOT boost.
