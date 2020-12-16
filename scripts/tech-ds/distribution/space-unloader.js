@@ -1,5 +1,6 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const range = 300;
 const warmupSpeed = 0.05;
@@ -31,6 +32,7 @@ const outEffect = lib.newEffect(38, e => {
 });
 
 const blockType = extendContent(Block, "space-unloader", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
     load() {
         this.super$load();
         topRegion = lib.loadRegion("space-unloader-top");

@@ -1,5 +1,6 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const range = 480;
 const warmupSpeed = 0.05;
@@ -31,6 +32,7 @@ const inEffect = lib.newEffect(38, e => {
 });
 
 const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
     load() {
         this.super$load();
         topRegion = lib.loadRegion("resources-dispatching-center-top");
