@@ -9,7 +9,7 @@ const {
 const dsGlobal = require('ds-common/ds-global');
 
 // -=-=-=-=-=-=-=-=-=-=-=- Shard Receiver -=-=-=-=-=-=-=-=-=-=-=-
-const shardReceiver = extend(AttributeSmelter, "shard-receiver", {
+const shardReceiver = extend(GenericSmelter, "shard-receiver", {
 });
 shardReceiver.size = 4;
 // shardReceiver.health = 600;
@@ -50,7 +50,7 @@ spaceCrystallizer.buildVisibility = BuildVisibility.shown;
 spaceCrystallizer.category = Category.crafting;
 
 spaceCrystallizer.craftEffect = Fx.smeltsmoke;
-spaceCrystallizer.outputItem = new ItemStack(spaceCrystal, 1);
+spaceCrystallizer.outputItem = new ItemStack(spaceCrystal, 2);
 spaceCrystallizer.craftTime = 90;
 spaceCrystallizer.hasPower = true;
 spaceCrystallizer.flameColor = spaceCrystal.color;
@@ -59,8 +59,8 @@ spaceCrystallizer.boostScale = 0.15;
 
 spaceCrystallizer.consumes.items(ItemStack.with(
     dimensionShard, 4,
-    Items.silicon, 2,
-    Items.phaseFabric, 3
+    Items.silicon, 1,
+    Items.phaseFabric, 2
 ));
 spaceCrystallizer.consumes.power(6);
 

@@ -14,7 +14,7 @@ var block = extend(Drill, 'hard-thorium-drill', {
 block.buildVisibility = BuildVisibility.shown;
 block.size = 4;
 block.health = 800;
-block.liquidCapacity = 400;
+block.liquidCapacity = 300;
 block.requirements = ItemStack.with(
     Items.copper, 200,
     Items.graphite, 140,
@@ -24,19 +24,19 @@ block.requirements = ItemStack.with(
 );
 block.category = Category.production;
 
-block.drillTime = 320;
+block.drillTime = 144;
 block.drawRim = true;
 block.hasPower = true;
-block.canBoost = false;
-block.tier = 8;
+block.canOverdrive = false;
+block.tier = 9;
 block.updateEffect = Fx.pulverizeRed;
 block.updateEffectChance = 0.01;
 block.drillEffect = Fx.mineHuge;
 block.rotateSpeed = 2;
 block.warmupSpeed = 0.01;
 block.hardnessDrillMultiplier = 30;
-block.liquidBoostIntensity = 4;
-block.consumes.power(12);
-block.consumes.liquid(Liquids.water, 4).boost();
+block.liquidBoostIntensity = 3;
+block.consumes.power(8);
+block.consumes.liquid(Liquids.water, 2.5).boost();
 
 exports.hardThoriumDrill = block;
