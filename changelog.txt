@@ -7,3 +7,5 @@ Mod display name and description localized.
 
 0.0.3:
 Hard Thorium Drill CANNOT boost.
+Decrease Space Crystall requirements.
+Decrease requirements of Resources Dispatching Center.
