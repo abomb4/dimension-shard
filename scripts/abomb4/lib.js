@@ -5,7 +5,16 @@ exports.mod = Vars.mods.locateMod(exports.modName);
 
 exports.defineMultiCrafter = require('abomb4/multi-crafter').defineMultiCrafter;
 
-exports.loadSound = (path) => Vars.mods.scripts.loadSound(path)
+exports.loadSound = (() => {
+    const cache = {};
+    return (path) => {
+        const c = cache[path];
+        if (c === undefined) {
+            return cache[path] = Vars.mods.scripts.loadSound(path);
+        }
+        return c;
+    }
+})();
 
 exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer));
 

@@ -189,8 +189,6 @@ exports.newElectricStormBulletType = (requestOptions) => {
 
 
 exports.newIonBoltBulletType = (requestOptions) => {
-    const tmp = new Vec2();
-    const tmp2 = new Vec2();
 
     // const fxLightningBall = new Effect(10, 500, cons(e => {
     //     Lines.stroke(3 * e.fout());
@@ -209,6 +207,12 @@ exports.newIonBoltBulletType = (requestOptions) => {
     //     }
     // }));
 
+    const fireEffect = new Effect(8, cons(e => {
+        Draw.color(Color.white, ionLiquid.color, e.fin());
+        Lines.stroke(0.5 + e.fout());
+        Lines.circle(e.x, e.y, e.fin() * 5);
+    }));
+
     const mergedOptions = Object.assign({
         damage: 30,
         speed: 5.2,
@@ -219,14 +223,16 @@ exports.newIonBoltBulletType = (requestOptions) => {
         shrinkX: 0,
         ammoMultiplier: 1,
         hitEffect: Fx.massiveExplosion,
+        smokeEffect: fireEffect,
+        despawnEffect: fireEffect,
         splashDamageRadius: 32,
         splashDamage: 30,
-        lightning: 3,
+        lightning: 2,
         lightningLength: 6,
         lightningLengthRand: 3,
         lightningCone: 360,
         lightningAngle: 90,
-        lightningDamage: 18,
+        lightningDamage: 20,
         lightningColor: ionLiquid.color,
         puddles: 3,
         puddleRange: 8,
@@ -238,18 +244,19 @@ exports.newIonBoltBulletType = (requestOptions) => {
         fragBullet: exports.newElectricStormBulletType({
             lifetime: 20,
             speedStart: 2.5,
-            damage: 24,
+            damage: 1,
             pierceCap: 2,
-            splashDamage: 8,
+            splashDamage: 1,
             splashDamageRadius: 24,
-            lightning: 4,
+            lightning: 2,
             lightningLength: 3,
-            lightningDamage: 8,
+            lightningDamage: 10,
             lightningColor: ionLiquid.color,
             frontColor: ionLiquid.color,
-            flyingLightningDamage: 6,
+            flyingLightningDamage: 15,
             flyingLightninColor: ionLiquid.color,
-            flyingLightningChange: 0.01,
+            flyingLightningChange: 0.07,
+            flyingLightningDelay: 5,
         }),
         backColor: ionLiquid.color,
         frontColor: ionLiquid.color,
@@ -266,3 +273,14 @@ exports.newIonBoltBulletType = (requestOptions) => {
     }
     return v;
 };
+
+exports.standardIonBoltSmall = exports.newIonBoltBulletType({
+    fragBullets: 0,
+    height: 8,
+    damage: 20,
+    lightningDamage: 16,
+    splashDamageRadius: 26,
+    hitEffect: Fx.explosion,
+    puddles: 1,
+    puddleAmount: 6,
+});
