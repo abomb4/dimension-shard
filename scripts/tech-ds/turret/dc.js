@@ -66,4 +66,4 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, {
     },
 });
 
-exports.ionBoltTurret = turret;
+exports.dc = turret;

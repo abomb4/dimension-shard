@@ -29,7 +29,7 @@ const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology
 
 const { t5Factory } = require('tech-ds/unit/t5-factory')
 
-const { dimensionFall262 } = require('tech-ds/campaign')
+const { dimensionFall } = require('tech-ds/campaign')
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
@@ -47,7 +47,10 @@ lib.addToResearch(shardReceiver, {
         Items.phaseFabric, 330 * 30,
         Items.surgeAlloy, 100 * 30,
     ),
-    objectives: Seq.with(new Objectives.Research(items.dimensionShard))
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.nuclearComplex),
+        new Objectives.SectorComplete(SectorPresets.overgrowth),
+    )
 });
 lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore.name, });
 lib.addToResearch(hardThoriumAlloySmelter, { parent: spaceCrystallizer.name, });
@@ -91,7 +94,7 @@ lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 lib.addToResearch(t5Factory, { parent: dimensionTechnologyCore.name, });
 
 // zones
-lib.addToResearch(dimensionFall262, {
-    parent: SectorPresets.nuclearComplex.name,
-    objectives: Seq.with(new Objectives.SectorComplete(SectorPresets.nuclearComplex))
+lib.addToResearch(dimensionFall, {
+    parent: SectorPresets.planetaryTerminal.name,
+    objectives: Seq.with(new Objectives.SectorComplete(SectorPresets.planetaryTerminal))
 });
