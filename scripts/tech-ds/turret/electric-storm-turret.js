@@ -17,7 +17,7 @@ const turret = blockTypes.newNoRotatingTurret({
     buildVisibility: BuildVisibility.shown,
     category: Category.turret,
     liquidCapacity: 120,
-    health: 4200,
+    health: 5000,
     size: 5,
     reloadTime: 150,
     range: 384,

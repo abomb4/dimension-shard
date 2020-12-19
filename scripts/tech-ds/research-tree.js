@@ -14,6 +14,7 @@ const {
 const { hardThoriumConduit, hardThoriumLiquidRouter, spaceLiquidTank } = require('tech-ds/liquid-buildings')
 const { dimensionCrystalBattery, timeCompressedRtg } = require('tech-ds/power-buildings')
 
+const { dc } = require('tech-ds/turret/dc')
 const { bombTeleporter } = require('tech-ds/turret/bomb-teleporter')
 const { ionBoltTurret } = require('tech-ds/turret/ion-bolt-turret')
 const { electricStormTurret } = require('tech-ds/turret/electric-storm-turret')
@@ -78,6 +79,7 @@ lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore.name, });
 
 // turret line
 lib.addToResearch(bombTeleporter, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(dc, { parent: bombTeleporter.name, });
 lib.addToResearch(ionBoltTurret, { parent: bombTeleporter.name, });
 lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, });
 

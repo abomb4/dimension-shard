@@ -9,3 +9,7 @@ Mod display name and description localized.
 Hard Thorium Drill CANNOT boost.
 Decrease Space Crystall requirements.
 Decrease requirements of Resources Dispatching Center.
+
+0.0.4:
+Add DC turret
+adjust many data

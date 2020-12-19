@@ -5,7 +5,7 @@ const { newIonBoltBulletType } = require('ds-common/bullet-types');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
-    const m = extendContent(UnitType, 'caral', {
+    const m = extendContent(UnitType, 'burn', {
         getSkillDefinitions() {
             return [
             ];
@@ -39,7 +39,7 @@ const unitType = (() => {
     // );
     m.weapons.add(
         (() => {
-            const w = new Weapon(lib.modName + "-caral-ion-cannon");
+            const w = new Weapon(lib.modName + "-burn-ion-cannon");
             w.shake = 4;
             w.shootY = 9;
             w.x = 18;
@@ -61,8 +61,10 @@ const unitType = (() => {
     const puddleRange = 30;
     const puddleAmount = 20;
     const puddleLiquid = items.ionLiquid;
-    const lightning = 12;
-    const lightningDamage = 20;
+    const lightning = 16;
+    const lightningDamage = 22;
+    const lightningLength = 24;
+    const lightningLengthRand = 8;
     Events.on(UnitDestroyEvent, cons(event => {
         if (event.unit.type === m) {
             // Ion Liquid leak, and flame
@@ -77,11 +79,11 @@ const unitType = (() => {
             }
             // Lightning hit everyone
             for (var i = 0; i < lightning; i++) {
-                Lightning.create(Team.derelict, items.ionLiquid.color, lightningDamage, x, y, Mathf.random(360), 30);
+                Lightning.create(Team.derelict, items.ionLiquid.color, lightningDamage, x, y, Mathf.random(360), lightningLength + Mathf.random(lightningLengthRand));
             }
         }
     }));
     return m;
 })();
 
-exports.caral = unitType;
+exports.burn = unitType;
