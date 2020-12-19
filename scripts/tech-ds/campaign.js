@@ -12,6 +12,7 @@ wrek.atmosphereRadIn = 0.02;
 wrek.atmosphereRadOut = 0.1;
 wrek.startSector = 12;
 
+
 const dimensionFall = new SectorPreset("dimensionFall", wrek, 12);
 dimensionFall.captureWave = 50;
 dimensionFall.difficulty = 8;

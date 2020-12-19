@@ -96,5 +96,8 @@ lib.addToResearch(t5Factory, { parent: dimensionTechnologyCore.name, });
 // zones
 lib.addToResearch(dimensionFall, {
     parent: SectorPresets.planetaryTerminal.name,
-    objectives: Seq.with(new Objectives.SectorComplete(SectorPresets.planetaryTerminal))
+    objectives: Seq.with(
+        new Objectives.SectorComplete(SectorPresets.planetaryTerminal),
+        lib.objectivePlanetaryTerminalActivated
+    )
 });
