@@ -14,10 +14,10 @@ const shardReceiver = extend(GenericSmelter, "shard-receiver", {
 shardReceiver.size = 4;
 // shardReceiver.health = 600;
 shardReceiver.requirements = ItemStack.with(
-    Items.silicon, 200,
-    Items.thorium, 320,
-    Items.phaseFabric, 330,
-    Items.surgeAlloy, 100,
+    Items.silicon, 60,
+    Items.thorium, 120,
+    Items.phaseFabric, 150,
+    Items.surgeAlloy, 30,
 );
 shardReceiver.buildVisibility = BuildVisibility.shown;
 shardReceiver.category = Category.crafting;
@@ -58,7 +58,7 @@ spaceCrystallizer.itemCapacity = 20;
 spaceCrystallizer.boostScale = 0.15;
 
 spaceCrystallizer.consumes.items(ItemStack.with(
-    dimensionShard, 4,
+    dimensionShard, 3,
     Items.silicon, 1,
     Items.phaseFabric, 2
 ));
