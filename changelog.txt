@@ -13,3 +13,7 @@ Decrease requirements of Resources Dispatching Center.
 0.0.4:
 Add DC turret
 adjust many data
+
+0.0.5：
+Add a planet
+Adjust factory costs
