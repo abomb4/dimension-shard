@@ -48,7 +48,7 @@ const unitType = (() => {
             w.reload = 40;
             w.recoil = 4;
             w.shootSound = lib.loadSound('ion-shot');
-            w.occlusion = 20;
+            w.shadow = 20;
             w.rotate = true;
             w.bullet = newIonBoltBulletType({
                 speed: 4.6
