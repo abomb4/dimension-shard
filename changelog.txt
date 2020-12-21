@@ -17,3 +17,8 @@ adjust many data
 0.0.5：
 Add a planet
 Adjust factory costs
+
+0.0.6:
+Reimplement the black hole effects
+Bomb Teleporter can fire Space Crystal now
+Adjust many datas

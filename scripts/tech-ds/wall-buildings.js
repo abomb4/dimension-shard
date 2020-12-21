@@ -11,7 +11,7 @@ shardWall.buildVisibility = BuildVisibility.shown;
 shardWall.category = Category.defense;
 shardWall.buildCostMultiplier = 6.5;
 shardWall.flashHit = true;
-shardWall.chanceDeflect = Blocks.phaseWall.chanceDeflect * 2;
+shardWall.chanceDeflect = Blocks.phaseWall.chanceDeflect * 1.2;
 
 var shardWallLarge = extend(Wall, 'shard-phase-wall-large', {});
 shardWallLarge.size = 2;

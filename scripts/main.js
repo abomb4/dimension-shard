@@ -12,7 +12,7 @@ const lib = require('abomb4/lib')
 require('ds-common/items')
 require('ds-common/ds-global')
 require('ds-common/overrides')
-require('ds-common/bullet-types')
+require('ds-common/bullet-types/index')
 
 // dimension technology
 require('tech-ds/unit/equa');

@@ -2,7 +2,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
-const chanceDeflect = 15;
+const chanceDeflect = 10;
 const deflectAngle = 60;
 var deflectSound = Sounds.none;
 const shieldColor = items.spaceCrystalColorLight;

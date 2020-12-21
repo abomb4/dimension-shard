@@ -1,7 +1,7 @@
 const lib = require('abomb4/lib')
 const items = require('ds-common/items')
 const { newDeflectForceFieldAbility } = require('abomb4/abilities');
-const { newIonBoltBulletType } = require('ds-common/bullet-types');
+const { newIonBoltBulletType } = require('ds-common/bullet-types/index');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {

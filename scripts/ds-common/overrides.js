@@ -4,6 +4,7 @@
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const bulletTypes = require('ds-common/bullet-types/index');
 const {
     dimensionShard,
     spaceCrystal,
@@ -106,13 +107,6 @@ Blocks.spectre.ammoTypes.put(hardThoriumAlloy, (() => {
 // -=-=-=-=-=-=-=-=-=-=-=-= Space Crystal =-=-=-=-=-=-=-=-=-=-=-=-
 
 Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
-    function percent(x, y, tx, ty, radius) {
-        var dst = Mathf.dst(x, y, tx, ty);
-        var falloff = 0.4;
-        var scaled = Mathf.lerp(1 - dst / radius, 1, falloff);
-        return scaled;
-    }
-
     var fxShoot = lib.newEffect(24, e => {
         e.scaled(10, cons(b => {
             Draw.color(items.spaceCrystalColorLight, items.spaceCrystalColor, b.fin());
@@ -122,7 +116,7 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
 
         Draw.color(items.spaceCrystalColor);
 
-        for(var i of Mathf.signs){
+        for (var i of Mathf.signs) {
             Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
             Drawf.tri(e.x, e.y, 13 * e.fout(), 50, e.rotation + 20 * i);
         }
@@ -135,17 +129,21 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
 
         Draw.color(items.spaceCrystalColor);
 
-        Angles.randLenVectors(e.id, 6, 2 + 19 * e.finpow(), new Floatc2({get: (x, y) => {
-            Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5);
-            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
-        }}));
+        Angles.randLenVectors(e.id, 6, 2 + 19 * e.finpow(), new Floatc2({
+            get: (x, y) => {
+                Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5);
+                Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+            }
+        }));
 
         Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, items.spaceCrystalColorLight, e.fin());
         Lines.stroke(1.5 * e.fout());
 
-        Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), new Floatc2({get: (x, y) => {
-            Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
-        }}));
+        Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), new Floatc2({
+            get: (x, y) => {
+                Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
+            }
+        }));
     }));
     var fxHole = new Effect(70, 80, cons(e => {
         Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, e.fout());
@@ -160,7 +158,7 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
         Fill.circle(e.x, e.y, e.fout() * 1 + 5)
     }));
     var fxBlackTrail = new Effect(30, cons(e => {
-        for(var i = 0; i < 2; i++){
+        for (var i = 0; i < 2; i++) {
             Draw.color(i == 0 ? items.spaceCrystalColorLight : items.spaceCrystalColor);
 
             var m = i == 0 ? 1 : 0.5;
@@ -171,37 +169,11 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
             Drawf.tri(e.x, e.y, w, 10 * m, rot + 180);
         }
     }));
+
     const v = new JavaAdapter(PointBulletType, {
         despawned(b) {
             if (b) {
-                var counter = { count: 60 };
-                var x = b.x;
-                var y = b.y;
-                var team = b.team;
-                var rect = new Rect();
-                rect.setSize(this.splashDamageRadius * 2).setCenter(x, y);
-                var con = cons(unit => {
-                    if (unit.team == team || !unit.within(x, y, this.splashDamageRadius)) {
-                        return;
-                    }
-                    var p = percent(x, y, unit.getX(), unit.getY(), this.splashDamageRadius);
-                    var amount = this.splashDamage / 60 * 1.2 * p
-                    unit.damage(amount);
-
-                    // drag
-                    unit.impulse(Tmp.v3.set(unit).sub(x, y).nor().scl(this.knockback * p * 80));
-                    unit.vel.limit(3);
-                });
-
-                var poo = run(() => {
-                    if (counter.count > 0) {
-                        Units.nearbyEnemies(team, rect, con);
-                        Timer.schedule(poo, 0);
-                    }
-                    counter.count--;
-                });
-                poo.run();
-                // Timer.schedule(run(() => Units.nearbyEnemies(b.team, rect, con)), 0, 0.02, 40);
+                bulletTypes.blackHoleDamaged.create(b, b.x, b.y, 0);
                 this.super$despawned(b);
             }
         }
@@ -210,9 +182,10 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
     v.hitEffect = fxHoleBomb;
     v.smokeEffect = Fx.smokeCloud;
     v.trailEffect = fxBlackTrail;
-    v.despawnEffect = fxHole;
+    // v.despawnEffect = fxHole;
+    v.despawnEffect = Fx.none;
     v.trailSpacing = 20;
-    v.damage = 50;
+    v.damage = 0;
     v.tileDamageMultiplier = 0.5;
     v.speed = 500;
     v.hitShake = 8;
@@ -220,7 +193,7 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
     v.reloadMultiplier = 0.6;
     v.hitSize = 100;
     v.splashDamageRadius = 80;
-    v.splashDamage = 100;
+    v.splashDamage = 75;
     v.knockback = -0.55;
     return v;
 })());

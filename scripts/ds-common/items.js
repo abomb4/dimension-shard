@@ -98,7 +98,7 @@ exports.timeFreezingEffect = (() => {
 })();
 
 exports.timeFlow = (() => {
-    const v = new Liquid("time-flow", Color.valueOf("5b2467"));
+    const v = new Liquid("time-flow", Color.valueOf("a76ab3"));
     v.heatCapacity = 2;
     v.temperature = 0.1;
     v.viscosity = 0.85;

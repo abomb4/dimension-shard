@@ -9,7 +9,7 @@ const dsGlobal = require('ds-common/ds-global');
 
 const {
     newElectricStormBulletType
-} = require('ds-common/bullet-types');
+} = require('ds-common/bullet-types/index');
 
 const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',

@@ -3,7 +3,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
-const { createDirectLightning } = require('ds-common/bullet-types');
+const { createDirectLightning } = require('ds-common/bullet-types/index');
 
 const turret = new JavaAdapter(PowerTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -16,7 +16,7 @@ turret.category = Category.turret;
 turret.health = 1700;
 turret.size = 3;
 turret.reloadTime = 50;
-turret.range = 180;
+turret.range = 165;
 turret.inaccuracy = 0;
 turret.shots = 4;
 turret.shootEffect = Fx.lightningShoot;
@@ -27,11 +27,11 @@ turret.xRand = 6;
 turret.shootSound = Sounds.spark;
 turret.loopSound = Sounds.none;
 turret.requirements = ItemStack.with(
-    Items.lead, 280,
+    Items.lead, 320,
     Items.silicon, 80,
     Items.plastanium, 120,
-    items.spaceCrystal, 40,
-    items.hardThoriumAlloy, 25
+    items.spaceCrystal, 60,
+    items.hardThoriumAlloy, 30
 );
 turret.shootType = (() => {
     const s = new JavaAdapter(LightningBulletType, {
@@ -40,13 +40,13 @@ turret.shootType = (() => {
         },
     });
 
-    s.damage = 20;
-    s.lightningLength = 36;
-    s.lightningLengthRand = 8;
+    s.damage = 22;
+    s.lightningLength = 24;
+    s.lightningLengthRand = 12;
     s.lightningColor = Color.valueOf("69dcee");
     return s;
 })()
-turret.powerUse = 9;
+turret.powerUse = 10;
 
 lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, {
     // I think the default udpatShooting and updateCooling is wrong, so modify it.

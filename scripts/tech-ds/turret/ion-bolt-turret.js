@@ -9,7 +9,7 @@ const dsGlobal = require('ds-common/ds-global');
 
 const {
     newIonBoltBulletType
-} = require('ds-common/bullet-types');
+} = require('ds-common/bullet-types/index');
 
 const turret = new JavaAdapter(LiquidTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },

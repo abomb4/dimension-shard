@@ -2,6 +2,7 @@ const lib = require('abomb4/lib');
 
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
+const bulletTypes = require('ds-common/bullet-types/index');
 
 const turret = new JavaAdapter(ItemTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -97,7 +98,7 @@ Items.blastCompound, (() => {
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
     bt.splashDamageRadius = 45;
-    bt.splashDamage = 120;
+    bt.splashDamage = 105;
     bt.status = StatusEffects.blasted;
     bt.speed = turret.range;
     bt.hitShake = 2;
@@ -116,6 +117,31 @@ items.dimensionShard, (() => {
     bt.splashDamage = 70;
     bt.speed = turret.range;
     bt.hitShake = 1.6;
+    return bt;
+})(),
+items.spaceCrystal, (() => {
+    const bt = new JavaAdapter(PointBulletType, {
+        despawned(b) {
+            if (b) {
+                bulletTypes.blackHole.create(b, b.x, b.y, 0);
+                this.super$despawned(b);
+            }
+        }
+    });
+    bt.shootEffect = Fx.none;
+    bt.hitEffect = bulletTypes.fxBlackHoleExplode;
+    bt.smokeEffect = Fx.none;
+    bt.trailEffect = Fx.none;
+    bt.despawnEffect = Fx.none;
+    bt.hitSound = Sounds.explosion;
+    bt.damage = 0;
+    bt.splashDamageRadius = 80;
+    bt.splashDamage = 15;
+    bt.speed = turret.range;
+    bt.hitShake = 2;
+    bt.knockback = -0.55;
+    bt.reloadMultiplier = 0.6;
+    bt.ammoMultiplier = 1;
     return bt;
 })(),
 );

@@ -185,7 +185,7 @@ radioisotopeWeaver.category = Category.crafting;
 
 radioisotopeWeaver.craftEffect = Fx.smeltsmoke;
 radioisotopeWeaver.outputItem = new ItemStack(Items.phaseFabric, 2);
-radioisotopeWeaver.craftTime = 90;
+radioisotopeWeaver.craftTime = 80;
 radioisotopeWeaver.hasPower = true;
 radioisotopeWeaver.flameColor = Items.phaseFabric.color;
 radioisotopeWeaver.itemCapacity = 50;
@@ -224,7 +224,7 @@ ionCollector.consumes.items(ItemStack.with(
     Items.surgeAlloy, 1,
 ));
 ionCollector.consumes.liquid(timeFlow, 0.2);
-ionCollector.consumes.power(10);
+ionCollector.consumes.power(7);
 exports.ionCollector = ionCollector;
 
 
