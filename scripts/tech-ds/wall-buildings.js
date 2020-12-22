@@ -26,23 +26,53 @@ shardWallLarge.chanceDeflect = shardWall.chanceDeflect;
 exports.shardPhaseWall = shardWall;
 exports.shardPhaseWallLarge = shardWallLarge;
 
-var wall = extend(Wall, 'hard-thorium-alloy-wall', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
-});
-wall.size = 1;
-wall.health = 1100;
-wall.requirements = ItemStack.with(items.hardThoriumAlloy, 6);
-wall.buildVisibility = BuildVisibility.shown;
-wall.category = Category.defense;
-wall.buildCostMultiplier = 6.2;
+var wall = (() => {
+    const armor = 5;
+    const block = extend(Wall, 'hard-thorium-alloy-wall', {
+        isHidden() { return !dsGlobal.techDsAvailable(); },
+        setStats() {
+            this.super$setStats();
+            if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));
+        },
+    })
+    lib.setBuildingSimple(block, Wall.WallBuild, {
+        damage(amount) {
+            amount = Math.max(amount - armor, Vars.minArmorDamage * amount);
+            this.super$damage(amount);
+        },
+    });
+    block.size = 1;
+    block.health = 950;
+    block.requirements = ItemStack.with(items.hardThoriumAlloy, 6);
+    block.buildVisibility = BuildVisibility.shown;
+    block.category = Category.defense;
+    block.buildCostMultiplier = 6.2;
+    return block;
+})();
 
-var wallLarge = extend(Wall, 'hard-thorium-alloy-wall-large', {});
-wallLarge.size = 2;
-wallLarge.health = wall.health * 4;
-wallLarge.requirements = ItemStack.mult(wall.requirements, 4);
-wallLarge.buildVisibility = wall.buildVisibility;
-wallLarge.category = wall.category;
-wallLarge.buildCostMultiplier = wall.buildCostMultiplier;
+var wallLarge = (() => {
+    const armor = 7;
+    const block = extend(Wall, 'hard-thorium-alloy-wall-large', {
+        isHidden() { return !dsGlobal.techDsAvailable(); },
+        setStats() {
+            this.super$setStats();
+            if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));
+        },
+    })
+    lib.setBuildingSimple(block, Wall.WallBuild, {
+        damage(amount) {
+            amount = Math.max(amount - armor, Vars.minArmorDamage * amount);
+            this.super$damage(amount);
+        },
+    });
+    block.size = 2;
+    block.health = wall.health * 4;
+    block.requirements = ItemStack.mult(wall.requirements, 4);
+    block.buildVisibility = wall.buildVisibility;
+    block.category = wall.category;
+    block.buildCostMultiplier = wall.buildCostMultiplier;
+    return block;
+})();
 
 exports.hardThoriumAlloyWall = wall;
 exports.hardThoriumAlloyWallLarge = wallLarge;

@@ -22,3 +22,6 @@ Adjust factory costs
 Reimplement the black hole effects
 Bomb Teleporter can fire Space Crystal now
 Adjust many datas
+
+0.0.7:
+Add armor for Hard Thorium Wall
