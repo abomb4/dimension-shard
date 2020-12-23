@@ -1,3 +1,20 @@
+// Copyright (C) 2020 abomb4
+//
+// This file is part of Dimension Shard.
+//
+// Dimension Shard is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Dimension Shard is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Dimension Shard.  If not, see <http://www.gnu.org/licenses/>.
+
 const floatc2 = (func) => new Floatc2({ get: (v1, v2) => func(v1, v2) });
 exports.dimensionShardColor = Color.valueOf("165282");
 exports.dimensionShardColorLight = Color.valueOf("719ec1");
@@ -123,7 +140,7 @@ exports.ionBurningEffect = (() => {
 
     v.color = Color.valueOf("cee0e9");
     v.damage = 0.6;
-    v.healthMultiplier = 0.8;
+    v.healthMultiplier = 0.75;
     v.effect = fxIonBurning;
 
     v.init(run(() => {
