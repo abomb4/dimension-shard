@@ -43,7 +43,7 @@ const createDirectLightning = (() => {
                     if (tile != null && tile.block().insulated && tile.team() != team) {
                         bhit = true;
                         //snap it instead of removing
-                        lines.get(lines.size - 1).set(wx * tilesize, wy * tilesize);
+                        lines.get(lines.size - 1).set(wx * Vars.tilesize, wy * Vars.tilesize);
                         return true;
                     }
                     return false;
