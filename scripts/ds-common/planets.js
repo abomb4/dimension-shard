@@ -16,7 +16,6 @@
 // along with Dimension Shard.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 const wrek = new JavaAdapter(Planet, {
     load() {
         this.meshLoader = prov(() => new HexMesh(wrek, 4));

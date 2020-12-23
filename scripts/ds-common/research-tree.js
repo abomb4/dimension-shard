@@ -46,7 +46,7 @@ const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology
 
 const { t5Factory } = require('tech-ds/unit/t5-factory')
 
-const { dimensionFall } = require('tech-ds/campaign')
+const { dimensionFall } = require('ds-common/planets')
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });

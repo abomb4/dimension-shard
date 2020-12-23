@@ -55,9 +55,9 @@ require('tech-ds/effect/time-overdrive')
 
 require('tech-ds/unit/t5-factory')
 
-require('tech-ds/campaign')
+require('ds-common/planets')
+require('ds-common/research-tree')
 
-require('tech-ds/research-tree')
-
+// l10n mod name and description
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
