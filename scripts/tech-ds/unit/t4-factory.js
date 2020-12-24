@@ -41,11 +41,10 @@ block.constructTime = 60 * 60 * 1.5;
 
 block.consumes.power(13);
 block.consumes.items(ItemStack.with(
-    Items.silicon, 1000,
-    items.hardThoriumAlloy, 600,
-    items.spaceCrystal, 300,
-    items.timeCrystal, 200,
-    items.dimensionAlloy, 100,
+    Items.silicon, 700,
+    items.hardThoriumAlloy, 500,
+    items.spaceCrystal, 220,
+    items.timeCrystal, 160
 ));
 block.consumes.liquid(items.ionLiquid, 0.5);
 
