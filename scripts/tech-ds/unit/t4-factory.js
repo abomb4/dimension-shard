@@ -18,28 +18,28 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
-const { equa } = require('tech-ds/unit/equa');
-const { burn } = require('tech-ds/unit/burn');
+const { formula } = require('tech-ds/unit/formula');
 
-const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
+const block = extend(Reconstructor, 'dimension-t4-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 block.buildVisibility = BuildVisibility.shown;
-block.size = 9;
-block.liquidCapacity = 180;
+block.size = 7;
+block.liquidCapacity = 100;
 block.requirements = ItemStack.with(
-    Items.lead, 5000,
-    Items.silicon, 3000,
-    Items.surgeAlloy, 300,
-    items.hardThoriumAlloy, 800,
-    items.spaceCrystal, 600,
-    items.timeCrystal, 300,
-    items.dimensionAlloy, 200,
+    Items.lead, 2000,
+    Items.silicon, 1000,
+    Items.plastanium, 500,
+    Items.surgeAlloy, 120,
+    items.dimensionShard, 1200,
+    items.hardThoriumAlloy, 500,
+    items.spaceCrystal, 400,
+    items.timeCrystal, 150,
 );
 block.category = Category.units;
-block.constructTime = 60 * 60 * 4;
+block.constructTime = 60 * 60 * 1.5;
 
-block.consumes.power(25);
+block.consumes.power(13);
 block.consumes.items(ItemStack.with(
     Items.silicon, 1000,
     items.hardThoriumAlloy, 600,
@@ -47,10 +47,10 @@ block.consumes.items(ItemStack.with(
     items.timeCrystal, 200,
     items.dimensionAlloy, 100,
 ));
-block.consumes.liquid(items.ionLiquid, 1);
+block.consumes.liquid(items.ionLiquid, 0.5);
 
 block.upgrades.addAll(
-    lib.createUnitPlan(UnitTypes.quad, equa),
-    lib.createUnitPlan(UnitTypes.antumbra, burn),
+    lib.createUnitPlan(UnitTypes.mega, formula),
+    lib.createUnitPlan(UnitTypes.zenith, formula),
 );
-exports.t5Factory = block;
+exports.t4Factory = block;

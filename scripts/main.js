@@ -32,6 +32,7 @@ require('ds-common/overrides')
 require('ds-common/bullet-types/index')
 
 // dimension technology
+require('tech-ds/unit/formula');
 require('tech-ds/unit/equa');
 
 require('tech-ds/wall-buildings')
@@ -53,6 +54,7 @@ require('tech-ds/effect/dimension-technology-core')
 require('tech-ds/effect/deflect-force-projector')
 require('tech-ds/effect/time-overdrive')
 
+require('tech-ds/unit/t4-factory')
 require('tech-ds/unit/t5-factory')
 
 require('ds-common/planets')

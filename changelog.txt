@@ -25,3 +25,7 @@ Adjust many datas
 
 0.0.7:
 Add armor for Hard Thorium Wall
+
+0.0.8:
+Add T4 unit 'Formula'
+Add units to research tree, now they are available in campagin
