@@ -34,3 +34,7 @@ Add units to research tree, now they are available in campagin
 Add Unit Teleporter;
 Increase Resources Dispatching Center range;
 Reformat version, three number is unnecessary in dev version
+
+0.10:
+Add unit Collapse;
+Adjust researh tree
