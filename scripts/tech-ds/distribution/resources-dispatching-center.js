@@ -19,7 +19,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
-const range = 480;
+const range = 80 * 8;
 const warmupSpeed = 0.05;
 
 // Must load region in 'load()'

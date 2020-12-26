@@ -50,6 +50,7 @@ const { burn } = require('tech-ds/unit/burn');
 
 const { t4Factory } = require('tech-ds/unit/t4-factory')
 const { t5Factory } = require('tech-ds/unit/t5-factory')
+const { unitTeleporter } = require('tech-ds/unit/unit-teleporter')
 
 const { dimensionFall } = require('ds-common/planets')
 
@@ -115,6 +116,7 @@ lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 // unit line
 lib.addToResearch(t4Factory, { parent: dimensionTechnologyCore.name, });
 lib.addToResearch(t5Factory, { parent: t4Factory.name, });
+lib.addToResearch(unitTeleporter, { parent: t4Factory.name, });
 
 lib.addToResearch(formula, { parent: t4Factory.name, });
 lib.addToResearch(equa, { parent: formula.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });

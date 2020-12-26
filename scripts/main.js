@@ -28,12 +28,13 @@ const lib = require('abomb4/lib')
 
 require('ds-common/items')
 require('ds-common/ds-global')
-require('ds-common/overrides')
 require('ds-common/bullet-types/index')
+require('ds-common/overrides')
 
 // dimension technology
 require('tech-ds/unit/formula');
 require('tech-ds/unit/equa');
+require('tech-ds/unit/burn');
 
 require('tech-ds/wall-buildings')
 require('tech-ds/drill-buildings')
@@ -56,6 +57,7 @@ require('tech-ds/effect/time-overdrive')
 
 require('tech-ds/unit/t4-factory')
 require('tech-ds/unit/t5-factory')
+require('tech-ds/unit/unit-teleporter')
 
 require('ds-common/planets')
 require('ds-common/research-tree')

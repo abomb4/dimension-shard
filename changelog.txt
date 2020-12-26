@@ -29,3 +29,8 @@ Add armor for Hard Thorium Wall
 0.0.8:
 Add T4 unit 'Formula'
 Add units to research tree, now they are available in campagin
+
+0.9:
+Add Unit Teleporter;
+Increase Resources Dispatching Center range;
+Reformat version, three number is unnecessary in dev version
