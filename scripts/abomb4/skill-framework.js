@@ -109,6 +109,7 @@ const Call_ActiveSkill = (() => {
 const skillFrag = (() => {
 
     var selectSkill = -1;
+    /** @type {SkillStatus[]} */
     var skillList;
     var fragment;
     var toggler;
@@ -116,11 +117,28 @@ const skillFrag = (() => {
 
     const fIcons = [];
 
+    function activeSkill(index) {
+        if (index === undefined) { index = selectSkill; }
+        var skill = skillList[index];
+        if (skill) {
+            Vars.player.unit().tryActiveSkill(skill.def.name, {
+                x: Core.input.mouseWorldX(),
+                y: Core.input.mouseWorldY(),
+            });
+        }
+        selectSkill = -1;
+    }
     function trySelectSkill(index) {
         if (skillList && skillList.length > index) {
             const skill = skillList[index];
             if (skill.reload >= skill.def.cooldown) {
-                selectSkill = selectSkill == index ? -1 : index;
+                if (skill.def.activeTime <= 0) {
+                    selectSkill = selectSkill == index ? -1 : index;
+                } else {
+                    // ACTIVE IT
+                    selectSkill == index;
+                    activeSkill(index);
+                }
                 rebuild();
             }
         }
@@ -136,14 +154,7 @@ const skillFrag = (() => {
         update: function() {
             if (Vars.state.state == GameState.State.playing && skillList) {
                 if (selectSkill >= 0 && Core.input.keyTap(Binding.select) && notClickedAtOtherFrag()) {
-                    var skill = skillList[selectSkill];
-                    if (skill) {
-                        Vars.player.unit().tryActiveSkill(skill.def.name, {
-                            x: Core.input.mouseWorldX(),
-                            y: Core.input.mouseWorldY(),
-                        });
-                    }
-                    selectSkill = -1;
+                    activeSkill();
                     rebuild();
                 } else if (haveKeyboard()) {
                     if (Core.input.keyTap(Packages.arc.input.KeyCode.f1)) {
@@ -188,6 +199,7 @@ const skillFrag = (() => {
                 if (skillList) {
                     for (var i in skillList) {
                         ((index) => {
+                            /** @type {SkillStatus} */
                             const skill = skillList[index];
                             const imageStyle = new ImageButton.ImageButtonStyle();
                             imageStyle.down = Styles.flatDown;
@@ -228,7 +240,7 @@ const skillFrag = (() => {
                                 },
                             }, skill.def.icon, imageStyle);
                             skillButton.changed(run(() => {
-                                selectSkill = selectSkill == index ? -1 : index;
+                                trySelectSkill(index);
                                 rebuild();
                             }));
                             full.add(skillButton).update(cons(v => {
@@ -266,13 +278,76 @@ const skillFrag = (() => {
 })();
 
 /**
+ * Data when skill activated.
+ *
+ * @typedef {Object} Data
+ * @typedef {number} x x position
+ * @typedef {number} y y position
+ */
+
+/**
+ * Skill Definition.
+ * @typedef {Object} SkillDefinition
+ * @property {string} name - Unique in one unit type, must not empty
+ * @property {number} cooldown - Not empty, you may need someNumber * 60.
+ * @property {TextureRegion} icon - Not empty, instance of TextureRegion, use lib.loadRegion
+ * @property {boolean} directivity - Should choose target.
+ * @property {boolean} exclusive - Usage for continously skill, if true, other skills cannot activate during active time.
+ * @property {number} activeTime - If the skill is continously skill, set to greeter than zero
+ * @property {function(SkillStatus, Unit, Data)} active - Not empty, active function
+ * @property {function(SkillStatus, Unit, boolean)} preUpdate - For continously skill; 3rd param is 'isLastFrame'
+ * @property {function(SkillStatus, Unit, boolean)} postUpdate - For continously skill; 3rd param is 'isLastFrame'
+ * @property {function(SkillStatus, Unit, boolean)} draw - For continously skill; 3rd param is 'isLastFrame'
+ * @property {function(SkillStatus, Unit, number) => number} updateDamage - Update damage, return new damage value; 3rd param is damage.
+ */
+
+/**
+ * Skill status.
+ * @typedef {Object} SkillStatus
+ * @property {SkillDefinition} def - Definition of skill
+ * @property {number} reload - Reload, def.cooldown means ready
+ * @property {boolean} active - Is active, will run update() when active, set by SkillStatus#active
+ * @property {number} activeTimeLeft - If it's continously skill, set by SkillStatus#active;
+ * @property {number} numValue1 - Ugly, but useful, maybe.
+ * @property {number} numValue2 - Ugly, but useful, maybe.
+ * @property {number} numValue3 - Ugly, but useful, maybe.
+ * @property {number} numValue4 - Ugly, but useful, maybe.
+ */
+
+/*
+{
+    name: 'damage-deflection',
+    range: 20,
+    icon: lib.loadRegion('teleport'),
+    directivity: false,
+    exclusive: false,
+    activeTime: 60 * 3,
+    cooldown: 60 * 30,
+    active(skill, unit, data) {
+        Fx.heal.at(unit.x, unit.y);
+    },
+    preUpdate(skill, unit, lastFrame) {
+    },
+    postUpdate(skill, unit, lastFrame) {
+    },
+    draw(skill, unit, lastFrame) {
+    },
+    updateDamage(skill, unit, amount) {
+        return amount;
+    },
+},
+*/
+
+/**
  * To use this consturctor, the UnitType must define 'getSkillDefinitions()'.
  */
 function _define_constructor_(clazz, classId) {
     var construct = prov(() => {
+        /** @type {{[key: string]: SkillStatus}} */
         const skillStatusMap = {
         };
         var skillInited = false;
+        /** @type {SkillStatus[]} */
         const statusList = [];
 
         function initSkill(unit) {
@@ -281,8 +356,18 @@ function _define_constructor_(clazz, classId) {
                 if (unit.type.getSkillDefinitions && (definitions = unit.type.getSkillDefinitions())) {
                     for (var def of definitions) {
                         var skillStatus = {
+                            // Definition
                             def: def,
+                            // Reload, def.cooldown means ready
                             reload: def.cooldown,
+                            // is active
+                            active: false,
+                            // continously skill time left
+                            activeTimeLeft: 0,
+                            numValue1: 0,
+                            numValue2: 0,
+                            numValue3: 0,
+                            numValue4: 0,
                         };
                         statusList.push(skillStatus);
                         skillStatusMap[def.name] = skillStatus;
@@ -308,16 +393,97 @@ function _define_constructor_(clazz, classId) {
                 while (statusList.pop() !== undefined) {}
             },
             update() {
-                this.super$update();
                 if (statusList) {
-                    statusList.forEach(skill => {
-                        skill.reload = Math.min(skill.def.cooldown, skill.reload + Time.delta);
+                    statusList.forEach(status => {
+                        if (status.active) {
+                            status.activeTimeLeft -= Time.delta;
+                            if (status.def.preUpdate) {
+                                status.def.preUpdate(status, this, status.activeTimeLeft <= 0);
+                            }
+                        }
                     });
+
+                    this.super$update();
+
+                    statusList.forEach(status => {
+                        if (status.active) {
+                            var last = status.activeTimeLeft <= 0;
+                            if (status.def.postUpdate) {
+                                status.def.postUpdate(status, this, last);
+                            }
+                            status.active = !last;
+                        } else {
+                            status.reload = Math.min(status.def.cooldown, status.reload + Time.delta);
+                        }
+                    });
+                } else {
+                    this.super$update();
+                }
+            },
+            damage(amount, withEffect) {
+                // If some actived skill handles damage, filter it
+                for (var status of statusList) {
+                    if (status.active && status.def.updateDamage) {
+                        amount = status.def.updateDamage(status, this, amount);
+                    }
+                }
+                if (withEffect === undefined) {
+                    this.super$damage(amount);
+                } else {
+                    this.super$damage(amount, withEffect);
+                }
+            },
+            draw() {
+                this.super$draw();
+                statusList.forEach(status => {
+                    if (status.active && status.def.draw) {
+                        status.def.draw(status, this, status.activeTimeLeft <= 0);
+                    }
+                });
+            },
+            write(write) {
+                this.super$write(write);
+                const l = statusList.length;
+                write.b(l);
+                for (var i = 0; i < l; i++) {
+                    var status = statusList[i];
+                    write.f(status.reload);
+                    write.bool(status.active);
+                    write.f(status.activeTimeLeft);
+                    write.f(status.numValue1);
+                    write.f(status.numValue2);
+                    write.f(status.numValue3);
+                    write.f(status.numValue4);
+                }
+            },
+            read(read) {
+                this.super$read(read);
+                const l = read.b()
+                for (var i = 0; i < l; i++) {
+                    if (i >= statusList.length) {
+                        read.f();
+                        read.bool();
+                        read.f();
+                    } else {
+                        var status = statusList[i];
+                        status.reload = read.f();
+                        status.active = read.bool();
+                        status.activeTimeLeft = read.f();
+                        status.numValue1 = read.f();
+                        status.numValue2 = read.f();
+                        status.numValue3 = read.f();
+                        status.numValue4 = read.f();
+                    }
                 }
             },
             classId() { return classId; },
             isSkilled() { return statusList.length > 0; },
             tryActiveSkill(skillName, data) {
+                for (var status of statusList) {
+                    if (status.active && status.def.exclusive) {
+                        return;
+                    }
+                }
                 const skill = skillStatusMap[skillName];
                 if (skill && skill.reload >= skill.def.cooldown) {
                     Call_ActiveSkill(this, skillName, data);
@@ -325,9 +491,18 @@ function _define_constructor_(clazz, classId) {
                 }
             },
             activeSkill(skillName, data, fromRemote) {
+                for (var status of statusList) {
+                    if (status.active && status.def.exclusive) {
+                        return;
+                    }
+                }
                 const skill = skillStatusMap[skillName];
                 skill.def.active(skill, this, data);
                 skill.reload = 0;
+                if (skill.def.activeTime > 0) {
+                    skill.activeTimeLeft = skill.def.activeTime;
+                    skill.active = true;
+                }
             },
         });
         return u;

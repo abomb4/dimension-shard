@@ -19,6 +19,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 const { formula } = require('tech-ds/unit/formula');
+const { burn } = require('tech-ds/unit/burn');
 
 const block = extend(Reconstructor, 'dimension-t4-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -50,6 +51,6 @@ block.consumes.liquid(items.ionLiquid, 0.5);
 
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.mega, formula),
-    lib.createUnitPlan(UnitTypes.zenith, formula),
+    lib.createUnitPlan(UnitTypes.zenith, burn),
 );
 exports.t4Factory = block;

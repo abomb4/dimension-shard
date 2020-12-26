@@ -19,7 +19,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 const { equa } = require('tech-ds/unit/equa');
-const { burn } = require('tech-ds/unit/burn');
+const { collapse } = require('tech-ds/unit/collapse');
 
 const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -51,6 +51,6 @@ block.consumes.liquid(items.ionLiquid, 1);
 
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.quad, equa),
-    lib.createUnitPlan(UnitTypes.antumbra, burn),
+    lib.createUnitPlan(UnitTypes.antumbra, collapse),
 );
 exports.t5Factory = block;

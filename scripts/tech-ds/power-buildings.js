@@ -24,13 +24,13 @@ var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 dimensionCrystalBattery.buildVisibility = BuildVisibility.shown;
-dimensionCrystalBattery.size = 3;
+dimensionCrystalBattery.size = 1;
 dimensionCrystalBattery.requirements = ItemStack.with(
     Items.lead, 160,
     Items.silicon, 80,
     Items.titanium, 80,
-    items.spaceCrystal, 60,
-    items.timeCrystal, 30
+    items.spaceCrystal, 80,
+    items.timeCrystal, 10
 );
 dimensionCrystalBattery.category = Category.power;
 dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 10);

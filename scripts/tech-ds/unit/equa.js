@@ -45,6 +45,8 @@ const unitType = (() => {
                     range: 200,
                     icon: lib.loadRegion('teleport'),
                     cooldown: 60 * 2,
+                    directivity: true,
+                    activeTime: -1,
                     active(skill, unit, data) {
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
@@ -66,13 +68,14 @@ const unitType = (() => {
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                         }));
                     },
-                    update() { },
                 },
                 {
                     name: 'teleport-2',
                     range: 200,
                     icon: lib.loadRegion('teleport'),
                     cooldown: 60 * 3,
+                    directivity: true,
+                    activeTime: -1,
                     active(skill, unit, data) {
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
@@ -94,7 +97,6 @@ const unitType = (() => {
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                         }));
                     },
-                    update() { },
                 }
             ];
         },

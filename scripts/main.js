@@ -35,6 +35,7 @@ require('ds-common/overrides')
 require('tech-ds/unit/formula');
 require('tech-ds/unit/equa');
 require('tech-ds/unit/burn');
+require('tech-ds/unit/collapse');
 
 require('tech-ds/wall-buildings')
 require('tech-ds/drill-buildings')
