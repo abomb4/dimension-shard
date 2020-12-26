@@ -107,6 +107,8 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
 
         var other = Vars.world.tile(entity.link);
         if (!this.block.linkValid(tile, other)) return;
+        var otherBuild = other.build;
+        if (otherBuild == null) { return; }
 
         var opacity = Core.settings.getInt("bridgeopacity") / 100;
         if (Mathf.zero(opacity)) return;
@@ -117,8 +119,8 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
         Draw.color(Color.white, Color.black, Mathf.absin(Time.time, 6, 0.07));
         Draw.alpha(Math.max(entity.uptime, 0.25) * opacity);
 
-        Draw.rect(this.block.endRegion, tile.x, tile.y, angle + 90);
-        Draw.rect(this.block.endRegion, other.x, other.y, angle + 270);
+        Draw.rect(this.block.endRegion, this.x, this.y, angle + 90);
+        Draw.rect(this.block.endRegion, otherBuild.x, otherBuild.y, angle + 270);
 
         Lines.stroke(8);
         Lines.line(this.block.bridgeRegion, tile.worldx(), tile.worldy(), other.worldx(), other.worldy(), false);

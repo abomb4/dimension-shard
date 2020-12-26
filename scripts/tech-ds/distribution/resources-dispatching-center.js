@@ -183,27 +183,32 @@ blockType.buildType = prov(() => {
         },
         updateTile() {
             var itemSent = false;
-            for (var iloop = 0; iloop < links.size; iloop++) {
-                var i = fairLoopIndex(iloop, links.size, fairLoopOffset);
-                var pos = links.get(i);
-                if (linkValid(this, pos)) {
-                    var linkTarget = Vars.world.build(pos);
-                    links.set(i, new java.lang.Integer(linkTarget.pos()));
-                    for (var ii = 0; ii < Vars.content.items().size; ii++) {
-                        var item = Vars.content.item(ii);
-                        if (linkTarget.team == this.team && this.items.has(item) && linkTarget.acceptItem(this, item) && this.canDump(linkTarget, item)) {
-                            linkTarget.handleItem(this, item);
-                            this.items.remove(item, 1);
-                            itemSent = true;
-                            break;
+            if (this.consValid()) {
+                for (var iloop = 0; iloop < links.size; iloop++) {
+                    var i = fairLoopIndex(iloop, links.size, fairLoopOffset);
+                    var pos = links.get(i);
+                    if (linkValid(this, pos)) {
+                        var linkTarget = Vars.world.build(pos);
+                        links.set(i, new java.lang.Integer(linkTarget.pos()));
+                        for (var ii = 0; ii < Vars.content.items().size; ii++) {
+                            var item = Vars.content.item(ii);
+                            if (linkTarget.team == this.team && this.items.has(item) && linkTarget.acceptItem(this, item) && this.canDump(linkTarget, item)) {
+                                linkTarget.handleItem(this, item);
+                                this.items.remove(item, 1);
+                                itemSent = true;
+                                break;
+                            }
                         }
+                    } else {
+                        // it.remove();
                     }
-                } else {
-                    // it.remove();
                 }
+                warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
+            } else {
+                warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
             }
-            warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
-            rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
             if (warmup > 0) {
                 rotateDeg += rotateSpeed;
             }
