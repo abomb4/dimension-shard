@@ -72,7 +72,11 @@ const unitType = (() => {
             w.shootCone = 360;
             w.rotate = false;
             w.bullet = newSurroundingElectricBall({
+                lightningColor: items.ionLiquid.color,
+                frontColor: items.ionLiquid.color,
                 shootEffect: fxCharge,
+                status: items.ionBurningEffect,
+                statusDuration: 60,
                 lifetime: 5 * 60
             });
             return w;

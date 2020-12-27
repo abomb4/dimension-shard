@@ -38,3 +38,7 @@ Reformat version, three number is unnecessary in dev version
 0.10:
 Add unit Collapse;
 Adjust researh tree
+
+0.11:
+Remake burn from T5 to T4
+Fix save problem

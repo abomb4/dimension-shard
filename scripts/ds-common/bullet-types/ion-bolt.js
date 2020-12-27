@@ -43,6 +43,42 @@ const BULLET_PROPERTIES = [
     'trailEffect', 'trailParam', 'weaveMag', 'weaveScale', 'width',
 ];
 
+const standardFrag1 = newElectricStormBulletType({
+    lifetime: 16,
+    speedStart: 2.5,
+    damage: 1,
+    pierceCap: 2,
+    splashDamage: 1,
+    splashDamageRadius: 24,
+    lightning: 1,
+    lightningLength: 3,
+    lightningDamage: 8,
+    lightningColor: ionLiquid.color,
+    frontColor: ionLiquid.color,
+    flyingLightningDamage: 12,
+    flyingLightninColor: ionLiquid.color,
+    flyingLightningChange: 0.07,
+    flyingLightningDelay: 5,
+})
+
+const standardFrag3 = newElectricStormBulletType({
+    lifetime: 20,
+    speedStart: 2.5,
+    damage: 1,
+    pierceCap: 2,
+    splashDamage: 1,
+    splashDamageRadius: 24,
+    lightning: 2,
+    lightningLength: 3,
+    lightningDamage: 12,
+    lightningColor: ionLiquid.color,
+    frontColor: ionLiquid.color,
+    flyingLightningDamage: 16,
+    flyingLightninColor: ionLiquid.color,
+    flyingLightningChange: 0.07,
+    flyingLightningDelay: 5,
+})
+
 exports.newIonBoltBulletType = (requestOptions) => {
 
     // const fxLightningBall = new Effect(10, 500, cons(e => {
@@ -91,28 +127,12 @@ exports.newIonBoltBulletType = (requestOptions) => {
         lightningColor: ionLiquid.color,
         puddles: 3,
         puddleRange: 8,
-        puddleAmount: 8,
+        puddleAmount: 9,
         puddleLiquid: ionLiquid,
         status: items.ionBurningEffect,
         statusDuration: 120,
-        fragBullets: 1,
-        fragBullet: newElectricStormBulletType({
-            lifetime: 20,
-            speedStart: 2.5,
-            damage: 1,
-            pierceCap: 2,
-            splashDamage: 1,
-            splashDamageRadius: 24,
-            lightning: 2,
-            lightningLength: 3,
-            lightningDamage: 10,
-            lightningColor: ionLiquid.color,
-            frontColor: ionLiquid.color,
-            flyingLightningDamage: 15,
-            flyingLightninColor: ionLiquid.color,
-            flyingLightningChange: 0.07,
-            flyingLightningDelay: 5,
-        }),
+        fragBullets: 2,
+        fragBullet: standardFrag3,
         backColor: ionLiquid.color,
         frontColor: ionLiquid.color,
     }, requestOptions);
@@ -130,20 +150,29 @@ exports.newIonBoltBulletType = (requestOptions) => {
 };
 
 exports.standardIonBolt1 = exports.newIonBoltBulletType({
-    fragBullets: 0,
+    speed: 4.6,
+    lifetime: 38,
+    fragBullets: 1,
+    fragBullet: standardFrag1,
+    width: 2,
     height: 8,
-    damage: 20,
+    damage: 10,
+    lightning: 1,
     lightningDamage: 16,
     lightningLength: 5,
     lightningLengthRand: 0,
     splashDamageRadius: 26,
+    splashDamage: 20,
     hitEffect: Fx.explosion,
-    puddles: 1,
-    puddleAmount: 6,
+    puddles: 2,
+    puddleAmount: 8,
 });
 
 exports.standardIonBolt2 = exports.newIonBoltBulletType({
+    speed: 4.8,
+    lifetime: 42,
     fragBullets: 1,
+    width: 3,
     height: 9,
     damage: 25,
     lightningDamage: 18,
@@ -151,8 +180,8 @@ exports.standardIonBolt2 = exports.newIonBoltBulletType({
     lightningLengthRand: 0,
     splashDamageRadius: 28,
     hitEffect: Fx.explosion,
-    puddles: 1,
-    puddleAmount: 8,
+    puddles: 2,
+    puddleAmount: 9,
 });
 
 exports.standardIonBolt = exports.newIonBoltBulletType({

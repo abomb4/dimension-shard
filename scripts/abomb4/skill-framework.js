@@ -464,6 +464,11 @@ function _define_constructor_(clazz, classId) {
                         read.f();
                         read.bool();
                         read.f();
+
+                        read.f();
+                        read.f();
+                        read.f();
+                        read.f();
                     } else {
                         var status = statusList[i];
                         status.reload = read.f();
