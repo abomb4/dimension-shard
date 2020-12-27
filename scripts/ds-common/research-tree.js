@@ -44,10 +44,11 @@ const { deflectForceProjector } = require('tech-ds/effect/deflect-force-projecto
 const { timeOverdrive } = require('tech-ds/effect/time-overdrive')
 const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology-core')
 
-const { formula } = require('tech-ds/unit/formula');
-const { equa } = require('tech-ds/unit/equa');
-const { burn } = require('tech-ds/unit/burn');
-const { collapse } = require('tech-ds/unit/collapse');
+const { formula } = require('tech-ds/unit/ast4-formula');
+const { equa } = require('tech-ds/unit/ast5-equa');
+const { burn } = require('tech-ds/unit/aat4-burn');
+const { collapse } = require('tech-ds/unit/aat5-collapse');
+const { beat } = require('tech-ds/unit/gat4-beat');
 
 const { t4Factory } = require('tech-ds/unit/t4-factory')
 const { t5Factory } = require('tech-ds/unit/t5-factory')
@@ -123,7 +124,9 @@ lib.addToResearch(formula, { parent: t4Factory.name, });
 lib.addToResearch(equa, { parent: formula.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
 
 lib.addToResearch(burn, { parent: t4Factory.name, });
-lib.addToResearch(collapse, { parent: burn.name, });
+lib.addToResearch(collapse, { parent: burn.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
+
+lib.addToResearch(beat, { parent: t4Factory.name, });
 
 // zones
 lib.addToResearch(dimensionFall, {

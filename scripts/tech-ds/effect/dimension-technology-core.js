@@ -17,7 +17,7 @@
 
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
-const { equa } = require('tech-ds/unit/equa');
+const { equa } = require('tech-ds/unit/ast5-equa');
 
 const block = extend(CoreBlock, "dimension-technology-core", {
 });

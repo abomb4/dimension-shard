@@ -18,8 +18,9 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
-const { formula } = require('tech-ds/unit/formula');
-const { burn } = require('tech-ds/unit/burn');
+const { formula } = require('tech-ds/unit/ast4-formula');
+const { burn } = require('tech-ds/unit/aat4-burn');
+const { beat } = require('tech-ds/unit/gat4-beat');
 
 const block = extend(Reconstructor, 'dimension-t4-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -31,7 +32,6 @@ block.requirements = ItemStack.with(
     Items.lead, 2000,
     Items.silicon, 1000,
     Items.plastanium, 500,
-    Items.surgeAlloy, 120,
     items.dimensionShard, 1200,
     items.hardThoriumAlloy, 500,
     items.spaceCrystal, 400,
@@ -52,5 +52,6 @@ block.consumes.liquid(items.ionLiquid, 0.5);
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.mega, formula),
     lib.createUnitPlan(UnitTypes.zenith, burn),
+    lib.createUnitPlan(UnitTypes.fortress, beat),
 );
 exports.t4Factory = block;

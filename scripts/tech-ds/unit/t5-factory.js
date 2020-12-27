@@ -18,8 +18,8 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
-const { equa } = require('tech-ds/unit/equa');
-const { collapse } = require('tech-ds/unit/collapse');
+const { equa } = require('tech-ds/unit/ast5-equa');
+const { collapse } = require('tech-ds/unit/aat5-collapse');
 
 const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },

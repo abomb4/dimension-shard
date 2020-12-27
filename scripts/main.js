@@ -32,10 +32,14 @@ require('ds-common/bullet-types/index')
 require('ds-common/overrides')
 
 // dimension technology
-require('tech-ds/unit/formula');
-require('tech-ds/unit/equa');
-require('tech-ds/unit/burn');
-require('tech-ds/unit/collapse');
+// - air support
+require('tech-ds/unit/ast4-formula');
+require('tech-ds/unit/ast5-equa');
+// - air attack
+require('tech-ds/unit/aat4-burn');
+require('tech-ds/unit/aat5-collapse');
+// - ground attack
+require('tech-ds/unit/gat4-beat');
 
 require('tech-ds/wall-buildings')
 require('tech-ds/drill-buildings')
