@@ -101,7 +101,7 @@ const unitType = (() => {
             w.x = 0;
             w.y = -4;
             w.rotateSpeed = 4.2;
-            w.reload = 80;
+            w.reload = 100;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
@@ -126,10 +126,9 @@ const unitType = (() => {
                 bt.damage = 0;
                 bt.splashDamageRadius = 80;
                 bt.splashDamage = 15;
-                bt.speed = 192;
+                bt.speed = 188;
                 bt.hitShake = 2;
                 bt.knockback = -0.55;
-                bt.reloadMultiplier = 0.6;
                 bt.ammoMultiplier = 1;
                 bt.reflectable = false;
                 bt.absorbable = false;
@@ -144,7 +143,7 @@ const unitType = (() => {
             w.x = 20;
             w.y = 2;
             w.rotateSpeed = 4.3;
-            w.reload = 35;
+            w.reload = 60;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
@@ -178,7 +177,7 @@ const unitType = (() => {
             w.x = 14;
             w.y = 20;
             w.rotateSpeed = 4.1;
-            w.reload = 26;
+            w.reload = 36;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
@@ -211,7 +210,7 @@ const unitType = (() => {
             w.x = 12;
             w.y = -20;
             w.rotateSpeed = 4;
-            w.reload = 22;
+            w.reload = 32;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');

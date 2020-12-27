@@ -49,6 +49,32 @@ const TURRET_PROPERTIES = [
     'variantRegions', 'velocityInaccuracy', 'xRand',
 ];
 exports.TURRET_PROPERTIES = TURRET_PROPERTIES;
+const LIQUID_CONVERTER_PROPERTIES = [
+    'absorbLasers', 'acceptsItems', 'albedo', 'alwaysReplace', 'alwaysUnlocked',
+    'ambientSound', 'ambientSoundVolume', 'autoResetEnabled', 'baseExplosiveness',
+    'breakable', 'breakSound', 'buildCost', 'buildCostMultiplier',
+    'buildType', 'buildVisibility', 'cacheLayer', 'canOverdrive', 'category',
+    'configurable', 'configurations', 'consumesPower', 'consumesTap',
+    'conveyorPlacement', 'craftEffect', 'craftTime', 'deconstructThreshold', 'description',
+    'destructible', 'details', 'displayFlow', 'drawDisabled',
+    'drawer', 'drawLiquidLight', 'editorIcon', 'emitLight', 'enableDrawStatus',
+    'expanded', 'fillsTile', 'flags', 'floating', 'group',
+    'hasColor', 'hasItems', 'hasLiquids', 'hasPower', 'hasShadow',
+    'health', 'iconId', 'id', 'inEditor', 'inlineDescription',
+    'instantTransfer', 'insulated', 'itemCapacity', 'lastConfig', 'lightColor',
+    'lightRadius', 'liquidCapacity', 'liquidPressure', 'localizedName', 'logicConfigurable',
+    'loopSound', 'loopSoundVolume', 'mapColor', 'minfo',
+    'noUpdateDisabled', 'offset', 'outlineColor', 'outlineIcon',
+    'outputFacing', 'outputItem', 'outputLiquid', 'outputsLiquid', 'outputsPayload',
+    'outputsPower', 'placeableLiquid', 'placeableOn', 'priority', 'quickRotate',
+    'rebuildable', 'region', 'requirements', 'requiresWater', 'researchCostMultiplier',
+    'rotate', 'saveConfig', 'saveData', 'size', 'solid',
+    'solidifes', 'squareSprite', 'stats', 'subclass', 'swapDiagonalPlacement',
+    'sync', 'targetable', 'teamRegion', 'teamRegions', 'timers',
+    'unitCapModifier', 'unloadable', 'update', 'updateEffect', 'updateEffectChance',
+    'useColor'
+];
+exports.LIQUID_CONVERTER_PROPERTIES = LIQUID_CONVERTER_PROPERTIES;
 
 /**
  * 无需旋转的炮塔
@@ -145,3 +171,57 @@ exports.newNoRotatingTurret = (requestOptions) => {
     }
     return block;
 };
+
+/**
+ * Liquid converter with convert ratio
+ *
+ * @param {object} requestOptions
+ */
+exports.newLiquidConverter = (requestOptions) => {
+    const options = Object.assign({
+        buildVisibility: BuildVisibility.shown,
+        convertRatio: 1,
+        consumes: consumes => {},
+        buildingOverrides: {},
+        blockOverrides: {},
+    }, requestOptions);
+
+    if (!options.name) {
+        throw 'Name not defined.';
+    }
+
+    const block = extend(LiquidConverter, options.name, Object.assign({
+        init() {
+            this.super$init();
+            var cl = this.consumes.get(ConsumeType.liquid);
+            this.outputLiquid.amount = cl.amount * options.convertRatio;
+        },
+    }, options.blockOverrides));
+
+    lib.setBuildingSimple(block, LiquidConverter.LiquidConverterBuild, Object.assign({
+        updateTile() {
+            var cl = this.block.consumes.get(ConsumeType.liquid);
+            if (this.cons.valid()) {
+                var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
+                this.liquids.remove(cl.liquid, Math.min(use, this.liquids.get(cl.liquid)));
+                this.progress += use / cl.amount;
+                this.liquids.add(this.block.outputLiquid.liquid, use * options.convertRatio);
+                if (this.progress >= this.block.craftTime) {
+                    this.consume();
+                    this.progress %= this.block.craftTime;
+                }
+            }
+            this.dumpLiquid(this.block.outputLiquid.liquid);
+        }
+    }, options.buildingOverrides));
+
+    options.consumes(block.consumes);
+
+    for (var p of LIQUID_CONVERTER_PROPERTIES) {
+        var value = options[p];
+        if (value !== undefined && value !== null) {
+            block[p] = value;
+        }
+    }
+    return block;
+}

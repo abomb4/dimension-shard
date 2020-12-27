@@ -202,6 +202,10 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
             // transport liquid
             this.moveLiquid(other, this.liquids.current());
         }
+    },
+    checkDump(to){
+        var other = Vars.world.tile(this.link);
+        return (!this.block.linkValid(this.tile, other, false));
     }
 });
 

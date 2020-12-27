@@ -110,14 +110,14 @@ blockType.saveConfig = false;
 blockType.itemCapacity = 200;
 blockType.noUpdateDisabled = true;
 blockType.requirements = ItemStack.with(
-    Items.copper, 6200,
-    Items.metaglass, 3200,
-    Items.silicon, 2200,
-    Items.phaseFabric, 3200,
-    items.spaceCrystal, 2800,
-    items.timeCrystal, 1600,
-    items.hardThoriumAlloy, 2000,
-    items.dimensionAlloy, 600
+    Items.copper, 4200,
+    Items.metaglass, 1600,
+    Items.silicon, 1200,
+    Items.phaseFabric, 2200,
+    items.spaceCrystal, 1800,
+    items.timeCrystal, 800,
+    items.hardThoriumAlloy, 1200,
+    items.dimensionAlloy, 200
 );
 blockType.consumes.power(100);
 blockType.config(IntSeq, lib.cons2((tile, sq) => {
