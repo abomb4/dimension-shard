@@ -63,6 +63,8 @@ turret.ammo(Items.coal, (() => {
     bt.statusDuration = 120;
     bt.speed = turret.range;
     bt.hitShake = 1;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 Items.sporePod, (() => {
@@ -83,6 +85,8 @@ Items.sporePod, (() => {
     bt.statusDuration = 150;
     bt.speed = turret.range;
     bt.hitShake = 1.1;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 Items.pyratite, (() => {
@@ -103,6 +107,8 @@ Items.pyratite, (() => {
     bt.statusDuration = 240;
     bt.speed = turret.range;
     bt.hitShake = 1.5;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 Items.blastCompound, (() => {
@@ -119,6 +125,8 @@ Items.blastCompound, (() => {
     bt.status = StatusEffects.blasted;
     bt.speed = turret.range;
     bt.hitShake = 2;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 items.dimensionShard, (() => {
@@ -134,6 +142,8 @@ items.dimensionShard, (() => {
     bt.splashDamage = 70;
     bt.speed = turret.range;
     bt.hitShake = 1.6;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 items.spaceCrystal, (() => {
@@ -159,6 +169,8 @@ items.spaceCrystal, (() => {
     bt.knockback = -0.55;
     bt.reloadMultiplier = 0.6;
     bt.ammoMultiplier = 1;
+    bt.reflectable = false;
+    bt.absorbable = false;
     return bt;
 })(),
 );

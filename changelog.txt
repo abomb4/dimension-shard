@@ -43,3 +43,10 @@ Adjust researh tree
 Remake burn from T5 to T4
 Fix save problem
 Add unit Beat
+
+0.12:
+Change the Space Crystallizer and Time Condenser from 3x3 to 2x2;
+Significantly improve the efficiency and productivity of the Time Condenser and Ion Collector;
+Enhance the Collapse and Beat;
+Bomb teleporter and Collapse bullet cannot be reflected;
+Significantly reduce all factory prices

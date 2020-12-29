@@ -57,11 +57,11 @@ const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {
 spaceCrystallizer.size = 2;
 // spaceCrystallizer.health = 600;
 spaceCrystallizer.requirements = ItemStack.with(
-    Items.lead, 250,
-    Items.silicon, 100,
-    Items.thorium, 120,
+    Items.lead, 120,
+    Items.silicon, 40,
+    Items.thorium, 80,
     Items.phaseFabric, 30,
-    dimensionShard, 200
+    dimensionShard, 100
 );
 spaceCrystallizer.buildVisibility = BuildVisibility.shown;
 spaceCrystallizer.category = Category.crafting;
@@ -77,7 +77,7 @@ spaceCrystallizer.boostScale = 0.15;
 spaceCrystallizer.consumes.items(ItemStack.with(
     dimensionShard, 3,
     Items.silicon, 1,
-    Items.phaseFabric, 2
+    Items.phaseFabric, 1
 ));
 spaceCrystallizer.consumes.power(2);
 
@@ -91,12 +91,11 @@ const hardThoriumAlloySmelter = extend(GenericSmelter, "hard-thorium-alloy-smelt
 hardThoriumAlloySmelter.size = 3;
 // hardThoriumAlloySmelter.health = 600;
 hardThoriumAlloySmelter.requirements = ItemStack.with(
-    Items.copper, 400,
-    Items.graphite, 200,
-    Items.thorium, 300,
-    Items.plastanium, 140,
-    dimensionShard, 320,
-    spaceCrystal, 100
+    Items.copper, 120,
+    Items.graphite, 40,
+    Items.thorium, 160,
+    dimensionShard, 110,
+    spaceCrystal, 80
 );
 hardThoriumAlloySmelter.buildVisibility = BuildVisibility.shown;
 hardThoriumAlloySmelter.category = Category.crafting;
@@ -125,15 +124,15 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
     convertRatio: 2,
     size: 2,
     requirements: ItemStack.with(
-        Items.lead, 300,
-        Items.silicon, 150,
-        dimensionShard, 200,
-        hardThoriumAlloy, 120
+        Items.lead, 100,
+        Items.silicon, 70,
+        dimensionShard, 160,
+        hardThoriumAlloy, 90
     ),
     category: Category.crafting,
     craftEffect: Fx.smeltsmoke,
     outputLiquid: new LiquidStack(timeFlow, 0.2),
-    craftTime: 90,
+    craftTime: 100,
     hasPower: true,
     consumes: consumes => {
         consumes.items(ItemStack.with(
@@ -156,12 +155,10 @@ const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {
 timeCrystallizer.size = 3;
 // timeCrystallizer.health = 600;
 timeCrystallizer.requirements = ItemStack.with(
-    Items.lead, 500,
-    Items.graphite, 300,
-    Items.titanium, 320,
-    Items.phaseFabric, 160,
-    Items.surgeAlloy, 100,
-    dimensionShard, 400,
+    Items.titanium, 120,
+    Items.phaseFabric, 100,
+    Items.surgeAlloy, 20,
+    dimensionShard, 160,
     spaceCrystal, 80
 );
 timeCrystallizer.buildVisibility = BuildVisibility.shown;
@@ -191,11 +188,10 @@ const radioisotopeWeaver = extend(GenericSmelter, "radioisotope-weaver", {
 radioisotopeWeaver.size = 3;
 // radioisotopeWeaver.health = 600;
 radioisotopeWeaver.requirements = ItemStack.with(
-    Items.lead, 400,
-    Items.silicon, 220,
-    dimensionShard, 200,
-    spaceCrystal, 50,
-    hardThoriumAlloy, 140
+    Items.silicon, 180,
+    dimensionShard, 70,
+    spaceCrystal, 80,
+    hardThoriumAlloy, 160
 );
 radioisotopeWeaver.buildVisibility = BuildVisibility.shown;
 radioisotopeWeaver.category = Category.crafting;
@@ -224,10 +220,11 @@ exports.ionCollector = blockTypes.newLiquidConverter({
     size: 3,
     requirements: ItemStack.with(
         Items.lead, 300,
-        Items.silicon, 150,
-        dimensionShard, 100,
+        Items.plastanium, 100,
+        Items.surgeAlloy, 50,
+        dimensionShard, 60,
         timeCrystal, 30,
-        hardThoriumAlloy, 80
+        hardThoriumAlloy, 180
     ),
     category: Category.crafting,
     craftEffect: Fx.smeltsmoke,
@@ -253,12 +250,12 @@ const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", 
 dimensionAlloySmelter.size = 4;
 // dimensionAlloySmelter.health = 600;
 dimensionAlloySmelter.requirements = ItemStack.with(
-    Items.copper, 600,
-    Items.lead, 500,
-    Items.silicon, 420,
-    spaceCrystal, 200,
-    hardThoriumAlloy, 340,
-    timeCrystal, 120
+    Items.copper, 300,
+    Items.silicon, 220,
+    Items.surgeAlloy, 80,
+    spaceCrystal, 100,
+    hardThoriumAlloy, 200,
+    timeCrystal, 100
 );
 dimensionAlloySmelter.buildVisibility = BuildVisibility.shown;
 dimensionAlloySmelter.category = Category.crafting;
