@@ -221,35 +221,35 @@ lib.setBuilding(block, (block) => {
             if (!linkValid(entity, other, true)) return;
 
             // Draw line between
-            // if (isTeleportActive(entity) && isTeleportActive(other)) {
-            //     Draw.z(Layer.power);
-            //     var angle = Angles.angle(entity.x, entity.y, other.x, other.y);
-            //     Lines.stroke(0.6);
-            //     // Lines.line(tile.x, tile.y, other.x, other.y);
-            //     var spreadLength = Mathf.absin(Time.time, 6, 1.6);
-            //     spreadLength = 0.8 - spreadLength;
-            //     var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
-            //     var lineOffsetY = Angles.trnsy(angle, blockaaaaaaaa.size * 4 + 2);
+            if (isTeleportActive(entity) && isTeleportActive(other)) {
+                Draw.z(Layer.power);
+                var angle = Angles.angle(entity.x, entity.y, other.x, other.y);
+                Lines.stroke(0.6);
+                // Lines.line(tile.x, tile.y, other.x, other.y);
+                var spreadLength = Mathf.absin(Time.time, 6, 1.6);
+                spreadLength = 0.8 - spreadLength;
+                var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
+                var lineOffsetY = Angles.trnsy(angle, blockaaaaaaaa.size * 4 + 2);
 
-            //     Draw.color(ORANGE);
-            //     Draw.alpha(opacity * 0.5);
-            //     Lines.line(
-            //         entity.x + Angles.trnsx(angle + 90, spreadLength) + lineOffsetX,
-            //         entity.y + Angles.trnsy(angle + 90, spreadLength) + lineOffsetY,
-            //         other.x + Angles.trnsx(angle + 90, spreadLength) - lineOffsetX,
-            //         other.y + Angles.trnsy(angle + 90, spreadLength) - lineOffsetY
-            //     );
+                Draw.color(ORANGE);
+                Draw.alpha(opacity * 0.5);
+                Lines.line(
+                    entity.x + Angles.trnsx(angle + 90, spreadLength) + lineOffsetX,
+                    entity.y + Angles.trnsy(angle + 90, spreadLength) + lineOffsetY,
+                    other.x + Angles.trnsx(angle + 90, spreadLength) - lineOffsetX,
+                    other.y + Angles.trnsy(angle + 90, spreadLength) - lineOffsetY
+                );
 
-            //     Draw.color(BLUE);
-            //     Draw.alpha(opacity * 0.5);
-            //     Lines.line(
-            //         entity.x + Angles.trnsx(angle - 90, spreadLength) + lineOffsetX,
-            //         entity.y + Angles.trnsy(angle - 90, spreadLength) + lineOffsetY,
-            //         other.x + Angles.trnsx(angle - 90, spreadLength) - lineOffsetX,
-            //         other.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY
-            //     );
-            //     Draw.reset();
-            // }
+                Draw.color(BLUE);
+                Draw.alpha(opacity * 0.5);
+                Lines.line(
+                    entity.x + Angles.trnsx(angle - 90, spreadLength) + lineOffsetX,
+                    entity.y + Angles.trnsy(angle - 90, spreadLength) + lineOffsetY,
+                    other.x + Angles.trnsx(angle - 90, spreadLength) - lineOffsetX,
+                    other.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY
+                );
+                Draw.reset();
+            }
 
             // Draw sender effect
             if (isTeleportActive(entity) && isTeleportActive(other)) {

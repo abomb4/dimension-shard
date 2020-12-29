@@ -50,7 +50,7 @@ const unitType = (() => {
             const w = new Weapon(lib.modName + "-beat-weapon");
             w.shake = 3;
             w.shots = 8;
-            w.shotDelay = 0.25;
+            w.shotDelay = 0.5;
             w.inaccuracy = 0;
             w.shootY = 9;
             w.x = 17;
@@ -62,11 +62,11 @@ const unitType = (() => {
             w.shadow = 0;
             w.rotate = false;
             w.bullet = (() => {
-                const v2 = new BasicBulletType(7, 25);
+                const v2 = new BasicBulletType(7, 29);
                 v2.lifetime = 26;
                 v2.ammoMultiplier = 4;
                 v2.width = Bullets.standardThorium.width;
-                v2.height = Bullets.standardThorium.height * 1.5;
+                v2.height = Bullets.standardThorium.height * 2;
                 v2.frontColor = Bullets.standardThorium.frontColor;
                 v2.backColor = Bullets.standardThorium.backColor;
                 v2.pierceBuilding = false;
