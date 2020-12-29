@@ -131,6 +131,8 @@ const unitType = (() => {
                 bt.knockback = -0.55;
                 bt.reloadMultiplier = 0.6;
                 bt.ammoMultiplier = 1;
+                bt.reflectable = false;
+                bt.absorbable = false;
                 return bt;
             })();
             return w;
@@ -163,6 +165,8 @@ const unitType = (() => {
                 bt.status = StatusEffects.blasted;
                 bt.speed = 200;
                 bt.hitShake = 2;
+                bt.reflectable = false;
+                bt.absorbable = false;
                 return bt;
             })();
             return w;
@@ -194,6 +198,8 @@ const unitType = (() => {
                 bt.splashDamage = 70;
                 bt.speed = 160;
                 bt.hitShake = 1.6;
+                bt.reflectable = false;
+                bt.absorbable = false;
                 return bt;
             })();
             return w;
@@ -225,6 +231,8 @@ const unitType = (() => {
                 bt.splashDamage = 70;
                 bt.speed = 180;
                 bt.hitShake = 1.6;
+                bt.reflectable = false;
+                bt.absorbable = false;
                 return bt;
             })();
             return w;
