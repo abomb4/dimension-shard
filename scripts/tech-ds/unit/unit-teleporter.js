@@ -229,7 +229,7 @@ lib.setBuilding(block, (block) => {
                 var spreadLength = Mathf.absin(Time.time, 6, 1.6);
                 spreadLength = 0.8 - spreadLength;
                 var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
-                var lineOffsetY = Angles.trnsy(angle, blockaaaaaaaa.size * 4 + 2);
+                var lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
 
                 Draw.color(ORANGE);
                 Draw.alpha(opacity * 0.5);
