@@ -68,7 +68,7 @@ const unitType = (() => {
                             Fill.circle(unit.x, unit.y, radius);
                         } else {
                             Lines.stroke(1.5);
-                            Draw.alpha(0.09 + Mathf.clamp(0.08 * hit));
+                            Draw.alpha(0.09 + Mathf.clamp(0.08 * skill.numValue2));
                             Fill.circle(unit.x, unit.y, radius);
                             Draw.alpha(1);
                             Lines.circle(unit.x, unit.y, radius);
