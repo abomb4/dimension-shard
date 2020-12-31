@@ -205,18 +205,6 @@ lib.setBuilding(block, (block) => {
             var opacity = Math.max(entity.getUptime(), 0.25) * Core.settings.getInt("bridgeopacity") / 100;
             if (Mathf.zero(opacity)) return;
 
-            // Draw receiver
-            if (entity.getConnected() != null && isTeleportActive(entity.getConnected()) && isTeleportActive(entity)) {
-                // Draw.color(ORANGE);
-                // Draw.alpha(opacity);
-                // Lines.circle(tile.x, tile.y, TELEPORTER_RADIUS);
-                if (Mathf.random(60) > 48) {
-                    Time.run(Mathf.random(10), run(() => {
-                        outEffect.at(entity.x, entity.y, 0);
-                    }));
-                }
-            }
-
             const other = getBuild(entity.getTarget());
             if (!linkValid(entity, other, true)) return;
 
@@ -249,18 +237,6 @@ lib.setBuilding(block, (block) => {
                     other.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY
                 );
                 Draw.reset();
-            }
-
-            // Draw sender effect
-            if (isTeleportActive(entity) && isTeleportActive(other)) {
-                // Draw.color(BLUE);
-                // Draw.alpha(opacity);
-                // Lines.circle(tile.x, tile.y, TELEPORTER_RADIUS);
-                if (Mathf.random(60) > 48) {
-                    Time.run(Mathf.random(10), run(() => {
-                        inEffect.at(entity.x, entity.y, 0);
-                    }));
-                }
             }
 
             Draw.reset();
@@ -329,6 +305,13 @@ lib.setBuilding(block, (block) => {
                 shouldConsume = true;
                 target.setConnected(entity);
                 if (isTeleportActive(entity) && isTeleportActive(target)) {
+                    // Draw sender effect
+                    if (Mathf.random(60) > 48) {
+                        Time.run(Mathf.random(10), run(() => {
+                            inEffect.at(entity.x, entity.y, 0);
+                        }));
+                    }
+
                     // Try teleport units in range
                     // If too much units on target teleporter, abort.
                     var isTooMuch = (() => {
@@ -389,6 +372,18 @@ lib.setBuilding(block, (block) => {
                 rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, 0.02);
             }
             rotate += rotateSpeed;
+
+            // Draw receiver
+            if (entity.getConnected() != null && isTeleportActive(entity.getConnected()) && isTeleportActive(entity)) {
+                // Draw.color(ORANGE);
+                // Draw.alpha(opacity);
+                // Lines.circle(tile.x, tile.y, TELEPORTER_RADIUS);
+                if (Mathf.random(60) > 48) {
+                    Time.run(Mathf.random(10), run(() => {
+                        outEffect.at(entity.x, entity.y, 0);
+                    }));
+                }
+            }
         },
 
         // Save Load
