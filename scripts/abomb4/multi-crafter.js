@@ -16,42 +16,66 @@
 // along with Dimension Shard.  If not, see <http://www.gnu.org/licenses/>.
 
 
+/**
+ * @typedef {Object} Liquid - Java type Liquid
+ * @typedef {Object} Item - Java type Item
+ * @typedef {Object} Effect - Java type Effect
+ * @typedef {Object} Attribute - Java enum Attrubite
+ *
+ * @typedef {Object} Consume - Info of resources to consume
+ * @property {number} power - Power consume, 1 = 60/s
+ * @property {{ item: Item, amount: number }[]} items - Consume items, can be empty list, not nullable
+ * @property {{ liquid: Liquid, amount: number }[]} liquids - Consume liquids, can be empty list, not nullable
+ *
+ * @typedef {Object} Output - Info of resources to output
+ * @property {number} power - Power output, 1 = 60/s
+ * @property {{ item: Item, amount: number }[]} items - Output items, can be empty list, not nullable
+ * @property {{ liquid: Liquid, amount: number }[]} liquids - Output liquids, can be empty list, not nullable
+ *
+ * @typedef {Object} Plan - Crafting plan
+ * @property {Consume} consume - Resources to consume
+ * @property {Output} output - Resources to produce
+ * @property {Effect} craftEffect - Craft effect, fire when crafted
+ * @property {number} craftTime - Craft time
+ * @property {number} boostScale - Attribute boost scale
+ * @property {Attribute} attribute - Attribute required to boost
+ *
+ * @typedef {Object} MultiCrafterConfig - Multi Crafter definition configuration
+ * @property {string} name - 方块名称
+ * @property {number} unlinearEffectUp - 非线性并发效率提升比例，默认 0；并发可提高整体效率到接近 200% ，但永远达不到
+ * @property {number} itemCapacity - 物品容量
+ * @property {number} liquidCapacity - 液体容量
+ * @property {number} updateEffectChance - 生产效果几率，建议 0.15
+ * @property {Effect} updateEffect - 生产效果
+ * @property {Sound} ambientSound - 生产声音
+ * @property {number} ambientSoundVolume - 生产声音大小
+ * @property {function(building): any} draw - 自定义绘图方法
+ * @property {Plan[]} plans - 方案列表
+ */
 
 /**
  * 定义一个多合成工厂 Block 。
  *
  * 资源消耗方面，多合成工厂会直接吞噬材料而不是生产完成后再吞噬材料。
  *
- * @param {{
-    *   name: string,              // 方块名称
-    *   itemCapacity: number,      // 物品容量
-    *   liquidCapacity: number,    // 液体容量
-    *   updateEffectChance: number,// 生产效果几率，建议 0.15
-    *   updateEffect: Effect,      // 生产效果
-    *   ambientSound: Sound,       // 生产声音
-    *   ambientSoundVolume: number,// 生产声音大小
-    *   draw: (building) => any,   // 自定义绘图方法
-    *   plans: {                   // 方案列表
-    *     consume: {               // 消费资源
-    *       power: number,         // 1 = 60/s
-    *       items: { item: Item, amount: number }[],
-    *       liquids: { liquid: Liquid, amount: number }[]
-    *     },
-    *     output: {                // 生产资源
-    *       power: number,
-    *       items: { item: Item, amount: number },
-    *       liquids: { liquid: Liquid, amount: number }
-    *     },
-    *     craftEffect: Effect,     // 生产效果
-    *     craftTime: number,       // 建造时间
-    *     boostScale: number,      // 地形加成倍数，1 = 100%
-    *     attribute: Attribute,    // 地形加成
-    *   }[]
-    * }} config 配置项
-    *
-    * @author 滞人<abomb4@163.com> 2020-11-21
-    */
-exports.defineMultiCrafter = function(config) {
+ * @param {MultiCrafterConfig} originConfig 配置项
+ *
+ * @author 滞人<abomb4@163.com> 2020-11-21
+ */
+exports.defineMultiCrafter = function (originConfig) {
+    function unlinear(ratio, count) {
+        if (ratio == 0) {
+            return 1;
+        }
+        if (ratio < 0 || ratio > 1) {
+            throw new Error('Ratio cannot lesser than 0 or greeter than 1')
+        }
+        var rt = 0;
+        for (var i = 0; i < count; i++) {
+            rt += (1 - rt) * ratio;
+        }
+        return rt;
+    }
     function func(getter) { return new Func({ get: getter }); }
     function cons2(fun) { return new Cons2({ get: (v1, v2) => fun(v1, v2) }); }
     function randomLoop(list, func) {
@@ -63,6 +87,64 @@ exports.defineMultiCrafter = function(config) {
             (v => func(v))(list[i]);
         }
     }
+    /** @type {MultiCrafterConfig} */
+    const config = Object.assign({
+        unlinearEffectUp: 0,
+        itemCapacity: 10,
+        liquidCapacity: 10,
+        updateEffectChance: 0,
+        updateEffect: Fx.none,
+        ambientSound: Sound.none,
+        ambientSoundVolume: 0.05,
+        plans: []
+    }, originConfig);
+
+    (function validate() {
+        function check(val, checker, msg) {
+            if (!checker(val)) {
+                throw new Error(msg(val));
+            }
+        }
+        check(config.unlinearEffectUp, v => v >= 0 && v <= 1, v => 'unlinearEffectUp must in [0, 1], it was ' + v);
+        check(config.itemCapacity, v => typeof v === 'number' && v >= 0, v => 'itemCapacity must be number and greeter equals to 0, it was ' + v);
+        check(config.liquidCapacity, v => typeof v === 'number' && v >= 0, v => 'liquidCapacity must be number and greeter equals to 0, it was ' + v);
+        check(config.updateEffectChance, v => typeof v === 'number' && v >= 0, v => 'updateEffectChance must be number and in [0, 1], it was ' + v);
+        check(config.updateEffect, v => v && v.render, v => 'updateEffect must be a Effect instance, it was ' + v);
+        check(config.ambientSoundVolume, v => typeof v === 'number' && v >= 0, v => 'ambientSoundVolume must be number and in [0, 1], it was ' + v);
+        check(config.ambientSound, v => v && v.at, v => 'ambientSound must be a Sound instance, it was ' + v);
+        check(config.plans, v => Array.isArray(v), v => 'plans must be an array, it was ' + v);
+
+        for (var i = 0; i < config.plans.length; i++) {
+            var plan = config.plans[i];
+            check(plan.attribute, v => !v || v.env, v => 'plans[' + i + '].attribute must be null or Attribute, it was ' + v);
+            check(plan.boostScale, v => typeof v === 'number' && v > 0, v => 'plans[' + i + '].boostScale must be number and greeter than 0, it was ' + v);
+            check(plan.craftEffect, v => v && v.render, v => 'plans[' + i + '].craftEffect must be a Effect instance, it was ' + v);
+            check(plan.craftTime, v => typeof v === 'number' && v > 0, v => 'plans[' + i + '].craftTime must be number and greeter than 0, it was ' + v);
+            check(plan.consume, v => v != undefined, v => 'plans[' + i + '].consume must be a js object, it was ' + v);
+            check(plan.consume.items, v => Array.isArray(v), v => 'plans[' + i + '].consume.items must be an array, it was ' + v);
+            check(plan.consume.liquids, v => Array.isArray(v), v => 'plans[' + i + '].consume.liquids must be an array, it was ' + v);
+            check(plan.consume.power, v => typeof v === 'number' && v >= 0, v => 'plans[' + i + '].consume.power must be number and greeter equals to 0, it was ' + v);
+            check(plan.output, v => v != undefined, v => 'plans[' + i + '].output must be a js object, it was ' + v);
+            check(plan.output.items, v => Array.isArray(v), v => 'plans[' + i + '].output.items must be an array, it was ' + v);
+            check(plan.output.liquids, v => Array.isArray(v), v => 'plans[' + i + '].output.liquids must be an array, it was ' + v);
+            check(plan.output.power, v => typeof v === 'number' && v >= 0, v => 'plans[' + i + '].output.power must be number and greeter equals to 0, it was ' + v);
+
+            for (var j = 0; j < plan.consume.items.length; j++) {
+                var itemInfo = plan.consume.items[j];
+                check(itemInfo.item, v => v != undefined && v.flammability != undefined,
+                    v => 'plans[' + i + '].consume.items[' + j + '].item must be a Item instance, it was ' + v);
+                check(itemInfo.number, v => typeof v === 'number' && v > 0,
+                    v => 'plans[' + i + '].consume.items[' + j + '].number must be number and greeter than 0, it was ' + v);
+            }
+            for (var j = 0; j < plan.consume.liquids.length; j++) {
+                var liquidInfo = plan.consume.liquids[j];
+                check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
+                    v => 'plans[' + i + '].consume.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
+                check(liquidInfo.number, v => typeof v === 'number' && v > 0,
+                    v => 'plans[' + i + '].consume.liquids[' + j + '].number must be number and greeter than 0, it was ' + v);
+            }
+        }
+    })();
 
     const plans = [];
 
