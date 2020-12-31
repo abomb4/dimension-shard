@@ -39,6 +39,13 @@ const unitType = (() => {
                         Fx.heal.at(unit.x, unit.y);
                         skill.numValue1 = 0;
                         skill.numValue2 = 0;
+
+                        // Try active skill if serval Collapse under control
+                        unit.controlling.each(cons(mem => {
+                            if (mem.type == unit.type) {
+                                mem.tryActiveSkill(this.name, data);
+                            }
+                        }));
                     },
                     preUpdate(skill, unit, lastFrame) {
                         skill.numValue2 = Mathf.lerpDelta(skill.numValue2, 0, 1 / 10);
