@@ -63,19 +63,30 @@
  * @author 滞人<abomb4@163.com> 2020-11-21
  */
 exports.defineMultiCrafter = function (originConfig) {
+
+    /**
+     * 1 - (1 - ratio) ^ count
+     *
+     * like Multiplicative stacking in Dota2.
+     *
+     * @param {number} ratio ratio
+     * @param {number} count count
+     */
     function unlinear(ratio, count) {
-        if (ratio == 0) {
-            return 1;
+        if (ratio == 0 && count == 0) {
+            return 0;
         }
         if (ratio < 0 || ratio > 1) {
             throw new Error('Ratio cannot lesser than 0 or greeter than 1')
         }
-        var rt = 0;
-        for (var i = 0; i < count; i++) {
-            rt += (1 - rt) * ratio;
-        }
-        return rt;
+        // var rt = 0;
+        // for (var i = 0; i < count; i++) {
+        //     rt += (1 - rt) * ratio;
+        // }
+        // return rt;
+        return 1 - Math.pow((1 - ratio), count) + 0.00000000000000006;
     }
+
     function func(getter) { return new Func({ get: getter }); }
     function cons2(fun) { return new Cons2({ get: (v1, v2) => fun(v1, v2) }); }
     function randomLoop(list, func) {
@@ -202,6 +213,17 @@ exports.defineMultiCrafter = function (originConfig) {
             return entity.getData().planDatas[id] = data;
         }
 
+        /**
+         * If multiple plans running parallel, their efficiency reduce to 1 / numOfRunningPlan
+         *
+         * @param {Building} entity
+         * @returns {number} Efficiency
+         */
+        function getMultiPlanEfficiencyAffect(entity) {
+            const running = entity.getData().planDatas.filter(v => v.running).length;
+            return 1 / running * (1 + unlinear(config.unlinearEffectUp, running - 1));
+        }
+
         function getAttributeEfficiency(entity) {
             const data = getData(entity);
             const attrSum = data.attrSum;
@@ -214,15 +236,15 @@ exports.defineMultiCrafter = function (originConfig) {
         }
 
         function getProgressEfficiency(entity) {
-            return entity.edelta() * getAttributeEfficiency(entity);
+            return entity.edelta() * getAttributeEfficiency(entity) * getMultiPlanEfficiencyAffect(entity);
+        }
+
+        function getPowerProgressEfficiency(entity) {
+            return entity.delta() * getAttributeEfficiency(entity) * getMultiPlanEfficiencyAffect(entity);
         }
 
         function getProgressAddition(entity, craftTime) {
             return 1 / craftTime * getProgressEfficiency(entity);
-        }
-
-        function getPowerProgressEfficiency(entity) {
-            return entity.delta() * getAttributeEfficiency(entity);
         }
 
         function eat(entity) {
@@ -321,7 +343,7 @@ exports.defineMultiCrafter = function (originConfig) {
             }
 
             if (outputPower) {
-                data.powerProduceTime += craftTime;
+                data.powerProduceTime += craftTime * 1.05; // 1.05 try prevent not continous
             }
 
             data.progress = 0;
