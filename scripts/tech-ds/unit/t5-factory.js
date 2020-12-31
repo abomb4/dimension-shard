@@ -20,6 +20,8 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 const { equa } = require('tech-ds/unit/ast5-equa');
 const { collapse } = require('tech-ds/unit/aat5-collapse');
+const { formula } = require('tech-ds/unit/ast4-formula');
+const { burn } = require('tech-ds/unit/aat4-burn');
 
 const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -51,6 +53,8 @@ block.consumes.liquid(items.ionLiquid, 1);
 
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.quad, equa),
+    lib.createUnitPlan(formula, equa),
     lib.createUnitPlan(UnitTypes.antumbra, collapse),
+    lib.createUnitPlan(burn, collapse),
 );
 exports.t5Factory = block;
