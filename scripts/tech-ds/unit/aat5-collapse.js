@@ -22,6 +22,9 @@ const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
     const m = extendContent(UnitType, 'collapse', {
+        /**
+         * @returns {import('abomb4/skill-framework').SkillDefinition[]}
+         */
         getSkillDefinitions() {
             return [
                 {

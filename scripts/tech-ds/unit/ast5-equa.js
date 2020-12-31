@@ -21,6 +21,9 @@ const { payloadConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
     const m = extendContent(UnitType, 'equa', {
+        /**
+         * @returns {import('abomb4/skill-framework').SkillDefinition[]}
+         */
         getSkillDefinitions() {
             const teleportColor = Color.valueOf("69dcee");
             const teleportEffect = new Effect(40, 100, cons(e => {

@@ -298,7 +298,7 @@ const skillFrag = (() => {
  * @property {function(SkillStatus, Unit, boolean)} preUpdate - For continously skill; 3rd param is 'isLastFrame'
  * @property {function(SkillStatus, Unit, boolean)} postUpdate - For continously skill; 3rd param is 'isLastFrame'
  * @property {function(SkillStatus, Unit, boolean)} draw - For continously skill; 3rd param is 'isLastFrame'
- * @property {function(SkillStatus, Unit, number) => number} updateDamage - Update damage, return new damage value; 3rd param is damage.
+ * @property {function(SkillStatus, Unit, number): number} updateDamage - Update damage, return new damage value; 3rd param is damage.
  */
 
 /**
