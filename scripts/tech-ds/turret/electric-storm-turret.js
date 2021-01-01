@@ -67,6 +67,21 @@ const turret = blockTypes.newNoRotatingTurret({
         isHidden() { return !dsGlobal.techDsAvailable(); },
     },
     buildingOverrides: {
+        // I think the default udpatShooting and updateCooling is wrong, so modify it.
+        updateShooting() {
+            if (this.reload >= this.block.reloadTime) {
+                var type = this.peekAmmo();
+                this.shoot(type);
+                this.reload = 0;
+            }
+        },
+        updateTile() {
+            this.super$updateTile();
+            // Do reload if has ammo.
+            if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+                this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
+            }
+        },
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
             const { tr, velocityInaccuracy, minRange } = this.block;

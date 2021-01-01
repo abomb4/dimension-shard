@@ -32,7 +32,7 @@ const unitType = (() => {
     m.constructor = mechConstructor;
 
     m.armor = 9;
-    m.health = 9000;
+    m.health = 8000;
     m.speed = 0.35;
     m.rotateSpeed = 2;
     m.flying = false;

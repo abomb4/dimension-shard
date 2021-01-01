@@ -132,7 +132,7 @@ const skillFrag = (() => {
         if (skillList && skillList.length > index) {
             const skill = skillList[index];
             if (skill.reload >= skill.def.cooldown) {
-                if (skill.def.activeTime <= 0) {
+                if (skill.def.directivity) {
                     selectSkill = selectSkill == index ? -1 : index;
                 } else {
                     // ACTIVE IT
@@ -349,6 +349,7 @@ function _define_constructor_(clazz, classId) {
         var skillInited = false;
         /** @type {SkillStatus[]} */
         const statusList = [];
+        var fuckedId = null;
 
         function initSkill(unit) {
             if (!skillInited) {
@@ -391,6 +392,7 @@ function _define_constructor_(clazz, classId) {
                     delete skillStatusMap[i];
                 }
                 while (statusList.pop() !== undefined) {}
+                skillInited = false;
             },
             update() {
                 if (statusList) {

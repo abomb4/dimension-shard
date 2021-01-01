@@ -178,6 +178,21 @@ items.spaceCrystal, (() => {
 turret.consumes.powerCond(1, boolf(b => b.isActive()));
 
 lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, {
+    // I think the default udpatShooting and updateCooling is wrong, so modify it.
+    updateShooting() {
+        if (this.reload >= this.block.reloadTime) {
+            var type = this.peekAmmo();
+            this.shoot(type);
+            this.reload = 0;
+        }
+    },
+    updateTile() {
+        this.super$updateTile();
+        // Do reload if has ammo.
+        if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+            this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
+        }
+    },
 });
 
 exports.bombTeleporter = turret;

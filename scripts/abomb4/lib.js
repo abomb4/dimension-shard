@@ -20,8 +20,6 @@ exports.modName = "dimension-shard";
 
 exports.mod = Vars.mods.locateMod(exports.modName);
 
-exports.defineMultiCrafter = require('abomb4/multi-crafter').defineMultiCrafter;
-
 exports.loadSound = (() => {
     const cache = {};
     return (path) => {
