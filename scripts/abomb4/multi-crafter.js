@@ -105,7 +105,7 @@ exports.defineMultiCrafter = function (originConfig) {
         liquidCapacity: 10,
         updateEffectChance: 0,
         updateEffect: Fx.none,
-        ambientSound: Sound.none,
+        ambientSound: Sounds.none,
         ambientSoundVolume: 0.05,
         plans: []
     }, originConfig);
@@ -128,31 +128,53 @@ exports.defineMultiCrafter = function (originConfig) {
         for (var i = 0; i < config.plans.length; i++) {
             var plan = config.plans[i];
             check(plan.attribute, v => !v || v.env, v => 'plans[' + i + '].attribute must be null or Attribute, it was ' + v);
-            check(plan.boostScale, v => typeof v === 'number' && v > 0, v => 'plans[' + i + '].boostScale must be number and greeter than 0, it was ' + v);
+            check(plan.boostScale, v => !v || (typeof v === 'number' && v > 0), v => 'plans[' + i + '].boostScale must be number and greeter than 0, it was ' + v);
             check(plan.craftEffect, v => v && v.render, v => 'plans[' + i + '].craftEffect must be a Effect instance, it was ' + v);
             check(plan.craftTime, v => typeof v === 'number' && v > 0, v => 'plans[' + i + '].craftTime must be number and greeter than 0, it was ' + v);
             check(plan.consume, v => v != undefined, v => 'plans[' + i + '].consume must be a js object, it was ' + v);
             check(plan.consume.items, v => Array.isArray(v), v => 'plans[' + i + '].consume.items must be an array, it was ' + v);
-            check(plan.consume.liquids, v => Array.isArray(v), v => 'plans[' + i + '].consume.liquids must be an array, it was ' + v);
-            check(plan.consume.power, v => typeof v === 'number' && v >= 0, v => 'plans[' + i + '].consume.power must be number and greeter equals to 0, it was ' + v);
+            check(plan.consume.liquids, v => !v || Array.isArray(v), v => 'plans[' + i + '].consume.liquids must be null or an array, it was ' + v);
+            check(plan.consume.power, v => !v || (typeof v === 'number' && v >= 0), v => 'plans[' + i + '].consume.power must be null or a number and greeter equals to 0, it was ' + v);
             check(plan.output, v => v != undefined, v => 'plans[' + i + '].output must be a js object, it was ' + v);
             check(plan.output.items, v => Array.isArray(v), v => 'plans[' + i + '].output.items must be an array, it was ' + v);
-            check(plan.output.liquids, v => Array.isArray(v), v => 'plans[' + i + '].output.liquids must be an array, it was ' + v);
-            check(plan.output.power, v => typeof v === 'number' && v >= 0, v => 'plans[' + i + '].output.power must be number and greeter equals to 0, it was ' + v);
+            check(plan.output.liquids, v => !v || Array.isArray(v), v => 'plans[' + i + '].output.liquids must be null or an array, it was ' + v);
+            check(plan.output.power, v => !v || (typeof v === 'number' && v >= 0), v => 'plans[' + i + '].output.power must be null or a number and greeter equals to 0, it was ' + v);
 
-            for (var j = 0; j < plan.consume.items.length; j++) {
-                var itemInfo = plan.consume.items[j];
-                check(itemInfo.item, v => v != undefined && v.flammability != undefined,
-                    v => 'plans[' + i + '].consume.items[' + j + '].item must be a Item instance, it was ' + v);
-                check(itemInfo.number, v => typeof v === 'number' && v > 0,
-                    v => 'plans[' + i + '].consume.items[' + j + '].number must be number and greeter than 0, it was ' + v);
+            if (plan.consume.items) {
+                for (var j = 0; j < plan.consume.items.length; j++) {
+                    var itemInfo = plan.consume.items[j];
+                    check(itemInfo.item, v => v != undefined && v.flammability != undefined,
+                        v => 'plans[' + i + '].consume.items[' + j + '].item must be a Item instance, it was ' + v);
+                    check(itemInfo.amount, v => typeof v === 'number' && v > 0,
+                        v => 'plans[' + i + '].consume.items[' + j + '].amount must be number and greeter than 0, it was ' + v);
+                }
             }
-            for (var j = 0; j < plan.consume.liquids.length; j++) {
-                var liquidInfo = plan.consume.liquids[j];
-                check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
-                    v => 'plans[' + i + '].consume.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
-                check(liquidInfo.number, v => typeof v === 'number' && v > 0,
-                    v => 'plans[' + i + '].consume.liquids[' + j + '].number must be number and greeter than 0, it was ' + v);
+            if (plan.consume.liquids) {
+                for (var j = 0; j < plan.consume.liquids.length; j++) {
+                    var liquidInfo = plan.consume.liquids[j];
+                    check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
+                        v => 'plans[' + i + '].consume.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
+                    check(liquidInfo.amount, v => typeof v === 'number' && v > 0,
+                        v => 'plans[' + i + '].consume.liquids[' + j + '].amount must be number and greeter than 0, it was ' + v);
+                }
+            }
+            if (plan.output.items) {
+                for (var j = 0; j < plan.output.items.length; j++) {
+                    var itemInfo = plan.output.items[j];
+                    check(itemInfo.item, v => v != undefined && v.flammability != undefined,
+                        v => 'plans[' + i + '].output.items[' + j + '].item must be a Item instance, it was ' + v);
+                    check(itemInfo.amount, v => typeof v === 'number' && v > 0,
+                        v => 'plans[' + i + '].output.items[' + j + '].amount must be number and greeter than 0, it was ' + v);
+                }
+            }
+            if (plan.output.liquids) {
+                for (var j = 0; j < plan.output.liquids.length; j++) {
+                    var liquidInfo = plan.output.liquids[j];
+                    check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
+                        v => 'plans[' + i + '].output.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
+                    check(liquidInfo.amount, v => typeof v === 'number' && v > 0,
+                        v => 'plans[' + i + '].output.liquids[' + j + '].amount must be number and greeter than 0, it was ' + v);
+                }
             }
         }
     })();
@@ -220,7 +242,13 @@ exports.defineMultiCrafter = function (originConfig) {
          * @returns {number} Efficiency
          */
         function getMultiPlanEfficiencyAffect(entity) {
-            const running = entity.getData().planDatas.filter(v => v.running).length;
+            var running = 0;
+            for (var i in Object.keys(entity.getData().planDatas)) {
+                var data = entity.getData().planDatas[i];
+                if (data && data.running) {
+                    running += 1;
+                }
+            }
             return 1 / running * (1 + unlinear(config.unlinearEffectUp, running - 1));
         }
 
@@ -709,6 +737,8 @@ exports.defineMultiCrafter = function (originConfig) {
         });
         return entity;
     });
+
+    return block;
 }
 /*
 defineMultiCrafter({
