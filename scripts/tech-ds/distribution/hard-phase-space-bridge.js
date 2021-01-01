@@ -18,7 +18,7 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 
-var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
+var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
     drawPlace(x, y, rotation, valid) {
         const range = this.range;
@@ -47,33 +47,34 @@ var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
         if (other == null || tile == null) return false;
 
         if (checkDouble === undefined) { checkDouble = true; }
-        return other.block() === phaseSpaceBridge
-            && tile.block() === phaseSpaceBridge
+        return other.block() === hardPhaseSpaceBridge
+            && tile.block() === hardPhaseSpaceBridge
             && (!checkDouble || other.build.link != tile.pos())
             && tile.within(other, this.range * Vars.tilesize);
     },
 });
-phaseSpaceBridge.buildVisibility = BuildVisibility.shown;
-phaseSpaceBridge.category = Category.distribution;
-phaseSpaceBridge.size = 1;
-phaseSpaceBridge.health = 220;
-phaseSpaceBridge.hasItems = true;
-phaseSpaceBridge.hasLiquids = true;
-phaseSpaceBridge.outputsLiquid = true;
-phaseSpaceBridge.itemCapacity = 20;
-phaseSpaceBridge.liquidCapacity = 20;
-phaseSpaceBridge.range = 15;
-phaseSpaceBridge.transportTime = 0.01;
-phaseSpaceBridge.requirements = ItemStack.with(
-    Items.metaglass, 15,
-    Items.silicon, 5,
-    Items.titanium, 8,
-    Items.phaseFabric, 15,
-    items.dimensionShard, 20
+hardPhaseSpaceBridge.buildVisibility = BuildVisibility.shown;
+hardPhaseSpaceBridge.category = Category.distribution;
+hardPhaseSpaceBridge.size = 1;
+hardPhaseSpaceBridge.health = 450;
+hardPhaseSpaceBridge.hasItems = true;
+hardPhaseSpaceBridge.hasLiquids = true;
+hardPhaseSpaceBridge.outputsLiquid = true;
+hardPhaseSpaceBridge.itemCapacity = 20;
+hardPhaseSpaceBridge.liquidCapacity = 20;
+hardPhaseSpaceBridge.range = 18;
+hardPhaseSpaceBridge.transportTime = 0.01;
+hardPhaseSpaceBridge.requirements = ItemStack.with(
+    Items.metaglass, 20,
+    Items.silicon, 8,
+    Items.plastanium, 10,
+    Items.phaseFabric, 20,
+    items.dimensionShard, 30,
+    items.hardThoriumAlloy, 30,
 );
-phaseSpaceBridge.consumes.power(0.5);
+hardPhaseSpaceBridge.consumes.power(0.8);
 
-lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
+lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
 
     drawConfigure() {
         var entity = this;
@@ -202,10 +203,42 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
             this.moveLiquid(other, this.liquids.current());
         }
     },
+    moveLiquid(next, liquid) {
+        // No self burning
+        if (!next) { return 0; }
+
+        const hotLine = 0.7;
+        const coldLine = 0.55;
+
+        next = next.getLiquidDestination(this, liquid);
+        if (next.team == this.team && next.block.hasLiquids && this.liquids.get(liquid) > 0) {
+            var ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
+            var fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
+            var flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
+            flow = Math.min(flow, next.block.liquidCapacity - next.liquids.get(liquid));
+
+            if (flow > 0 && ofract <= fract && next.acceptLiquid(this, liquid)) {
+                next.handleLiquid(this, liquid, flow);
+                this.liquids.remove(liquid, flow);
+                return flow;
+            } else if (next.liquids.currentAmount() / next.block.liquidCapacity > 0.1 && fract > 0.1) {
+                var fx = (this.x + next.x) / 2.0;
+                var fy = (this.y + next.y) / 2.0;
+                var other = next.liquids.current();
+                // There was flammability logics, removed
+                if ((liquid.temperature > hotLine && other.temperature < coldLine) || (other.temperature > hotLine && liquid.temperature < coldLine)) {
+                    this.liquids.remove(liquid, Math.min(this.liquids.get(liquid), hotLine * Time.delta));
+                    if (Mathf.chance(0.2 * Time.delta)) {
+                        Fx.steam.at(fx, fy);
+                    }
+                }
+            }
+        }
+    },
     checkDump(to){
         var other = Vars.world.tile(this.link);
         return (!this.block.linkValid(this.tile, other, false));
     }
 });
 
-exports.phaseSpaceBridge = phaseSpaceBridge;
+exports.hardPhaseSpaceBridge = hardPhaseSpaceBridge;

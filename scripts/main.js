@@ -54,6 +54,7 @@ require('tech-ds/turret/ion-bolt-turret')
 require('tech-ds/turret/electric-storm-turret')
 
 require('tech-ds/distribution/phase-space-bridge')
+require('tech-ds/distribution/hard-phase-space-bridge')
 require('tech-ds/distribution/space-unloader')
 require('tech-ds/distribution/resources-dispatching-center')
 
