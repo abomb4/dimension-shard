@@ -15,6 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Dimension Shard.  If not, see <http://www.gnu.org/licenses/>.
 
+const lib = require('abomb4/lib');
 
 /**
  * @typedef {Object} Liquid - Java type Liquid
@@ -42,7 +43,8 @@
  *
  * @typedef {Object} MultiCrafterConfig - Multi Crafter definition configuration
  * @property {string} name - 方块名称
- * @property {number} unlinearEffectUp - 非线性并发效率提升比例，默认 0；并发可提高整体效率到接近 200% ，但永远达不到
+ * @property {boolean} noParallelAffect - 并发效率不受影响
+ * @property {number} parallelEffectUp - 非线性并发效率提升比例，取值[0, 1]，默认 0；并发可提高整体效率到接近 200% ，但永远达不到
  * @property {number} itemCapacity - 物品容量
  * @property {number} liquidCapacity - 液体容量
  * @property {number} updateEffectChance - 生产效果几率，建议 0.15
@@ -100,7 +102,8 @@ exports.defineMultiCrafter = function (originConfig) {
     }
     /** @type {MultiCrafterConfig} */
     const config = Object.assign({
-        unlinearEffectUp: 0,
+        noParallelAffect: false,
+        parallelEffectUp: 0,
         itemCapacity: 10,
         liquidCapacity: 10,
         updateEffectChance: 0,
@@ -116,7 +119,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 throw new Error(msg(val));
             }
         }
-        check(config.unlinearEffectUp, v => v >= 0 && v <= 1, v => 'unlinearEffectUp must in [0, 1], it was ' + v);
+        check(config.parallelEffectUp, v => v >= 0 && v <= 1, v => 'parallelEffectUp must in [0, 1], it was ' + v);
         check(config.itemCapacity, v => typeof v === 'number' && v >= 0, v => 'itemCapacity must be number and greeter equals to 0, it was ' + v);
         check(config.liquidCapacity, v => typeof v === 'number' && v >= 0, v => 'liquidCapacity must be number and greeter equals to 0, it was ' + v);
         check(config.updateEffectChance, v => typeof v === 'number' && v >= 0, v => 'updateEffectChance must be number and in [0, 1], it was ' + v);
@@ -242,14 +245,21 @@ exports.defineMultiCrafter = function (originConfig) {
          * @returns {number} Efficiency
          */
         function getMultiPlanEfficiencyAffect(entity) {
+            if (config.noParallelAffect) {
+                return 1;
+            }
             var running = 0;
-            for (var i in Object.keys(entity.getData().planDatas)) {
+            for (var i of Object.keys(entity.getData().planDatas)) {
                 var data = entity.getData().planDatas[i];
                 if (data && data.running) {
                     running += 1;
                 }
             }
-            return 1 / running * (1 + unlinear(config.unlinearEffectUp, running - 1));
+            if (running == 0) {
+                return 0;
+            }
+            const r = 1 / running * (1 + unlinear(config.parallelEffectUp, running - 1));
+            return r;
         }
 
         function getAttributeEfficiency(entity) {
@@ -471,6 +481,14 @@ exports.defineMultiCrafter = function (originConfig) {
             this.stats.add(Stat.output, new JavaAdapter(StatValue, {
                 display: (table) => {
                     table.defaults().padLeft(30).left();
+                    table.row();
+                    if (config.noParallelAffect) {
+                        table.add(lib.getMessage('stat', 'multiCrafterNoParallelAffect'));
+                    } else {
+                        table.add(lib.getMessage('stat', 'multiCrafterHaveParallelAffect'));
+                        table.row();
+                        table.add(lib.getMessage('stat', 'multiCrafterParallelEffect', [config.parallelEffectUp]));
+                    }
                     for (var plan of config.plans) {
                         ((plan) => {
                             table.row();
@@ -743,8 +761,10 @@ exports.defineMultiCrafter = function (originConfig) {
 /*
 defineMultiCrafter({
     name: 'mc-test',
-    itemCapacity: 100,
-    liquidCapacity: 100,
+    noParallelAffect: false,
+    parallelEffectUp: 0.5,
+    itemCapacity: 50,
+    liquidCapacity: 10,
     updateEffectChance: 0.05,
     updateEffect: Fx.none,
     ambientSound: Sounds.machine,
@@ -752,119 +772,39 @@ defineMultiCrafter({
     plans: [
         {
             consume: {
-                power: 0.5,
+                power: 5,
                 items: [
-                    { item: Items.blastCompound, amount: 1 }
+                    { item: Items.thorium, amount: 4 },
+                    { item: Items.sand, amount: 9 },
                 ],
-                liquids: [
-                    { liquid: Liquids.cryofluid, amount: 6 }
-                ]
             },
             output: {
-                power: 50,
                 items: [
-                    { item: Items.pyratite, amount: 1 },
-                    { item: Items.sporePod, amount: 1 },
+                    { item: Items.phaseFabric, amount: 1 },
                 ],
-                liquids: [
-                    { liquid: Liquids.oil, amount: 3 }
-                ]
             },
             craftEffect: Fx.flakExplosion,
             craftTime: 120,
-            attribute: Attribute.oil,
-            boostScale: 0.5
         },
         {
             consume: {
-                power: 0.5,
+                power: 10,
                 items: [
-                    { item: Items.copper, amount: 1 }
+                    { item: dimensionShard, amount: 6 },
+                    { item: Items.sand, amount: 18 },
                 ]
             },
             output: {
                 items: [
-                    { item: Items.sand, amount: 1 }
+                    { item: Items.phaseFabric, amount: 2 },
                 ]
             },
             craftEffect: Fx.flakExplosion,
-            craftTime: 1,
-        },
-        {
-            consume: {
-                power: 0.5,
-                items: [
-                    { item: Items.lead, amount: 1 }
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.silicon, amount: 1 }
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 1,
-        },
-        {
-            consume: {
-                power: 0.5,
-                items: [
-                    { item: Items.coal, amount: 1 }
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.titanium, amount: 1 }
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 1,
-        },
-        {
-            consume: {
-                power: 0.5,
-                items: [
-                    { item: Items.scrap, amount: 1 }
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.thorium, amount: 1 }
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 1,
-        },
-        {
-            consume: {
-                power: 0.5,
-                items: [
-                    { item: Items.sporePod, amount: 1 }
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.plastanium, amount: 1 }
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 1,
-        },
-        {
-            consume: {
-                power: 0.5,
-                items: [
-                    { item: Items.pyratite, amount: 1 }
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.surgeAlloy, amount: 1 }
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 1,
+            craftTime: 80,
         },
     ]
 });
+b.buildVisibility = BuildVisibility.shown;
+b.size = 7;
+b.category = Category.crafting;
 */
