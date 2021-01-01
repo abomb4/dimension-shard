@@ -50,3 +50,6 @@ Significantly improve the efficiency and productivity of the Time Condenser and 
 Enhance the Collapse and Beat;
 Bomb teleporter and Collapse bullet cannot be reflected;
 Significantly reduce all factory prices
+
+0.13:
+Add unit Rhapsody

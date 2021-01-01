@@ -40,6 +40,7 @@ require('tech-ds/unit/aat4-burn');
 require('tech-ds/unit/aat5-collapse');
 // - ground attack
 require('tech-ds/unit/gat4-beat');
+require('tech-ds/unit/gat5-rhapsody');
 
 require('tech-ds/wall-buildings')
 require('tech-ds/drill-buildings')

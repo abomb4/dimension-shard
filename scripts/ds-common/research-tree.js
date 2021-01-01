@@ -54,7 +54,8 @@ const { t4Factory } = require('tech-ds/unit/t4-factory')
 const { t5Factory } = require('tech-ds/unit/t5-factory')
 const { unitTeleporter } = require('tech-ds/unit/unit-teleporter')
 
-const { dimensionFall } = require('ds-common/planets')
+const { dimensionFall } = require('ds-common/planets');
+const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
@@ -127,6 +128,7 @@ lib.addToResearch(burn, { parent: t4Factory.name, });
 lib.addToResearch(collapse, { parent: burn.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
 
 lib.addToResearch(beat, { parent: t4Factory.name, });
+lib.addToResearch(rhapsody, { parent: beat.name, });
 
 // zones
 lib.addToResearch(dimensionFall, {

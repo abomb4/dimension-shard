@@ -22,6 +22,8 @@ const { equa } = require('tech-ds/unit/ast5-equa');
 const { collapse } = require('tech-ds/unit/aat5-collapse');
 const { formula } = require('tech-ds/unit/ast4-formula');
 const { burn } = require('tech-ds/unit/aat4-burn');
+const { beat } = require('tech-ds/unit/gat4-beat');
+const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 
 const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -56,5 +58,7 @@ block.upgrades.addAll(
     lib.createUnitPlan(formula, equa),
     lib.createUnitPlan(UnitTypes.antumbra, collapse),
     lib.createUnitPlan(burn, collapse),
+    lib.createUnitPlan(UnitTypes.scepter, rhapsody),
+    lib.createUnitPlan(beat, rhapsody),
 );
 exports.t5Factory = block;

@@ -20,6 +20,7 @@ const { newIonBoltBulletType, standardIonBolt1, standardIonBolt2, standardIonBol
 const { createDirectLightningTeam, createDirectLightning } = require('ds-common/bullet-types/direct-lightning');
 const { blackHole, blackHoleDamaged, fxBlackHoleExplode } = require('ds-common/bullet-types/black-hole');
 const { newSurroundingElectricBall } = require('ds-common/bullet-types/surrounding-electric-ball');
+const { newIonLaserBulletType, largeIonLaser } = require('ds-common/bullet-types/ion-laser');
 
 exports.newElectricStormBulletType = newElectricStormBulletType;
 exports.newIonBoltBulletType = newIonBoltBulletType;
@@ -32,3 +33,5 @@ exports.blackHole = blackHole;
 exports.blackHoleDamaged = blackHoleDamaged;
 exports.fxBlackHoleExplode = fxBlackHoleExplode;
 exports.newSurroundingElectricBall = newSurroundingElectricBall;
+exports.newIonLaserBulletType = newIonLaserBulletType;
+exports.largeIonLaser = largeIonLaser;

@@ -17,11 +17,36 @@
 
 const lib = require('abomb4/lib')
 const items = require('ds-common/items')
-const { newDeflectForceFieldAbility } = require('abomb4/abilities');
 const { newIonBoltBulletType } = require('ds-common/bullet-types/index');
 const { mechConstructor } = require('abomb4/skill-framework');
+const { largeIonLaser } = require('ds-common/bullet-types/index');
 
 const unitType = (() => {
+    const skillY = 10;
+    const chargeSound = Sounds.lasercharge;
+    const shootSound = Sounds.laserblast;
+    const laserBullet = largeIonLaser;
+    const laserShake = 14;
+    const fxIonLaserCharge = new Effect(60 * 3, 100, cons(e => {
+        const data = e.data;
+        var x = data.getX();
+        var y = data.getY();
+        Draw.color(items.ionLiquid.color);
+        Lines.stroke(e.fin() * 2);
+        Lines.circle(x, y, 4 + e.fout() * 100);
+
+        Fill.circle(x, y, e.fin() * 20);
+
+        Angles.randLenVectors(e.id, 20, 40 * e.fout(), lib.floatc2((x, y) => {
+            Fill.circle(x + x, y + y, e.fin() * 5);
+        }));
+
+        Draw.color();
+
+        Fill.circle(x, y, e.fin() * 10);
+    }));
+
+    var tmp = 0;
     const m = extendContent(UnitType, 'rhapsody', {
         getSkillDefinitions() {
             return [
@@ -31,38 +56,67 @@ const unitType = (() => {
                     icon: lib.loadRegion('ion-laser-large'),
                     directivity: true,
                     exclusive: true,
-                    activeTime: 60 * 4,
-                    cooldown: 60 * 4,
+                    activeTime: 60 * 3,
+                    cooldown: 60 * 12,
                     active(skill, unit, data) {
-                        Fx.heal.at(unit.x, unit.y);
+                        const the = (() => {
+                            var weapon = unit.mounts[0].weapon;
+                            return {
+                                getX() {
+                                    var mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
+                                    var shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                                    return shootX;
+                                },
+                                getY() {
+                                    var mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
+                                    var shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                                    return shootY;
+                                },
+                            }
+                        })();
+
+                        fxIonLaserCharge.at(the.getX(), the.getY(), 0, items.ionLiquid.color, {
+                            getX: () => the.getX(),
+                            getY: () => the.getY(),
+                        });
+                        chargeSound.at(the.getX(), the.getY(), 80 / (60 * 3));
+
                         skill.numValue1 = data.x;
                         skill.numValue2 = data.y;
+
+                        // Try active skill if serval Collapse under control
+                        unit.controlling.each(cons(mem => {
+                            if (mem.type == unit.type) {
+                                mem.tryActiveSkill(this.name, data);
+                            }
+                        }));
                     },
                     preUpdate(skill, unit, lastFrame) {
                         unit.vel.setZero();
-                        var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
-                        unit.lookAt(ang);
+                        tmp = unit.rotation;
+                        // var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
+                        // unit.lookAt(ang);
                         for (var mount of unit.mounts) {
                             mount.reload = 100;
                         }
                     },
                     postUpdate(skill, unit, lastFrame) {
-                        // if (lastFrame && unit && !unit.dead) {
-                        //     Fx.massiveExplosion.at(unit.x, unit.y);
-                        //     Sounds.explosionbig.at(unit.x, unit.y)
-                        //     Damage.damage(unit.team, unit.x, unit.y, 100, skill.numValue1);
-                        // }
-                        unit.vel.setLength(0.01);
+                        var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
+                        unit.rotation = tmp;
+                        unit.lookAt(ang);
                         if (lastFrame) {
-                            var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
-                            UnitTypes.corvus.weapons.get(0).bullet.create(unit, unit.team, unit.x, unit.y, ang);
-                            UnitTypes.corvus.weapons.get(0).bullet.create(unit, unit.team, unit.x, unit.y, ang);
-                            UnitTypes.corvus.weapons.get(0).bullet.create(unit, unit.team, unit.x, unit.y, ang);
-                            UnitTypes.corvus.weapons.get(0).bullet.create(unit, unit.team, unit.x, unit.y, ang);
-                            UnitTypes.corvus.weapons.get(0).bullet.create(unit, unit.team, unit.x, unit.y, ang);
+                            var weapon = unit.mounts[0].weapon;
+                            var mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
+                            var mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
+                            var shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                            var shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                            var ang = Tmp.v1.set(shootX, shootY).angleTo(skill.numValue1, skill.numValue2);
+                            laserBullet.create(unit, unit.team, shootX, shootY, ang);
+                            Effect.shake(laserShake, laserShake, shootX, shootY);
                             for (var mount of unit.mounts) {
-                                mount.reload = 1;
+                                mount.reload = weapon.reload;
                             }
+                            shootSound.at(shootX, shootY, 0.7);
                         }
                     },
                     draw(skill, unit, lastFrame) {
@@ -72,21 +126,9 @@ const unitType = (() => {
                         const danger = skill.numValue1 / 4000;
                         const color = items.dimensionShardColorLight.cpy().lerp(Color.red, danger);
                         Draw.color(color, Color.white, skill.numValue2 * (1 - danger * 0.5));
-                        if (Core.settings.getBool("animatedshields")) {
-                            Fill.circle(unit.x, unit.y, radius);
-                        } else {
-                            Lines.stroke(1.5);
-                            Draw.alpha(0.09 + Mathf.clamp(0.08 * hit));
-                            Fill.circle(unit.x, unit.y, radius);
-                            Draw.alpha(1);
-                            Lines.circle(unit.x, unit.y, radius);
-                            Draw.reset();
-                        }
                     },
                     updateDamage(skill, unit, amount) {
-                        skill.numValue1 += amount;
-                        skill.numValue2 = 1;
-                        return amount;
+                        return amount * 1.2;
                     },
                 },
             ];
@@ -95,48 +137,54 @@ const unitType = (() => {
 
     m.constructor = mechConstructor;
 
-    m.armor = 9;
-    m.health = 8000;
+    m.armor = 15;
+    m.health = 17000;
     m.speed = 0.35;
-    m.rotateSpeed = 2;
+    m.rotateSpeed = 1.8;
     m.flying = false;
     m.rotateShooting = true;
-    m.hitSize = 20;
+    m.hitSize = 30;
     m.destructibleWreck = false;
     m.canDrown = false;
-    m.mechFrontSway = 1;
+    m.mechFrontSway = 1.5;
+    m.mechSideSway = 0.6;
     m.mechStepParticles = true;
-    m.mechStepShake = 0.15;
+    m.mechStepShake = 0.75;
     m.singleTarget = true;
+    m.immunities.add(items.ionBurningEffect);
+    m.immunities.add(StatusEffects.burning);
 
     m.weapons.add(
         (() => {
             const w = new Weapon(lib.modName + "-rhapsody-weapon");
-            w.shake = 3;
-            w.shots = 8;
-            w.shotDelay = 0.5;
+            w.mirror = false;
+            w.shake = 2;
+            w.shots = 3;
+            w.shotDelay = 6;
             w.inaccuracy = 0;
-            w.shootY = 9;
-            w.x = 17;
-            w.y = 0;
+            w.shootX = 0;
+            w.shootY = 29;
+            w.x = 16;
+            w.y = 3;
             w.rotateSpeed = 4;
-            w.reload = 15.5;
+            w.reload = 60;
             w.recoil = 2;
-            w.shootSound = Blocks.salvo.shootSound;
+            w.shootSound = Sounds.none;
             w.shadow = 0;
             w.rotate = false;
-            w.bullet = (() => {
-                const v2 = new BasicBulletType(7, 24);
-                v2.lifetime = 26;
-                v2.ammoMultiplier = 4;
-                v2.width = Bullets.standardThorium.width;
-                v2.height = Bullets.standardThorium.height * 2;
-                v2.frontColor = Bullets.standardThorium.frontColor;
-                v2.backColor = Bullets.standardThorium.backColor;
-                v2.pierceBuilding = false;
-                // v.status = StatusEffects.blasted;
-                return v2;
-            })();
+            w.bullet = newIonBoltBulletType({
+                overrides: {
+                    init(b) {
+                        if (b) {
+                            this.super$init(b);
+                            lib.loadSound('ion-shot').at(b.x, b.y, Mathf.random(w.soundPitchMin, w.soundPitchMax));
+                        }
+                        else {
+                            this.super$init();
+                        }
+                    },
+                }
+            });
             return w;
         })()
     )
@@ -144,4 +192,4 @@ const unitType = (() => {
     return m;
 })();
 
-exports.remix = unitType;
+exports.rhapsody = unitType;

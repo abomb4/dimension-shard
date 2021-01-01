@@ -125,20 +125,23 @@ exports.newIonBoltBulletType = (requestOptions) => {
         lightningAngle: 90,
         lightningDamage: 20,
         lightningColor: ionLiquid.color,
-        puddles: 3,
+        puddles: 2,
         puddleRange: 8,
-        puddleAmount: 9,
+        puddleAmount: 10,
         puddleLiquid: ionLiquid,
         status: items.ionBurningEffect,
         statusDuration: 120,
-        fragBullets: 2,
+        fragBullets: 1,
         fragBullet: standardFrag3,
+        fragLifeMin: 0,
+        fragLifeMax: 1.2,
         backColor: ionLiquid.color,
         frontColor: ionLiquid.color,
+        overrides: {},
     }, requestOptions);
 
-    const v = new JavaAdapter(LaserBoltBulletType, {
-    }, mergedOptions.speed, mergedOptions.damage);
+    const v = new JavaAdapter(LaserBoltBulletType, Object.assign({
+    }, mergedOptions.overrides), mergedOptions.speed, mergedOptions.damage);
 
     for (var p of BULLET_PROPERTIES) {
         var value = mergedOptions[p];
