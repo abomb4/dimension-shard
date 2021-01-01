@@ -35,6 +35,22 @@ const unitType = (() => {
                     exclusive: false,
                     activeTime: 60 * 3,
                     cooldown: 60 * 10,
+                    aiCheckInterval: 30,
+                    aiCheck(skill, unit) {
+                        const dps = 800;
+                        const healthDanger = dps * this.aiCheckInterval / 60;
+                        const enemyRange = 50 * 1.5;
+
+                        if (skill.numValue3 > 0
+                            && skill.numValue3 - unit.health > healthDanger
+                            && Units.bestTarget(unit.team, unit.x, unit.y, enemyRange, boolf(e => !e.dead), boolf(b => true), Blocks.duo.unitSort)
+                            ) {
+                            unit.tryActiveSkill(this.name, {});
+                            skill.numValue3 = 0;
+                            return;
+                        }
+                        skill.numValue3 = unit.health;
+                    },
                     active(skill, unit, data) {
                         Fx.heal.at(unit.x, unit.y);
                         skill.numValue1 = 0;

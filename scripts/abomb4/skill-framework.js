@@ -294,6 +294,8 @@ const skillFrag = (() => {
  * @property {boolean} directivity - Should choose target.
  * @property {boolean} exclusive - Usage for continously skill, if true, other skills cannot activate during active time.
  * @property {number} activeTime - If the skill is continously skill, set to greeter than zero
+ * @property {number} aiCheckInterval - Default is 20, like Turret#targetInterval
+ * @property {function(SkillStatus, Unit)} aiCheck - Not empty, AI function
  * @property {function(SkillStatus, Unit, Data)} active - Not empty, active function
  * @property {function(SkillStatus, Unit, boolean)} preUpdate - For continously skill; 3rd param is 'isLastFrame'
  * @property {function(SkillStatus, Unit, boolean)} postUpdate - For continously skill; 3rd param is 'isLastFrame'
@@ -337,24 +339,33 @@ const skillFrag = (() => {
     },
 },
 */
-
+function runIfUndefined(v, setter) {
+    if (v === undefined) {
+        setter();
+    }
+}
+var idGen = 0;
 /**
  * To use this consturctor, the UnitType must define 'getSkillDefinitions()'.
  */
 function _define_constructor_(clazz, classId) {
     var construct = prov(() => {
+        const aiCheckTimer = new Interval(1);
         /** @type {{[key: string]: SkillStatus}} */
         const skillStatusMap = {
         };
-        var skillInited = false;
+        var skillUnitId = undefined;
         /** @type {SkillStatus[]} */
         const statusList = [];
-        var fuckedId = null;
 
         function initSkill(unit) {
-            if (!skillInited) {
+            if (skillUnitId === undefined) {
                 var definitions;
                 if (unit.type.getSkillDefinitions && (definitions = unit.type.getSkillDefinitions())) {
+                    definitions.forEach(def => {
+                        runIfUndefined(def.aiCheckInterval, () => def.aiCheckInterval = 20);
+                        runIfUndefined(def.aiCheck, () => def.aiCheck = (skill, unit) => {});
+                    });
                     for (var def of definitions) {
                         var skillStatus = {
                             // Definition
@@ -374,29 +385,45 @@ function _define_constructor_(clazz, classId) {
                         skillStatusMap[def.name] = skillStatus;
                     }
                 }
-                skillInited = true;
+                skillUnitId = idGen++;
             }
         }
         var u = new JavaAdapter(clazz, {
+            getSkillUnitId() {
+                return skillUnitId;
+            },
             getSkills() {
                 initSkill(this);
                 return statusList;
+            },
+            clearSkillData() {
+                for (var i in skillStatusMap) {
+                    delete skillStatusMap[i];
+                }
+                while (statusList.pop() !== undefined) {}
             },
             add() {
                 initSkill(this);
                 this.super$add();
             },
-            remove() {
-                this.super$remove();
-                for (var i in skillStatusMap) {
-                    delete skillStatusMap[i];
-                }
-                while (statusList.pop() !== undefined) {}
-                skillInited = false;
-            },
+            // remove() {
+            //     this.super$remove();
+            //     for (var i in skillStatusMap) {
+            //         delete skillStatusMap[i];
+            //     }
+            //     while (statusList.pop() !== undefined) {}
+            // },
             update() {
                 if (statusList) {
                     statusList.forEach(status => {
+                        if (status.reload >= status.def.cooldown
+                            && aiCheckTimer.get(0, status.def.aiCheckInterval)
+                            && !this.isPlayer()
+                            && this.controller.class != FormationAI
+                            && this.controller.class != LogicAI
+                            ) {
+                            status.def.aiCheck(status, this);
+                        }
                         if (status.active) {
                             status.activeTimeLeft -= Time.delta;
                             if (status.def.preUpdate) {
@@ -514,6 +541,19 @@ function _define_constructor_(clazz, classId) {
         });
         return u;
     });
+    Events.on(UnitDestroyEvent, cons(e => {
+        const unit = e.unit;
+        if (!unit) { return; }
+        if (unit.classId() == classId) {
+            unit.clearSkillData();
+        } else if (unit.payloads) {
+            unit.payloads.each(payload => {
+                if (payload.unit && payload.unit.classId() == classId) {
+                    unit.clearSkillData();
+                }
+            });
+        }
+    }));
     EntityMapping.idMap[classId] = construct;
     return construct;
 }

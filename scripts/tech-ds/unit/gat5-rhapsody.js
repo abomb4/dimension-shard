@@ -46,8 +46,11 @@ const unitType = (() => {
         Fill.circle(x, y, e.fin() * 10);
     }));
 
-    var tmp = 0;
+    var tmp = {};
     const m = extendContent(UnitType, 'rhapsody', {
+        /**
+         * @returns {import('abomb4/skill-framework').SkillDefinition[]}
+         */
         getSkillDefinitions() {
             return [
                 {
@@ -58,6 +61,20 @@ const unitType = (() => {
                     exclusive: true,
                     activeTime: 60 * 3,
                     cooldown: 60 * 12,
+                    aiCheck(skill, unit) {
+                        const target = Units.bestTarget(unit.team, unit.x, unit.y, laserBullet.length - 10,
+                            boolf(e => !e.dead), boolf(b => true), Blocks.duo.unitSort);
+                        if (target) {
+                            const bullet = m.weapons.get(0).bullet;
+                            const range = bullet.lifetime * bullet.speed;
+                            if (unit.dst(target) > range) {
+                                unit.tryActiveSkill(this.name, {
+                                    x: target.x,
+                                    y: target.y
+                                });
+                            }
+                        }
+                    },
                     active(skill, unit, data) {
                         const the = (() => {
                             var weapon = unit.mounts[0].weapon;
@@ -93,7 +110,7 @@ const unitType = (() => {
                     },
                     preUpdate(skill, unit, lastFrame) {
                         unit.vel.setZero();
-                        tmp = unit.rotation;
+                        skill.numValue3 = unit.rotation;
                         // var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
                         // unit.lookAt(ang);
                         for (var mount of unit.mounts) {
@@ -102,7 +119,7 @@ const unitType = (() => {
                     },
                     postUpdate(skill, unit, lastFrame) {
                         var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
-                        unit.rotation = tmp;
+                        unit.rotation = skill.numValue3;
                         unit.lookAt(ang);
                         if (lastFrame) {
                             var weapon = unit.mounts[0].weapon;
