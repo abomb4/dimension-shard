@@ -58,6 +58,7 @@ require('tech-ds/distribution/hard-phase-space-bridge')
 require('tech-ds/distribution/space-unloader')
 require('tech-ds/distribution/resources-dispatching-center')
 
+require('tech-ds/effect/core-construction-platform')
 require('tech-ds/effect/dimension-technology-core')
 require('tech-ds/effect/deflect-force-projector')
 require('tech-ds/effect/time-overdrive')
@@ -72,3 +73,6 @@ require('ds-common/research-tree')
 // l10n mod name and description
 lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
 lib.mod.meta.description = lib.getMessage('mod', 'description');
+
+
+Vars.experimental = true;
