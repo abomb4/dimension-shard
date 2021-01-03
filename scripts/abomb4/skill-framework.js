@@ -78,23 +78,35 @@ const Call_ActiveSkill = (() => {
         Call.clientPacketReliable(TYPE, pack);
     }
 
-    /** Client receives skill active packet, deal self */
-    Vars.netClient.addPacketHandler(TYPE, cons(pack => {
-        const info = readPackage(pack);
-        if (info.unit != null && info.unit.activeSkill !== undefined) {
-            // Avoid twice active
-            if (Vars.player.unit() == info.unit) { return; }
-            info.unit.activeSkill(info.skillName, info.data, true);
+    var inited = false;
+    function init() {
+        if (inited) { return; }
+        /** Client receives skill active packet, deal self */
+        if (Vars.netClient) {
+            Vars.netClient.addPacketHandler(TYPE, cons(pack => {
+                const info = readPackage(pack);
+                if (info.unit != null && info.unit.activeSkill !== undefined) {
+                    // Avoid twice active
+                    if (Vars.player.unit() == info.unit) { return; }
+                    info.unit.activeSkill(info.skillName, info.data, true);
+                }
+            }));
         }
-    }));
 
-    /** Server receives skill active packet, deal self and forward packet */
-    Vars.netServer.addPacketHandler(TYPE, lib.cons2((player, pack) => {
-        const info = readPackage(pack);
-        if (info.unit != null && info.unit.activeSkill !== undefined) {
-            info.unit.activeSkill(info.skillName, info.data, true);
-            forwardPackage(player, pack);
-        }
+        /** Server receives skill active packet, deal self and forward packet */
+        Vars.netServer.addPacketHandler(TYPE, lib.cons2((player, pack) => {
+            const info = readPackage(pack);
+            if (info.unit != null && info.unit.activeSkill !== undefined) {
+                info.unit.activeSkill(info.skillName, info.data, true);
+                forwardPackage(player, pack);
+            }
+        }));
+    }
+    Events.on(ServerLoadEvent, cons(e => {
+        init();
+    }));
+    Events.on(ClientLoadEvent, cons(e => {
+        init();
     }));
 
     return (unit, skillName, data) => {
@@ -107,6 +119,8 @@ const Call_ActiveSkill = (() => {
 })();
 
 const skillFrag = (() => {
+
+    if (Vars.headless) { return; }
 
     var selectSkill = -1;
     /** @type {SkillStatus[]} */

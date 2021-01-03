@@ -194,9 +194,10 @@ const block = new JavaAdapter(StorageBlock, {
             floatp(() => entity.items.total() / entity.getMaxItemCapacity())
         )));
         this.bars.add("launchCount", func(entity => new Bar(
-            prov(() => lib.getMessage("bar", "coreConstructionPlatformLaunchTimes",
+            prov(() => lib.getMessage("bar", "coreConstructionPlatformLaunchTimes", [
                 entity.getLaunchTimes(),
-                entity.getIsMain() ? entity.getRequirementInfo().launchCount : '-')),
+                entity.getIsMain() ? entity.getRequirementInfo().launchCount : '-'
+            ])),
             prov(() => Pal.items),
             floatp(() => entity.getLaunchTimes() / entity.getRequirementInfo().launchCount)
         )));
