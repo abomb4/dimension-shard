@@ -39,24 +39,34 @@ function defineItemRequirements(array) {
     return r;
 }
 const options = {
-    becomeCoreDelay: 60 * 2,
+    becomeCoreDelayDelay: 60 * 2.5,
+    becomeCoreDelay: 60 * 1.5,
     launchTime: 60 * 4,
     /** @type {RequirementInfo[]} */
     requirementInfos: [
         {
             launchCount: 3,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 4000 },
-                { item: Items.lead, amount: 4000 },
+                { item: Items.copper, amount: 2000 },
+                { item: Items.lead, amount: 2000 },
                 { item: Items.silicon, amount: 2000 },
             ])
         },
         {
             launchCount: 3,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 4400 },
-                { item: Items.lead, amount: 4400 },
-                { item: Items.silicon, amount: 2200 },
+                { item: Items.copper, amount: 3400 },
+                { item: Items.lead, amount: 3400 },
+                { item: Items.silicon, amount: 2400 },
+            ])
+        },
+        {
+            launchCount: 3,
+            requirements: defineItemRequirements([
+                { item: Items.copper, amount: 4000 },
+                { item: Items.lead, amount: 4000 },
+                { item: Items.silicon, amount: 2600 },
+                { item: Items.titanium, amount: 2600 },
             ])
         },
         {
@@ -64,15 +74,6 @@ const options = {
             requirements: defineItemRequirements([
                 { item: Items.copper, amount: 5000 },
                 { item: Items.lead, amount: 5000 },
-                { item: Items.silicon, amount: 2500 },
-                { item: Items.titanium, amount: 2500 },
-            ])
-        },
-        {
-            launchCount: 3,
-            requirements: defineItemRequirements([
-                { item: Items.copper, amount: 6000 },
-                { item: Items.lead, amount: 6000 },
                 { item: Items.silicon, amount: 3000 },
                 { item: Items.titanium, amount: 3000 },
             ])
@@ -184,14 +185,20 @@ function getRequirementInfo(building) {
 const block = new JavaAdapter(StorageBlock, {
     setStats() {
         this.super$setStats();
-        this.stats.add(Stat.launchTime, options.launchTime / 60, StatUnit.seconds);
     },
     setBars() {
         this.super$setBars();
         this.bars.add("items", func(entity => new Bar(
             prov(() => Core.bundle.format("bar.items", entity.items.total())),
             prov(() => Pal.items),
-            floatp(() => entity.items.total() / this.itemCapacity)
+            floatp(() => entity.items.total() / entity.getMaxItemCapacity())
+        )));
+        this.bars.add("launchCount", func(entity => new Bar(
+            prov(() => lib.getMessage("bar", "coreConstructionPlatformLaunchTimes",
+                entity.getLaunchTimes(),
+                entity.getIsMain() ? entity.getRequirementInfo().launchCount : '-')),
+            prov(() => Pal.items),
+            floatp(() => entity.getLaunchTimes() / entity.getRequirementInfo().launchCount)
         )));
     },
     outputsItems() {
@@ -262,7 +269,7 @@ function createPod() {
             return "CoreConstructionPlatformPod#" + this.id;
         },
         remove() {
-            if(this.added == false) return;
+            if (this.added == false) return;
             Groups.all.remove(this);
             Groups.draw.remove(this);
             this.added = false;
@@ -273,7 +280,10 @@ function createPod() {
 lib.setBuilding(block, block => {
 
     function getDefaultRequirementInfo() {
-        return options.requirementInfos[options.requirementInfos.length - 1];
+        return {
+            launchCount: 1,
+            requirements: {}
+        }
     }
 
     var isMain = false;
@@ -287,7 +297,7 @@ lib.setBuilding(block, block => {
 
     function debug(b) {
         print('id: ' + b.id + ', isMain: ' + isMain + ', launchTimes: ' + launchTimes + ', toCoreDelay: ' + toCoreDelay +
-        ', launchDelay: ' + launchDelay + ', readyLaunch: ' + readyLaunch + ', ready: ' + ready + ', requirementInfo: ' + JSON.stringify(requirementInfo));
+            ', launchDelay: ' + launchDelay + ', readyLaunch: ' + readyLaunch + ', ready: ' + ready + ', requirementInfo: ' + JSON.stringify(requirementInfo));
     }
     const building = new JavaAdapter(Building, {
         requirementInfoChanged() {
@@ -319,6 +329,8 @@ lib.setBuilding(block, block => {
         becomeCore() {
             Fx.placeBlock.at(this.tile, Blocks.coreShard.size);
             Fx.upgradeCore.at(this.tile, Blocks.coreShard.size);
+            Fx.launch.at(this.tile);
+            Effect.shake(5, 5, this.tile);
             this.tile.setBlock(Blocks.coreShard, this.team);
         },
         fullFilled() {
@@ -340,6 +352,26 @@ lib.setBuilding(block, block => {
                 }
             }
         },
+        getMaxItemCapacity() {
+            if (!isMain) {
+                return 0;
+            }
+            var sum = 0;
+            for (var key of Object.keys(requirementInfo.requirements)) {
+                sum += requirementInfo.requirements[key];
+            }
+            return sum;
+        },
+        getLaunchTimes() {
+            return launchTimes;
+        },
+        getRequirementInfo() {
+            return getRequirementInfo(this);
+        },
+        getIsMain() {
+            return isMain;
+        },
+        // -=-=-=-=-=-=-=-=-=- divide -=-=-=-=-=-=-=-=-=-
         created() {
             this.super$created();
             this.afterAdded();
@@ -370,7 +402,7 @@ lib.setBuilding(block, block => {
                 }
                 if (!ready && launchTimes === requirementInfo.launchCount) {
                     ready = true;
-                    toCoreDelay = options.becomeCoreDelay;
+                    toCoreDelay = options.becomeCoreDelay + options.becomeCoreDelayDelay;
                 }
                 if (ready) {
                     toCoreDelay -= this.delta();
@@ -385,17 +417,31 @@ lib.setBuilding(block, block => {
             if (ready) {
                 const region = Blocks.coreShard.region;
                 const teamRegion = Blocks.coreShard.teamRegion;
-                const percent = (1 - toCoreDelay / options.becomeCoreDelay)
+                const percent = (1 - Math.min(1, toCoreDelay / options.becomeCoreDelay))
                 const w = region.width * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const h = region.height * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const yAddition = 192 * Interp.pow3In.apply(1 - percent);
                 Draw.alpha(percent)
-                Draw.rect(region, this.x, this.y + yAddition, w, h, toCoreDelay);
+                Draw.rect(region, this.x, this.y + yAddition, w, h, toCoreDelay * 2);
                 Draw.color(this.team.color);
                 Draw.alpha(percent)
-                Draw.rect(teamRegion, this.x, this.y + yAddition, w, h, toCoreDelay);
+                Draw.rect(teamRegion, this.x, this.y + yAddition, w, h, toCoreDelay * 2);
                 Draw.color();
             }
+        },
+        displayConsumption(table) {
+            table.left();
+            table.table(cons(c => {
+                var i = 0;
+                for (var key of Object.keys(requirementInfo.requirements)) {
+                    var item = Vars.content.item(key);
+                    var amount = requirementInfo.requirements[key];
+                    c.add(new ReqImage(new ItemImage(item.icon(Cicon.medium), amount),
+                        boolp(() => this.items != null && this.items.has(item)))
+                    ).padRight(8);
+                    if (++i % 4 == 0) table.row();
+                }
+            })).left()
         },
         read(read, revision) {
             this.super$read(read, revision);
@@ -445,4 +491,4 @@ Events.on(WorldLoadEvent, cons(e => {
         selectMainBuilding(team);
     }
 }));
-exports.corePlatform = block;
+exports.coreConstructionPlatform = block;

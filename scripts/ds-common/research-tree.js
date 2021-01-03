@@ -56,12 +56,14 @@ const { unitTeleporter } = require('tech-ds/unit/unit-teleporter')
 
 const { dimensionFall } = require('ds-common/planets');
 const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
+const { coreConstructionPlatform } = require('tech-ds/effect/core-construction-platform');
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
 lib.addToResearch(shardPhaseWall, { parent: 'phase-wall-large', });
 lib.addToResearch(shardPhaseWallLarge, { parent: shardPhaseWall.name, });
 lib.addToResearch(dimensionTechnologyCore, { parent: 'core-nucleus', });
+lib.addToResearch(coreConstructionPlatform, { parent: 'launch-pad' });
 
 // -=-=-=-=-=-=-=-=-=-=-=- After core -=-=-=-=-=-=-=-=-=-=-=-
 // factory line

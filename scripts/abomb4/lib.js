@@ -45,9 +45,15 @@ exports.int = (v) => new java.lang.Integer(v);
  * Get message from bundle, 'type.mod-name.key'
  * @param {string} type the prefix such as block, unit, mech
  * @param {string} key  the suffix
- * @param {string[]} msgs  messages
+ * @param {string} msg1  messages
+ * @param {string} msg2  messages
+ * @param {string} msg3  messages
+ * @param {string} msg4  messages
+ * @param {string} msg5  messages
+ * @param {string} msg6  messages
  */
-exports.getMessage = (type, key, msgs) => Core.bundle.format(type + "." + exports.modName + "." + key, msgs);
+exports.getMessage = (type, key, msg1, msg2, msg3, msg4, msg5, msg6) =>
+    Core.bundle.format(type + "." + exports.modName + "." + key, msg1, msg2, msg3, msg4, msg5, msg6);
 
 /** Cannot use java.lang.reflect.Array, but Arrays.copyOf available! Lucky! */
 exports.createUnitPlan = (unitFrom, unitTo) => {
