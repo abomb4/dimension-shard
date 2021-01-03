@@ -59,6 +59,7 @@ const unitType = (() => {
                         Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
                         unit.x += Tmp.v1.x;
                         unit.y += Tmp.v1.y;
+                        unit.snapInterpolation();
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
                         // find commands
@@ -88,6 +89,7 @@ const unitType = (() => {
                         Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
                         unit.x += Tmp.v1.x;
                         unit.y += Tmp.v1.y;
+                        unit.snapInterpolation();
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
                         // find commands
