@@ -437,9 +437,9 @@ lib.setBuilding(block, block => {
                     var item = Vars.content.item(key);
                     var amount = requirementInfo.requirements[key];
                     c.add(new ReqImage(new ItemImage(item.icon(Cicon.medium), amount),
-                        boolp(() => this.items != null && this.items.has(item)))
+                        ((item, amount) => boolp(() => this.items != null && this.items.has(item) && this.items.get(item) >= amount))(item, amount))
                     ).padRight(8);
-                    if (++i % 4 == 0) table.row();
+                    if (++i % 4 == 0) c.row();
                 }
             })).left()
         },
