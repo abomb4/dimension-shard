@@ -68,6 +68,7 @@ const unitType = (() => {
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                             mem.x += Tmp.v1.x;
                             mem.y += Tmp.v1.y;
+                            mem.snapInterpolation();
                             teleportEffect.at(mem.x, mem.y);
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                         }));
@@ -98,6 +99,7 @@ const unitType = (() => {
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                             mem.x += Tmp.v1.x;
                             mem.y += Tmp.v1.y;
+                            mem.snapInterpolation();
                             teleportEffect.at(mem.x, mem.y);
                             teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
                         }));
