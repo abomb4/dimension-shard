@@ -42,7 +42,7 @@ var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 const rtgMultipler = 12;
-const rtgItemMultipler = 10;
+const rtgItemMultipler = 12;
 timeCompressedRtg.buildVisibility = BuildVisibility.shown;
 timeCompressedRtg.size = 3;
 timeCompressedRtg.requirements = ItemStack.with(
@@ -51,8 +51,8 @@ timeCompressedRtg.requirements = ItemStack.with(
     Items.phaseFabric, 25 * rtgItemMultipler,
     Items.plastanium, 75 * rtgItemMultipler,
     items.dimensionShard, 50 * rtgItemMultipler / 2,
-    items.spaceCrystal, 90,
-    items.timeCrystal, 150,
+    items.spaceCrystal, 120,
+    items.timeCrystal, 180,
     items.hardThoriumAlloy, 50 * rtgItemMultipler / 2
 );
 timeCompressedRtg.category = Category.power;

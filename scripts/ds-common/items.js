@@ -22,7 +22,7 @@ exports.dimensionShard = (() => {
     const v = new Item("dimension-shard", exports.dimensionShardColor);
     v.explosiveness = 0.2;
     v.hardness = 5;
-    v.radioactivity = 1.8;
+    v.radioactivity = 1.4;
     v.cost = 1;
 
     const ore = new OreBlock(v);

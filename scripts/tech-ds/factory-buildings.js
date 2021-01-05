@@ -41,11 +41,12 @@ shardReceiver.category = Category.crafting;
 
 shardReceiver.craftEffect = Fx.smeltsmoke;
 shardReceiver.outputItem = new ItemStack(dimensionShard, 1);
-shardReceiver.craftTime = 150;
+shardReceiver.craftTime = 600;
 shardReceiver.hasPower = true;
 shardReceiver.flameColor = dimensionShard.color;
 shardReceiver.itemCapacity = 10;
-shardReceiver.boostScale = 0.15;
+shardReceiver.boostScale = 2;
+shardReceiver.consumes.power(3.5);
 shardReceiver.consumes.power(3.5);
 
 exports.shardReceiver = shardReceiver;

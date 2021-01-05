@@ -182,7 +182,7 @@ blockType.buildType = prov(() => {
                 links.add(int);
             }
         },
-        setItemTypeId(v) { itemType = (v === null ? null : Vars.content.items().get(v)) },
+        setItemTypeId(v) { itemType = (!v && v !== 0 ? null : Vars.content.items().get(v)) },
         updateTile() {
             var hasItem = false;
             var consValid = this.consValid();
