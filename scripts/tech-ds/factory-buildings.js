@@ -31,6 +31,7 @@ const shardReceiver = extend(GenericSmelter, "shard-receiver", {
 shardReceiver.size = 4;
 // shardReceiver.health = 600;
 shardReceiver.requirements = ItemStack.with(
+    Items.metaglass, 160,
     Items.silicon, 60,
     Items.thorium, 120,
     Items.phaseFabric, 150,
@@ -41,13 +42,12 @@ shardReceiver.category = Category.crafting;
 
 shardReceiver.craftEffect = Fx.smeltsmoke;
 shardReceiver.outputItem = new ItemStack(dimensionShard, 1);
-shardReceiver.craftTime = 600;
+shardReceiver.craftTime = 300;
 shardReceiver.hasPower = true;
 shardReceiver.flameColor = dimensionShard.color;
 shardReceiver.itemCapacity = 10;
 shardReceiver.boostScale = 2;
-shardReceiver.consumes.power(3.5);
-shardReceiver.consumes.power(3.5);
+shardReceiver.consumes.power(7);
 
 exports.shardReceiver = shardReceiver;
 
