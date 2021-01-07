@@ -60,3 +60,11 @@ Add Core Construction Platform
 0.15:
 Adjust RTG, Shard radioactivity, Shard Seceiver;
 Hard Thorium Drill can now exceed 60/s
+
+0.16:
+Add smaller core;
+Add Vault;
+Electric Storm now follow target pos;
+Adjust the battery;
+Liquid tank more capacity;
+Core Construction Platform multiplayer issue fixed
