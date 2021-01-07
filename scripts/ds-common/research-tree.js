@@ -41,8 +41,10 @@ const { spaceUnloader } = require('tech-ds/distribution/space-unloader')
 const { resourcesDispatchingCenter } = require('tech-ds/distribution/resources-dispatching-center')
 
 const { deflectForceProjector } = require('tech-ds/effect/deflect-force-projector')
+const { spaceVault } = require('tech-ds/effect/space-vault');
 const { timeOverdrive } = require('tech-ds/effect/time-overdrive')
-const { dimensionTechnologyCore } = require('tech-ds/effect/dimension-technology-core')
+const { dimensionTechnologyCore3 } = require('tech-ds/effect/dimension-technology-core-3');
+const { dimensionTechnologyCore4 } = require('tech-ds/effect/dimension-technology-core')
 
 const { formula } = require('tech-ds/unit/ast4-formula');
 const { equa } = require('tech-ds/unit/ast5-equa');
@@ -62,7 +64,8 @@ const { coreConstructionPlatform } = require('tech-ds/effect/core-construction-p
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
 lib.addToResearch(shardPhaseWall, { parent: 'phase-wall-large', });
 lib.addToResearch(shardPhaseWallLarge, { parent: shardPhaseWall.name, });
-lib.addToResearch(dimensionTechnologyCore, { parent: 'core-nucleus', });
+lib.addToResearch(dimensionTechnologyCore3, { parent: 'core-nucleus', });
+lib.addToResearch(dimensionTechnologyCore4, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(coreConstructionPlatform, { parent: 'launch-pad' });
 
 // -=-=-=-=-=-=-=-=-=-=-=- After core -=-=-=-=-=-=-=-=-=-=-=-
@@ -80,7 +83,7 @@ lib.addToResearch(shardReceiver, {
         new Objectives.SectorComplete(SectorPresets.overgrowth),
     )
 });
-lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(hardThoriumAlloySmelter, { parent: spaceCrystallizer.name, });
 lib.addToResearch(timeCondenser, { parent: hardThoriumAlloySmelter.name, });
 lib.addToResearch(timeCrystallizer, { parent: timeCondenser.name, });
@@ -89,38 +92,39 @@ lib.addToResearch(ionCollector, { parent: timeCondenser.name, });
 lib.addToResearch(dimensionAlloySmelter, { parent: ionCollector.name, });
 
 // distribution line
-lib.addToResearch(spaceUnloader, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(spaceUnloader, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(resourcesDispatchingCenter, { parent: spaceUnloader.name, });
 
 // power line
-lib.addToResearch(dimensionCrystalBattery, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(dimensionCrystalBattery, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(timeCompressedRtg, { parent: dimensionCrystalBattery.name, });
 
 // defence line
-lib.addToResearch(hardThoriumAlloyWall, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(hardThoriumAlloyWall, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(hardThoriumAlloyWallLarge, { parent: hardThoriumAlloyWall.name, });
 
 // liquid line
-lib.addToResearch(hardThoriumConduit, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(hardThoriumConduit, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(hardThoriumLiquidRouter, { parent: hardThoriumConduit.name, });
 lib.addToResearch(spaceLiquidTank, { parent: hardThoriumLiquidRouter.name, });
 
 // drill line
-lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore3.name, });
 
 // turret line
-lib.addToResearch(bombTeleporter, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(bombTeleporter, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(dc, { parent: bombTeleporter.name, });
 lib.addToResearch(ionBoltTurret, { parent: bombTeleporter.name, });
 lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, });
 
 // effect line
-lib.addToResearch(deflectForceProjector, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(deflectForceProjector, { parent: dimensionTechnologyCore3.name, });
+lib.addToResearch(spaceVault, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(unitTeleporter, { parent: deflectForceProjector.name, });
 lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 
 // unit line
-lib.addToResearch(t4Factory, { parent: dimensionTechnologyCore.name, });
+lib.addToResearch(t4Factory, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(t5Factory, { parent: t4Factory.name, });
 
 lib.addToResearch(formula, { parent: t4Factory.name, });
@@ -130,7 +134,7 @@ lib.addToResearch(burn, { parent: t4Factory.name, });
 lib.addToResearch(collapse, { parent: burn.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
 
 lib.addToResearch(beat, { parent: t4Factory.name, });
-lib.addToResearch(rhapsody, { parent: beat.name, });
+lib.addToResearch(rhapsody, { parent: beat.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
 
 // zones
 lib.addToResearch(dimensionFall, {

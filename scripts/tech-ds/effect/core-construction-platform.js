@@ -172,16 +172,6 @@ const options = {
     ]
 };
 
-/**
- * @returns {RequirementInfo}
- */
-function getRequirementInfo(building) {
-    const cores = building.team.cores().size;
-    if (cores == 0) {
-        return options.requirementInfos[0];
-    }
-    return options.requirementInfos[Math.min(options.requirementInfos.length, cores) - 1];
-}
 const block = new JavaAdapter(StorageBlock, {
     setStats() {
         this.super$setStats();
@@ -233,24 +223,120 @@ for (var team of Team.baseTeams) {
     mainBuilding[team.id] = null;
     cores[team.id] = 0;
 }
+
+const Call_Launch = (() => {
+    const TYPE = 'CCPLaunch';
+    const DELIMITER = ', ';
+
+    function makePackage(tilePos, launchCountBefore) {
+        const datas = tilePos + DELIMITER + launchCountBefore
+        return datas;
+    }
+
+    /**
+     * Read packet to objects
+     *
+     * @param {string} str the packet
+     * @returns {{tilePos: number, launchCountBefore: number}}
+     */
+    function readPackage(str) {
+        const datas = str.split(DELIMITER);
+        const tilePos = datas[0];
+        const launchCountBefore = datas[1];
+        return {
+            tilePos: tilePos,
+            launchCountBefore: launchCountBefore,
+        };
+    }
+
+    var inited = false;
+    function init() {
+        if (inited) { return; }
+        /** Client receives skill active packet, deal self */
+        if (Vars.netClient) {
+            Vars.netClient.addPacketHandler(TYPE, cons(pack => {
+                const info = readPackage(pack);
+                const tile = Vars.world.tile(info.tilePos)
+                if (tile.block() == block) {
+                    const building = tile.build
+                    building.setLaunchTimes(parseInt(info.launchCountBefore));
+                    building.doLaunch();
+                }
+            }));
+        }
+    }
+    Events.on(ClientLoadEvent, cons(e => {
+        init();
+    }));
+    return (tilePos, launchCountBefore) => {
+        const pack = makePackage(tilePos, launchCountBefore);
+        // Send to EVERY client if i'm server
+        Call.clientPacketReliable(TYPE, pack);
+    }
+})()
+const Call_MakeMain = (() => {
+    const TYPE = 'CCPMakeMain';
+    const DELIMITER = ', ';
+
+    function makePackage(tilePos, cores) {
+        const datas = tilePos + DELIMITER + cores
+        return datas;
+    }
+
+    /**
+     * Read packet to objects
+     *
+     * @param {string} str the packet
+     * @returns {{tilePos: number, cores: number}}
+     */
+    function readPackage(str) {
+        const datas = str.split(DELIMITER);
+        const tilePos = datas[0];
+        const cores = datas[1];
+        return {
+            tilePos: tilePos,
+            cores: cores,
+        };
+    }
+
+    var inited = false;
+    function init() {
+        if (inited) { return; }
+        /** Client receives skill active packet, deal self */
+        if (Vars.netClient) {
+            Vars.netClient.addPacketHandler(TYPE, cons(pack => {
+                const info = readPackage(pack);
+                const tile = Vars.world.tile(info.tilePos)
+                if (tile.block() == block) {
+                    const building = tile.build
+                    building.makeMain(info.cores);
+                }
+            }));
+        }
+    }
+    Events.on(ClientLoadEvent, cons(e => {
+        init();
+    }));
+    return (tilePos, cores) => {
+        const pack = makePackage(tilePos, cores);
+        // Send to EVERY client if i'm server
+        Call.clientPacketReliable(TYPE, pack);
+    }
+})()
+
 function checkCores() {
     for (var team of Team.baseTeams) {
-        const newSize = team.cores().size;
+        var newSize = team.cores().size;
+        // print('cores[' + team.id + ']: ' + cores[team.id] + ', newSize: ' + newSize + ', mainBuilding[team.id]: ' + mainBuilding[team.id]);
         if (cores[team.id] != newSize && mainBuilding[team.id] != null) {
-            mainBuilding[team.id].requirementInfoChanged();
+            mainBuilding[team.id].makeMain(newSize);
         }
         cores[team.id] = newSize;
     }
 }
-function checkCoresTask() {
-    if (Vars.state.state == GameState.State.menu) {
-        return;
-    }
-    checkCores();
-    Time.run(30, run(() => { checkCoresTask() }));
-}
 
 function selectMainBuilding(team) {
+    if (Vars.net.client()) { return; }
     // print('select');
     if (mainBuilding[team.id] != null) {
         // print('fuxked');
@@ -259,8 +345,9 @@ function selectMainBuilding(team) {
     const group = platformGroup[team.id];
     // print('group.isEmpty: ' + group.isEmpty());
     if (!group.isEmpty()) {
-        mainBuilding[team.id] = group.get(0);
-        mainBuilding[team.id].makeMain();
+        const main = group.get(0);
+        mainBuilding[team.id] = main;
+        mainBuilding[team.id].makeMain(main.team.cores().size);
     }
 }
 
@@ -280,44 +367,44 @@ function createPod() {
 
 lib.setBuilding(block, block => {
 
-    function getDefaultRequirementInfo() {
-        return {
-            launchCount: 1,
-            requirements: {}
-        }
-    }
+    // var this._isMain = false;
+    // var this._launchTimes = 0;
+    // var this._toCoreDelay = options.becomeCoreDelay;
+    // var this._launchDelay = options.launchTime;
+    // var this._readyLaunch = false;
+    // var this._ready = false;
+    // /** @type {RequirementInfo} */
+    // var this._requirementInfoIndex = 0;
 
-    var isMain = false;
-    var launchTimes = 0;
-    var toCoreDelay = options.becomeCoreDelay;
-    var launchDelay = options.launchTime;
-    var readyLaunch = false;
-    var ready = false;
-    /** @type {RequirementInfo} */
-    var requirementInfo = getDefaultRequirementInfo();
-
-    function debug(b) {
-        print('id: ' + b.id + ', isMain: ' + isMain + ', launchTimes: ' + launchTimes + ', toCoreDelay: ' + toCoreDelay +
-            ', launchDelay: ' + launchDelay + ', readyLaunch: ' + readyLaunch + ', ready: ' + ready + ', requirementInfo: ' + JSON.stringify(requirementInfo));
-    }
     const building = new JavaAdapter(Building, {
-        requirementInfoChanged() {
-            if (!isMain) { return; }
-            requirementInfo = getRequirementInfo(this);
-            if (launchTimes >= requirementInfo.launchCount) {
-                this.convertToCore();
-            }
-        },
-        makeMain() {
+        _isMain: false,
+        _launchTimes: 0,
+        _toCoreDelay: options.becomeCoreDelay,
+        _launchDelay: options.launchTime,
+        _readyLaunch: false,
+        _ready: false,
+        _requirementInfoIndex: 0,
+        makeMain(cores) {
+            Call_MakeMain(this.tile.pos(), cores);
             mainBuilding[this.team.id] = this;
-            isMain = true;
-            this.requirementInfoChanged();
+            this._isMain = true;
+            this._requirementInfoIndex = cores;
+        },
+        setLaunchTimes(times) {
+            this._launchTimes = times
+        },
+        getLaunchTimes() {
+            return this._launchTimes
+        },
+        getIsMain() {
+            return this._isMain;
         },
         doLaunch() {
-            launchTimes += 1;
+            Call_Launch(this.tile.pos(), this._launchTimes);
+            this._launchTimes += 1;
             this.items.clear();
-            readyLaunch = false;
-            launchDelay = options.launchTime;
+            this._readyLaunch = false;
+            this._launchDelay = options.launchTime;
 
             Fx.launchPod.at(this);
             const entity = createPod();
@@ -333,8 +420,12 @@ lib.setBuilding(block, block => {
             Fx.launch.at(this.tile);
             Effect.shake(5, 5, this.tile);
             this.tile.setBlock(Blocks.coreShard, this.team);
+            if (!Vars.net.client()) {
+                checkCores();
+            }
         },
         fullFilled() {
+            const requirementInfo = this.getRequirementInfo();
             for (var key of Object.keys(requirementInfo.requirements)) {
                 var amount = requirementInfo.requirements[key];
                 var item = Vars.content.item(key)
@@ -348,29 +439,27 @@ lib.setBuilding(block, block => {
         afterAdded() {
             if (!platformGroup[this.team.id].contains(this)) {
                 platformGroup[this.team.id].add(this);
-                if (isMain) {
-                    this.makeMain();
+                if (this._isMain && !Vars.net.client()) {
+                    this.makeMain(this.team.cores().size);
                 }
             }
         },
         getMaxItemCapacity() {
-            if (!isMain) {
+            if (!this._isMain) {
                 return 0;
             }
+            const requirementInfo = this.getRequirementInfo();
             var sum = 0;
             for (var key of Object.keys(requirementInfo.requirements)) {
                 sum += requirementInfo.requirements[key];
             }
             return sum;
         },
-        getLaunchTimes() {
-            return launchTimes;
-        },
         getRequirementInfo() {
-            return getRequirementInfo(this);
-        },
-        getIsMain() {
-            return isMain;
+            if (this._requirementInfoIndex == 0) {
+                return options.requirementInfos[0];
+            }
+            return options.requirementInfos[Math.min(this._requirementInfoIndex, options.requirementInfos.length) - 1];
         },
         // -=-=-=-=-=-=-=-=-=- divide -=-=-=-=-=-=-=-=-=-
         created() {
@@ -390,90 +479,97 @@ lib.setBuilding(block, block => {
         },
         updateTile() {
             this.super$updateTile();
-            if (isMain) {
-                if (!readyLaunch && this.fullFilled()) {
-                    readyLaunch = true;
-                    launchDelay = options.launchTime;
+            if (this._isMain) {
+                const requirementInfo = this.getRequirementInfo();
+                if (!this._readyLaunch && this.fullFilled()) {
+                    this._readyLaunch = true;
+                    this._launchDelay = options.launchTime;
                 }
-                if (readyLaunch) {
-                    launchDelay -= this.edelta();
+                if (this._readyLaunch) {
+                    this._launchDelay -= this.edelta();
                 }
-                if (launchDelay <= 0) {
+                if (this._launchDelay <= 0 && !Vars.net.client()) {
                     this.doLaunch();
                 }
-                if (!ready && launchTimes === requirementInfo.launchCount) {
-                    ready = true;
-                    toCoreDelay = options.becomeCoreDelay + options.becomeCoreDelayDelay;
+                if (!this._ready && this._launchTimes === requirementInfo.launchCount) {
+                    this._ready = true;
+                    this._toCoreDelay = options.becomeCoreDelay + options.becomeCoreDelayDelay;
                 }
-                if (ready) {
-                    toCoreDelay -= this.delta();
+                if (this._ready) {
+                    this._toCoreDelay -= this.delta();
                 }
-                if (toCoreDelay <= 0) {
+                if (this._toCoreDelay <= 0) {
                     this.becomeCore();
                 }
             }
         },
         draw() {
             this.super$draw();
-            if (ready) {
+            if (this._ready) {
                 const region = Blocks.coreShard.region;
                 const teamRegion = Blocks.coreShard.teamRegion;
-                const percent = (1 - Math.min(1, toCoreDelay / options.becomeCoreDelay))
+                const percent = (1 - Math.min(1, this._toCoreDelay / options.becomeCoreDelay))
                 const w = region.width * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const h = region.height * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const yAddition = 192 * Interp.pow3In.apply(1 - percent);
                 Draw.alpha(percent)
-                Draw.rect(region, this.x, this.y + yAddition, w, h, toCoreDelay * 2);
+                Draw.rect(region, this.x, this.y + yAddition, w, h, this._toCoreDelay * 2);
                 Draw.color(this.team.color);
                 Draw.alpha(percent)
-                Draw.rect(teamRegion, this.x, this.y + yAddition, w, h, toCoreDelay * 2);
+                Draw.rect(teamRegion, this.x, this.y + yAddition, w, h, this._toCoreDelay * 2);
                 Draw.color();
             }
         },
         displayConsumption(table) {
-            table.left();
-            table.table(cons(c => {
-                var i = 0;
-                for (var key of Object.keys(requirementInfo.requirements)) {
-                    var item = Vars.content.item(key);
-                    var amount = requirementInfo.requirements[key];
-                    c.add(new ReqImage(new ItemImage(item.icon(Cicon.medium), amount),
-                        ((item, amount) => boolp(() => this.items != null && this.items.has(item) && this.items.get(item) >= amount))(item, amount))
-                    ).padRight(8);
-                    if (++i % 4 == 0) c.row();
-                }
-            })).left()
+            if (this._isMain) {
+                table.left();
+                table.table(cons(c => {
+                    var requirementInfo = this.getRequirementInfo();
+                    var i = 0;
+                    for (var key of Object.keys(requirementInfo.requirements)) {
+                        var item = Vars.content.item(key);
+                        var amount = requirementInfo.requirements[key];
+                        c.add(new ReqImage(new ItemImage(item.icon(Cicon.medium), amount),
+                            ((item, amount) => boolp(() => this.items != null && this.items.has(item) && this.items.get(item) >= amount))(item, amount))
+                        ).padRight(8);
+                        if (++i % 4 == 0) c.row();
+                    }
+                })).left()
+            }
         },
         read(read, revision) {
             this.super$read(read, revision);
-            isMain = read.bool();
-            launchTimes = read.i();
-            toCoreDelay = read.f();
-            ready = read.bool();
-            readyLaunch = read.bool();
-            launchDelay = read.f();
+            this._isMain = read.bool();
+            this._requirementInfoIndex = read.i();
+            this._launchTimes = read.i();
+            this._toCoreDelay = read.f();
+            this._ready = read.bool();
+            this._readyLaunch = read.bool();
+            this._launchDelay = read.f();
             this.afterAdded();
             // debug(this);
         },
         write(write) {
             this.super$write(write);
-            write.bool(isMain);
-            write.i(launchTimes);
-            write.f(toCoreDelay);
-            write.bool(ready);
-            write.bool(readyLaunch);
-            write.f(launchDelay);
+            write.bool(this._isMain);
+            write.i(this._requirementInfoIndex);
+            write.i(this._launchTimes);
+            write.f(this._toCoreDelay);
+            write.bool(this._ready);
+            write.bool(this._readyLaunch);
+            write.f(this._launchDelay);
         },
         getMaximumAccepted(item) {
-            if (!isMain) { return 0; }
-            if (ready) { return 0; }
-            if (readyLaunch) { return 0; }
+            if (!this._isMain) { return 0; }
+            if (this._ready) { return 0; }
+            if (this._readyLaunch) { return 0; }
+            var requirementInfo = this.getRequirementInfo();
             return requirementInfo.requirements[item.id] || 0;
         },
         acceptItem(source, item) {
-            if (!isMain) { return false; }
-            if (ready) { return false; }
-            if (readyLaunch) { return false; }
+            if (!this._isMain) { return false; }
+            if (this._ready) { return false; }
+            if (this._readyLaunch) { return false; }
             return this.items.get(item) < this.getMaximumAccepted(item);
         },
     });
@@ -481,13 +577,17 @@ lib.setBuilding(block, block => {
 });
 
 Events.on(BlockBuildEndEvent, cons(e => {
+    checkCores();
     const team = e.team;
     if (!e.breaking && e.tile.block() == block) {
         selectMainBuilding(team);
     }
 }));
+Events.on(BlockDestroyEvent, cons(e => {
+    checkCores();
+}));
 Events.on(WorldLoadEvent, cons(e => {
-    checkCoresTask();
+    checkCores();
     for (var team of Team.baseTeams) {
         selectMainBuilding(team);
     }

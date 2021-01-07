@@ -92,7 +92,8 @@ const turret = blockTypes.newNoRotatingTurret({
 
             if ((targetPos && targetPos.getX() != 0 && targetPos.getY() != 0) && (this.isControlled() || this.logicShooting)) {
                 type.create(this, team, x + tr.x, y + tr.y, angle, -1, 1 + Mathf.range(velocityInaccuracy), lifeScl, {
-                    target: new Vec2(targetPos.getX(), targetPos.getY())
+                    target: targetPos
+                    // target: new Vec2(targetPos.getX(), targetPos.getY())
                 });
             } else {
                 type.create(this, team, x + tr.x, y + tr.y, angle, 1 + Mathf.range(velocityInaccuracy), lifeScl);

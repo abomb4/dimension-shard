@@ -59,8 +59,10 @@ require('tech-ds/distribution/space-unloader')
 require('tech-ds/distribution/resources-dispatching-center')
 
 require('tech-ds/effect/core-construction-platform')
+require('tech-ds/effect/dimension-technology-core-3')
 require('tech-ds/effect/dimension-technology-core')
 require('tech-ds/effect/deflect-force-projector')
+require('tech-ds/effect/space-vault')
 require('tech-ds/effect/time-overdrive')
 
 require('tech-ds/unit/t4-factory')

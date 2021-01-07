@@ -26,13 +26,14 @@ var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
 dimensionCrystalBattery.buildVisibility = BuildVisibility.shown;
 dimensionCrystalBattery.size = 1;
 dimensionCrystalBattery.requirements = ItemStack.with(
-    Items.lead, 160,
-    Items.silicon, 80,
-    Items.titanium, 80,
+    Items.lead, 120,
+    Items.silicon, 60,
+    Items.titanium, 60,
     items.spaceCrystal, 80,
     items.timeCrystal, 10
 );
 dimensionCrystalBattery.category = Category.power;
+dimensionCrystalBattery.health = 180;
 dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 10);
 
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
@@ -42,7 +43,7 @@ var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 const rtgMultipler = 12;
-const rtgItemMultipler = 12;
+const rtgItemMultipler = 10;
 timeCompressedRtg.buildVisibility = BuildVisibility.shown;
 timeCompressedRtg.size = 3;
 timeCompressedRtg.requirements = ItemStack.with(

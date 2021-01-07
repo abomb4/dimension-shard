@@ -131,7 +131,7 @@ var spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {
 spaceLiquidTank.buildVisibility = BuildVisibility.shown;
 spaceLiquidTank.size = 3;
 spaceLiquidTank.health = 1400;
-spaceLiquidTank.liquidCapacity = Blocks.liquidTank.liquidCapacity * 3;
+spaceLiquidTank.liquidCapacity = Blocks.liquidTank.liquidCapacity * 5;
 spaceLiquidTank.requirements = ItemStack.with(
     Items.metaglass, 150,
     Items.plastanium, 75,

@@ -17,9 +17,11 @@
 
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
+    isHidden() { return !dsGlobal.techDsAvailable(); },
     drawPlace(x, y, rotation, valid) {
         const range = this.range;
         const tilesize = Vars.tilesize;

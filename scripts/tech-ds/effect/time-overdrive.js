@@ -37,14 +37,13 @@ block.requirements = ItemStack.with(
     items.timeCrystal, 100,
 );
 
-block.consumes.power(15);
-block.size = 3;
 block.range = 180;
 block.phaseRangeBoost = 40;
 block.speedBoost = 2.2;
 block.speedBoostPhase = 1.8;
 block.useTime = 180;
 block.hasBoost = true;
+block.consumes.power(15);
 block.consumes.liquid(items.timeFlow, 0.1).boost();
 
 exports.timeOverdrive = block;

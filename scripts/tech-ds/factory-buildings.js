@@ -62,7 +62,7 @@ spaceCrystallizer.requirements = ItemStack.with(
     Items.silicon, 40,
     Items.thorium, 80,
     Items.phaseFabric, 30,
-    dimensionShard, 100
+    dimensionShard, 70
 );
 spaceCrystallizer.buildVisibility = BuildVisibility.shown;
 spaceCrystallizer.category = Category.crafting;
