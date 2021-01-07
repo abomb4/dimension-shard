@@ -71,8 +71,10 @@ require('ds-common/planets')
 require('ds-common/research-tree')
 
 // l10n mod name and description
-lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
-lib.mod.meta.description = lib.getMessage('mod', 'description');
+if (!Vars.headless) {
+    lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');
+    lib.mod.meta.description = lib.getMessage('mod', 'description');
+}
 
 
 Vars.experimental = true;
