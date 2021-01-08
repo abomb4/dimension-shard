@@ -40,7 +40,8 @@ const turret = new JavaAdapter(ItemTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'bomb-teleporter');
 
-turret.recoilAmount = 2;
+turret.cooldown = 0.04;
+turret.recoilAmount = 1.5;
 turret.liquidCapacity = 10;
 turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;

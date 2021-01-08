@@ -26,6 +26,7 @@ const turret = new JavaAdapter(PowerTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'dc');
 
+turret.cooldown = 0.04;
 turret.recoilAmount = 1;
 turret.liquidCapacity = 10;
 turret.buildVisibility = BuildVisibility.shown;
