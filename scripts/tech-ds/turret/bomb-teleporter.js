@@ -21,6 +21,21 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 const bulletTypes = require('ds-common/bullet-types/index');
 
+const teleportColor = Color.valueOf("69dcee");
+const shootEffect = new Effect(16, 24, cons(e => {
+    Draw.color(teleportColor);
+    for (var i = 0; i < 4; i++) {
+        Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
+    }
+
+    Lines.stroke(Math.max(0, e.fout() - 0.5) * 2.5);
+    Lines.circle(e.x, e.y, 24 * e.finpow());
+
+    Draw.color();
+    for (var i = 0; i < 4; i++) {
+        Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
+    }
+}));
 const turret = new JavaAdapter(ItemTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'bomb-teleporter');
@@ -38,7 +53,9 @@ turret.inaccuracy = 2;
 turret.shots = 1;
 turret.burstSpacing = 0;
 turret.xRand = 0;
+turret.shootEffect = shootEffect;
 turret.shootSound = lib.loadSound('bomb-teleport');
+turret.heatColor = teleportColor;
 turret.requirements = ItemStack.with(
     Items.copper, 200,
     Items.silicon, 130,
@@ -49,7 +66,7 @@ turret.ammo(Items.coal, (() => {
     const bt = new PointBulletType();
     bt.shootEffect = Fx.none;
     bt.hitEffect = Fx.none;
-    bt.smokeEffect = Fx.smokeCloud;
+    bt.smokeEffect = Fx.none;
     bt.trailEffect = Fx.none;
     bt.despawnEffect = Fx.explosion;
     bt.hitSound = Sounds.explosion;
@@ -71,7 +88,7 @@ Items.sporePod, (() => {
     const bt = new PointBulletType();
     bt.shootEffect = Fx.none;
     bt.hitEffect = Fx.none;
-    bt.smokeEffect = Fx.smokeCloud;
+    bt.smokeEffect = Fx.none;
     bt.trailEffect = Fx.none;
     bt.despawnEffect = Fx.explosion;
     bt.hitSound = Sounds.explosion;
@@ -115,7 +132,7 @@ Items.blastCompound, (() => {
     const bt = new PointBulletType();
     bt.shootEffect = Fx.none;
     bt.hitEffect = Fx.none;
-    bt.smokeEffect = Fx.smokeCloud;
+    bt.smokeEffect = Fx.none;
     bt.trailEffect = Fx.none;
     bt.despawnEffect = Fx.massiveExplosion;
     bt.hitSound = Sounds.explosion;
