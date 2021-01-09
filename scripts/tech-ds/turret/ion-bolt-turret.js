@@ -28,7 +28,25 @@ const {
     newIonBoltBulletType
 } = require('ds-common/bullet-types/index');
 
+var liquidRegion;
+var topRegion;
+var chargeRegions = []
+
 const turret = new JavaAdapter(LiquidTurret, {
+    load() {
+        this.super$load()
+        liquidRegion = lib.loadRegion('ion-bolt-turret-liquid')
+        topRegion = lib.loadRegion('ion-bolt-turret-top')
+        chargeRegions.push(lib.loadRegion('ion-bolt-turret-charge-1'))
+        chargeRegions.push(lib.loadRegion('ion-bolt-turret-charge-2'))
+        chargeRegions.push(lib.loadRegion('ion-bolt-turret-charge-3'))
+    },
+    myGetTr() {
+        return this.tr;
+    },
+    myGetTr2() {
+        return this.tr2;
+    },
     isHidden() { return !dsGlobal.techDsAvailable(); },
 }, 'ion-bolt-turret');
 
@@ -62,6 +80,22 @@ turret.ammo(ionLiquid, newIonBoltBulletType({
 }));
 // turret.consumes.powerCond(50, boolf(b => b.isActive()));
 
+const lightningBulletType = new JavaAdapter(LightningBulletType, {
+    init(b) {
+        if (b === undefined) {
+            this.lightningLength = 14;
+            this.lightningLengthRand = 6;
+            this.lightningColor = ionLiquid.color;
+            this.damage = 20;
+            this.super$init();
+        } else {
+            this.super$init(b);
+        }
+    },
+});
+const lightningBulletTypeShootEffect = Fx.lightningShoot;
+const lightningBulletShootSound = Sounds.spark;
+
 lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
@@ -70,6 +104,21 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
             this.shoot(type);
             this.reload = 0;
         }
+    },
+    bullet(type, angle) {
+        this.super$bullet(type, angle);
+        const tr = turret.myGetTr();
+        Tmp.v1.trns(tr.angle() + 60, 15)
+        Tmp.v2.trns(tr.angle() - 60, 15)
+        const x1 = this.x + Tmp.v1.x
+        const y1 = this.y + Tmp.v1.y;
+        const x2 = this.x + Tmp.v2.x
+        const y2 = this.y + Tmp.v2.y;
+        lightningBulletType.create(this, this.team, x1, y1, angle)
+        lightningBulletType.create(this, this.team, x2, y2, angle)
+        lightningBulletTypeShootEffect.at(x1, y1, tr.angle())
+        lightningBulletTypeShootEffect.at(x2, y2, tr.angle())
+        lightningBulletShootSound.at(this.x, this.y);
     },
     updateTile() {
         this.super$updateTile();
@@ -85,7 +134,20 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
             && (liquids.current() == liquid || (ammoTypes.containsKey(liquid)
                 && (!(ammoTypes.get(liquids.current())) || liquids.get(liquids.current()) <= 1 / ammoTypes.get(liquids.current()).ammoMultiplier + 0.001)
             ));
-    }
+    },
+    draw() {
+        this.super$draw();
+        const tr2 = turret.myGetTr2();
+
+        Drawf.liquid(liquidRegion, this.x + tr2.x, this.y + tr2.y, this.liquids.total() / turret.liquidCapacity, this.liquids.current().color, this.rotation - 90);
+        Draw.rect(topRegion, this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+
+        const loadPercentLen = Math.max(0, (this.reload / this.block.reloadTime * 1.4 - 0.4)) * chargeRegions.length;
+        for (var i = 0; i < chargeRegions.length; i++) {
+            Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0, 1)));
+            Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+        }
+    },
 });
 
 exports.ionBoltTurret = turret;
