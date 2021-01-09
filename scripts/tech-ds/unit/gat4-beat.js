@@ -62,8 +62,8 @@ const unitType = (() => {
             w.shadow = 0;
             w.rotate = false;
             w.bullet = (() => {
-                const v2 = new BasicBulletType(7, 24);
-                v2.lifetime = 26;
+                const v2 = new BasicBulletType(7, 29);
+                v2.lifetime = 28;
                 v2.ammoMultiplier = 4;
                 v2.width = Bullets.standardThorium.width;
                 v2.height = Bullets.standardThorium.height * 2;

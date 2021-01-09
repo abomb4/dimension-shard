@@ -169,7 +169,7 @@ const unitType = (() => {
             w.x = 20;
             w.y = 2;
             w.rotateSpeed = 4.3;
-            w.reload = 50;
+            w.reload = 60;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
@@ -203,7 +203,7 @@ const unitType = (() => {
             w.x = 14;
             w.y = 20;
             w.rotateSpeed = 4.1;
-            w.reload = 34;
+            w.reload = 40;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
@@ -236,7 +236,7 @@ const unitType = (() => {
             w.x = 12;
             w.y = -20;
             w.rotateSpeed = 4;
-            w.reload = 30;
+            w.reload = 34;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');

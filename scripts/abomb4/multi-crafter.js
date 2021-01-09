@@ -763,7 +763,7 @@ exports.defineMultiCrafter = function (originConfig) {
     return block;
 }
 /*
-defineMultiCrafter({
+const b = defineMultiCrafter({
     name: 'mc-test',
     noParallelAffect: false,
     parallelEffectUp: 0.5,
@@ -781,6 +781,9 @@ defineMultiCrafter({
                     { item: Items.thorium, amount: 4 },
                     { item: Items.sand, amount: 9 },
                 ],
+                liquids: [
+                    { liquid: ionLiquid, amount: 122 },
+                ],
             },
             output: {
                 items: [
@@ -788,7 +791,7 @@ defineMultiCrafter({
                 ],
             },
             craftEffect: Fx.flakExplosion,
-            craftTime: 120,
+            craftTime: 60,
         },
         {
             consume: {

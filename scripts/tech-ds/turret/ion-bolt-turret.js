@@ -66,8 +66,8 @@ turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');
 turret.loopSound = Sounds.none;
 turret.requirements = ItemStack.with(
-    Items.copper, 1200,
     Items.lead, 1600,
+    Items.metaglass, 1200,
     Items.graphite, 800,
     Items.plastanium, 1200,
     Items.surgeAlloy, 600,
