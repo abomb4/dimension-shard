@@ -255,8 +255,9 @@ exports.defineMultiCrafter = function (originConfig) {
                     running += 1;
                 }
             }
+
             if (running == 0) {
-                return 0;
+                return 1;
             }
             const r = 1 / running * (1 + unlinear(config.parallelEffectUp, running - 1));
             return r;
@@ -334,8 +335,9 @@ exports.defineMultiCrafter = function (originConfig) {
                     const liquid = consume.liquid;
                     const use = Math.min(consume.amount * getProgressAddition(entity, craftTime), entity.block.liquidCapacity);
                     if (entity.liquids == null || entity.liquids.get(liquid) < use) {
-                        return false;
+                        return true;
                     }
+                    return false;
                 })(consume);
                 if (fls) { return false; }
             }
@@ -393,7 +395,6 @@ exports.defineMultiCrafter = function (originConfig) {
             getData() { return plan; },
             update(entity) {
                 const data = getData(entity);
-                data.running = false;
 
                 // if any outputs full, don't update
                 const outputItems = plan.output.items;
@@ -401,6 +402,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 if (outputItems) {
                     for (var item of outputItems) {
                         if (entity.items.get(item.item) >= entity.block.itemCapacity) {
+                            data.running = false;
                             return false;
                         }
                     }
@@ -408,6 +410,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 if (outputLiquids) {
                     for (var liquid of outputLiquids) {
                         if (entity.liquids.get(liquid.liquid) >= (entity.block.liquidCapacity - 0.001)) {
+                            data.running = false;
                             return false;
                         }
                     }
@@ -422,6 +425,7 @@ exports.defineMultiCrafter = function (originConfig) {
                     }
                     return true;
                 } else {
+                    data.running = false;
                     return false;
                 }
             },
