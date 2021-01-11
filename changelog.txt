@@ -68,3 +68,8 @@ Electric Storm now follow target pos;
 Adjust the battery;
 Liquid tank more capacity;
 Core Construction Platform multiplayer issue fixed
+
+0.17:
+Add 3.5 turrets sprites
+Increase Space Crystal Ammo of Foreshadow
+Ion Cannon fires arcs now
