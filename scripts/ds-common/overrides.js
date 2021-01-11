@@ -22,6 +22,7 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const bulletTypes = require('ds-common/bullet-types/index');
+const { fxBlackHoleExplodeDamaged } = require('ds-common/bullet-types/black-hole');
 const {
     dimensionShard,
     spaceCrystal,
@@ -138,42 +139,6 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
             Drawf.tri(e.x, e.y, 13 * e.fout(), 50, e.rotation + 20 * i);
         }
     });
-    var fxHoleBomb = new Effect(8, 80, cons(e => {
-        e.scaled(7, cons(i => {
-            Lines.stroke(3 * i.fout());
-            Lines.circle(e.x, e.y, 3 + i.fin() * 60);
-        }));
-
-        Draw.color(items.spaceCrystalColor);
-
-        Angles.randLenVectors(e.id, 6, 2 + 19 * e.finpow(), new Floatc2({
-            get: (x, y) => {
-                Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5);
-                Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
-            }
-        }));
-
-        Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, items.spaceCrystalColorLight, e.fin());
-        Lines.stroke(1.5 * e.fout());
-
-        Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), new Floatc2({
-            get: (x, y) => {
-                Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
-            }
-        }));
-    }));
-    var fxHole = new Effect(70, 80, cons(e => {
-        Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, e.fout());
-        Draw.alpha(0.5 * e.fin() + 0.5);
-        Lines.stroke(e.fin() * 3);
-        Lines.circle(e.x, e.y, Mathf.sin(e.fout()) * 60);
-
-        Draw.color(items.spaceCrystalColor);
-        Draw.alpha(0.8 * e.fout() + 0.2);
-        Fill.circle(e.x, e.y, (1 - Math.abs(0.3 - e.fin())) * 6)
-        Draw.alpha(Mathf.clamp(9 * e.fout(), 0, 1));
-        Fill.circle(e.x, e.y, e.fout() * 1 + 5)
-    }));
     var fxBlackTrail = new Effect(30, cons(e => {
         for (var i = 0; i < 2; i++) {
             Draw.color(i == 0 ? items.spaceCrystalColorLight : items.spaceCrystalColor);
@@ -196,7 +161,7 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
         }
     });
     v.shootEffect = fxShoot;
-    v.hitEffect = fxHoleBomb;
+    v.hitEffect = fxBlackHoleExplodeDamaged;
     v.smokeEffect = Fx.smokeCloud;
     v.trailEffect = fxBlackTrail;
     // v.despawnEffect = fxHole;

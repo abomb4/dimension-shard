@@ -60,16 +60,14 @@ const defineBlackHoleBullet = (() => {
             draw(b) {
                 var fin = b.time / this.lifetime;
                 var fout = 1 - fin;
-                Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, fout);
-                Draw.alpha(0.5 * fin + 0.5);
+                Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, fout * 0.8 + 0.2);
+                Draw.alpha(0.4 * fin + 0.6);
                 Lines.stroke(fin * 3);
-                Lines.circle(b.x, b.y, Mathf.sin(fout) * 60);
+                Lines.circle(b.x, b.y, Mathf.sin(fout) * options.splashDamageRadius);
 
                 Draw.color(items.spaceCrystalColor);
-                Draw.alpha(0.8 * fout + 0.2);
-                Fill.circle(b.x, b.y, (1 - Math.abs(0.3 - fin)) * 6)
                 Draw.alpha(Mathf.clamp(9 * fout, 0, 1));
-                Fill.circle(b.x, b.y, fout * 1 + 5)
+                Fill.circle(b.x, b.y, (Interp.pow2Out.apply(fout) + 0.2) * options.splashDamageRadius / 10)
             },
             update(b) {
                 if (b) {
@@ -134,10 +132,10 @@ exports.blackHole = defineBlackHoleBullet({
     splashDamageRadius: 80,
 });
 exports.blackHoleDamaged = defineBlackHoleBullet({
-    lifetime: 60,
-    knockback: -0.55,
-    splashDamage: 60,
-    splashDamageRadius: 80
+    lifetime: 120,
+    knockback: -0.65,
+    splashDamage: 80,
+    splashDamageRadius: 160
 });
 
 exports.fxBlackHoleExplode = new Effect(8, 80, cons(e => {
@@ -159,6 +157,32 @@ exports.fxBlackHoleExplode = new Effect(8, 80, cons(e => {
     Lines.stroke(1.5 * e.fout());
 
     Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), new Floatc2({
+        get: (x, y) => {
+            Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
+        }
+    }));
+}));
+
+
+exports.fxBlackHoleExplodeDamaged = new Effect(14, 160, cons(e => {
+    e.scaled(7, cons(i => {
+        Lines.stroke(3 * i.fout());
+        Lines.circle(e.x, e.y, 3 + i.fin() * 60);
+    }));
+
+    Draw.color(items.spaceCrystalColor);
+
+    Angles.randLenVectors(e.id, 6, 2 + 119 * e.finpow(), new Floatc2({
+        get: (x, y) => {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+        }
+    }));
+
+    Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, items.spaceCrystalColorLight, e.fin());
+    Lines.stroke(1.5 * e.fout());
+
+    Angles.randLenVectors(e.id + 1, 8, 1 + 146 * e.finpow(), new Floatc2({
         get: (x, y) => {
             Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
         }

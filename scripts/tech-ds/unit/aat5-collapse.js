@@ -236,7 +236,7 @@ const unitType = (() => {
             w.x = 12;
             w.y = -20;
             w.rotateSpeed = 4;
-            w.reload = 34;
+            w.reload = 36;
             w.recoil = 4;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
