@@ -86,7 +86,7 @@ exports.newNoRotatingTurret = (requestOptions) => {
         turretType: ItemTurret,
         buildVisibility: BuildVisibility.shown,
         shootCone: 360,
-        buildingOverrides: {},
+        buildingOverrides: () => ({}),
         blockOverrides: {},
         drawer: cons(building => Draw.rect(building.block.region, building.x, building.y)),
         heatDrawer: cons(building => {
@@ -125,43 +125,46 @@ exports.newNoRotatingTurret = (requestOptions) => {
     const block = extend(options.turretType, options.name, Object.assign({
     }, options.blockOverrides));
 
-    lib.setBuildingSimple(block, buildingType, Object.assign({
-        turnToTarget(targetRot) {
-            this.rotation = targetRot;
-        },
-        // I think the default udpatShooting and updateCooling is wrong, so modify it.
-        updateShooting() {
-            if (this.reload >= this.block.reloadTime) {
-                var type = this.peekAmmo();
-                this.shoot(type);
-                this.reload = 0;
-            }
-        },
-        updateTile() {
-            this.super$updateTile();
-            // Do reload if has ammo.
-            if (this.hasAmmo() && this.reload < this.block.reloadTime) {
-                this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
-            }
-        },
-        draw() {
-            const {
-                baseRegion, region, size, drawer, heatRegion, heatDrawer
-            } = this.block;
-            const { x, y } = this;
-            Draw.rect(baseRegion, x, y);
-            Draw.color();
+    lib.setBuilding(block, block => {
+        const overrides = options.buildingOverrides();
+        return new JavaAdapter(buildingType, Object.assign({
+            turnToTarget(targetRot) {
+                this.rotation = targetRot;
+            },
+            // I think the default udpatShooting and updateCooling is wrong, so modify it.
+            updateShooting() {
+                if (this.reload >= this.block.reloadTime) {
+                    var type = this.peekAmmo();
+                    this.shoot(type);
+                    this.reload = 0;
+                }
+            },
+            updateTile() {
+                this.super$updateTile();
+                // Do reload if has ammo.
+                if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+                    this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
+                }
+            },
+            draw() {
+                const {
+                    baseRegion, region, size, drawer, heatRegion, heatDrawer
+                } = this.block;
+                const { x, y } = this;
+                Draw.rect(baseRegion, x, y);
+                Draw.color();
 
-            Draw.z(Layer.turret);
+                Draw.z(Layer.turret);
 
-            // Drawf.shadow(region, x - (size / 2), y - (size / 2), 0);
-            drawer.get(this);
+                // Drawf.shadow(region, x - (size / 2), y - (size / 2), 0);
+                drawer.get(this);
 
-            if (heatRegion != Core.atlas.find("error")) {
-                heatDrawer.get(this);
-            }
-        },
-    }, options.buildingOverrides));
+                if (heatRegion != Core.atlas.find("error")) {
+                    heatDrawer.get(this);
+                }
+            },
+        }, overrides), block)
+    });
 
     for (var p of TURRET_PROPERTIES) {
         var value = options[p];
@@ -182,7 +185,7 @@ exports.newLiquidConverter = (requestOptions) => {
         buildVisibility: BuildVisibility.shown,
         convertRatio: 1,
         consumes: consumes => {},
-        buildingOverrides: {},
+        buildingOverrides: () => ({}),
         blockOverrides: {},
     }, requestOptions);
 
@@ -213,7 +216,7 @@ exports.newLiquidConverter = (requestOptions) => {
             }
             this.dumpLiquid(this.block.outputLiquid.liquid);
         }
-    }, options.buildingOverrides));
+    }, options.buildingOverrides()));
 
     options.consumes(block.consumes);
 

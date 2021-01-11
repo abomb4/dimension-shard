@@ -27,7 +27,7 @@ const dsGlobal = require('ds-common/ds-global');
 const {
     newElectricStormBulletType
 } = require('ds-common/bullet-types/index');
-
+var i = 1;
 const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',
     turretType: ItemTurret,
@@ -44,6 +44,7 @@ const turret = blockTypes.newNoRotatingTurret({
     rotateSpeed: 1000,
     velocityInaccuracy: 0.8,
     shootCone: 360,
+    heatColor: Color.valueOf('69dcee'),
     shootSound: lib.loadSound('electric-shot'),
     requirements: ItemStack.with(
         Items.copper, 2500,
@@ -60,13 +61,20 @@ const turret = blockTypes.newNoRotatingTurret({
     coolantMultiplier: 0.15,
     coolantUsage: 2,
     blockOverrides: {
+        middleRegion: lib.loadRegion('electric-storm-turret-middle'),
+        middleHeatRegion: lib.loadRegion('electric-storm-turret-middle-heat'),
         load() {
             this.super$load();
-            this.baseRegion = lib.loadRegion("block-5");
+            this.baseRegion = lib.loadRegion('electric-storm-turret-base');
+            this.middleRegion = lib.loadRegion('electric-storm-turret-middle');
+            this.middleHeatRegion = lib.loadRegion('electric-storm-turret-middle-heat');
         },
         isHidden() { return !dsGlobal.techDsAvailable(); },
     },
-    buildingOverrides: {
+    buildingOverrides: () => ({
+        pigu: i++,
+        drawRotate: 0,
+        drawRotateAccel: 0,
         // I think the default udpatShooting and updateCooling is wrong, so modify it.
         updateShooting() {
             if (this.reload >= this.block.reloadTime) {
@@ -81,6 +89,12 @@ const turret = blockTypes.newNoRotatingTurret({
             if (this.hasAmmo() && this.reload < this.block.reloadTime) {
                 this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
             }
+            if (this.hasAmmo() && this.cons.valid()) {
+                this.drawRotateAccel = Mathf.lerpDelta(this.drawRotateAccel, 0.4, 0.02);
+            } else {
+                this.drawRotateAccel = Mathf.lerpDelta(this.drawRotateAccel, 0, 0.02);
+            }
+            this.drawRotate += this.drawRotateAccel
         },
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
@@ -99,7 +113,35 @@ const turret = blockTypes.newNoRotatingTurret({
                 type.create(this, team, x + tr.x, y + tr.y, angle, 1 + Mathf.range(velocityInaccuracy), lifeScl);
             }
         },
-    }
+        draw() {
+            const {
+                baseRegion, region, size, heatColor, heatRegion, middleRegion, middleHeatRegion
+            } = turret;
+            const { x, y, drawRotate } = this;
+            Draw.rect(baseRegion, x, y);
+            Draw.color();
+
+            Draw.rect(middleRegion, this.x, this.y);
+            if (this.heat > 0.00001) {
+                Draw.color(heatColor, this.heat);
+                Draw.blend(Blending.additive);
+                Draw.rect(middleHeatRegion, this.x, this.y);
+                Draw.blend();
+                Draw.color();
+            }
+
+            Draw.z(Layer.turret);
+            Draw.rect(region, this.x, this.y, drawRotate - 90);
+
+            if (this.heat > 0.00001) {
+                Draw.color(heatColor, this.heat);
+                Draw.blend(Blending.additive);
+                Draw.rect(heatRegion, this.x, this.y, drawRotate - 90);
+                Draw.blend();
+                Draw.color();
+            }
+        },
+    })
 });
 
 turret.ammo(dimensionAlloy, newElectricStormBulletType({
