@@ -147,14 +147,14 @@ exports.setBuilding = function (blockType, buildingCreator) {
 }
 
 /**
- * lib.setBuildingSimple(extend(CoreBlock, "my-core", {}), CoreBlock.CoreBuilding, {})
+ * lib.setBuildingSimple(extend(CoreBlock, "my-core", {}), CoreBlock.CoreBuilding, block => {})
  *
  * @param {Block} blockType The block type
  * @param {Class<Building>} buildingType The building type
- * @param {Object} overrides Object that as second parameter of extend()
+ * @param {() => Object} overridesGetter Object that as second parameter of extend()
  */
-exports.setBuildingSimple = function (blockType, buildingType, overrides) {
-    blockType.buildType = prov(() => new JavaAdapter(buildingType, overrides, blockType));
+exports.setBuildingSimple = function (blockType, buildingType, overridesGetter) {
+    blockType.buildType = prov(() => new JavaAdapter(buildingType, overridesGetter(blockType), blockType));
 }
 
 /** Random item picker, use add() to add items with integer probability */

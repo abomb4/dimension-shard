@@ -98,7 +98,7 @@ const shieldConsumer = (paramEntity) => cons(trait => {
         paramEntity.buildup += trait.damage * paramEntity.warmup;
     }
 });
-lib.setBuildingSimple(block, ForceProjector.ForceBuild, {
+lib.setBuildingSimple(block, ForceProjector.ForceBuild, block => ({
 
     updateTile() {
         const {
@@ -181,6 +181,6 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, {
         }
         Draw.reset();
     },
-});
+}));
 
 exports.deflectForceProjector = block;

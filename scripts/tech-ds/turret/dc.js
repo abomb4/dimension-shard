@@ -66,7 +66,7 @@ turret.shootType = (() => {
 })()
 turret.powerUse = 10;
 
-lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, {
+lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
@@ -82,6 +82,6 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, {
             this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
         }
     },
-});
+}));
 
 exports.dc = turret;

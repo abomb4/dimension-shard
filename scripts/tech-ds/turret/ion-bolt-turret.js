@@ -96,7 +96,7 @@ const lightningBulletType = new JavaAdapter(LightningBulletType, {
 const lightningBulletTypeShootEffect = Fx.lightningShoot;
 const lightningBulletShootSound = Sounds.spark;
 
-lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
+lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
@@ -148,6 +148,6 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, {
             Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
         }
     },
-});
+}));
 
 exports.ionBoltTurret = turret;

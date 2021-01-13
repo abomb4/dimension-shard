@@ -35,7 +35,7 @@ hardThoriumConduit.requirements = ItemStack.with(
 );
 hardThoriumConduit.category = Category.liquid;
 
-lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, {
+lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, block => ({
     moveLiquid(next, liquid) {
         // No self burning
         if (!next) { return 0; }
@@ -68,7 +68,7 @@ lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, {
             }
         }
     }
-});
+}));
 
 exports.hardThoriumConduit = hardThoriumConduit;
 
@@ -88,7 +88,7 @@ hardThoriumLiquidRouter.requirements = ItemStack.with(
 );
 hardThoriumLiquidRouter.category = Category.liquid;
 
-lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, {
+lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, block => ({
     moveLiquid(next, liquid) {
         // No self burning
         if (!next) { return 0; }
@@ -121,7 +121,7 @@ lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, {
             }
         }
     }
-});
+}));
 
 exports.hardThoriumLiquidRouter = hardThoriumLiquidRouter;
 
@@ -141,7 +141,7 @@ spaceLiquidTank.requirements = ItemStack.with(
 );
 spaceLiquidTank.category = Category.liquid;
 
-lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, {
+lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => ({
     moveLiquid(next, liquid) {
         // No self burning
         if (!next) { return 0; }
@@ -174,6 +174,6 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, {
             }
         }
     }
-});
+}));
 
 exports.spaceLiquidTank = spaceLiquidTank;

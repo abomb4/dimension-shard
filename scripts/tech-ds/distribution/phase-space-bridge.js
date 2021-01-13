@@ -73,7 +73,7 @@ phaseSpaceBridge.requirements = ItemStack.with(
 );
 phaseSpaceBridge.consumes.power(0.5);
 
-lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
+lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
 
     drawConfigure() {
         var entity = this;
@@ -206,6 +206,6 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
         var other = Vars.world.tile(this.link);
         return (!this.block.linkValid(this.tile, other, false));
     }
-});
+}));
 
 exports.phaseSpaceBridge = phaseSpaceBridge;

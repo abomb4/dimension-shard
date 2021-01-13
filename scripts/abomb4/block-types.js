@@ -201,7 +201,7 @@ exports.newLiquidConverter = (requestOptions) => {
         },
     }, options.blockOverrides));
 
-    lib.setBuildingSimple(block, LiquidConverter.LiquidConverterBuild, Object.assign({
+    lib.setBuildingSimple(block, LiquidConverter.LiquidConverterBuild, block => Object.assign({
         updateTile() {
             var cl = this.block.consumes.get(ConsumeType.liquid);
             if (this.cons.valid()) {

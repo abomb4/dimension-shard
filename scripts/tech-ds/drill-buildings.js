@@ -19,9 +19,11 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
+var rotatorLightRegion;
 const block = extend(Drill, 'hard-thorium-drill', {
     load() {
         this.super$load();
+        rotatorLightRegion = lib.loadRegion('hard-thorium-drill-rotator-light');
         this.rotatorRegion = lib.loadRegion('hard-thorium-drill-rotator');
         this.rotatorRegion.packedHeight += 10;
         this.rotatorRegion.packedWidth -= 102;
@@ -43,30 +45,29 @@ block.category = Category.production;
 
 block.drillTime = 100;
 block.drawRim = true;
+block.drawMineItem = true;
 block.hasPower = true;
 block.canOverdrive = false;
 block.tier = 9;
 block.updateEffect = Fx.pulverizeRed;
 block.updateEffectChance = 0.01;
-block.drillEffect = Fx.mineHuge;
-block.rotateSpeed = 2;
+block.drillEffect = Fx.mine;
+block.rotateSpeed = 4;
 block.warmupSpeed = 0.01;
+block.heatColor = Color.valueOf("9a48ff");
 block.hardnessDrillMultiplier = 25;
 block.liquidBoostIntensity = 3;
 block.consumes.power(8);
-block.consumes.liquid(Liquids.water, 2.5).boost();
+block.consumes.liquid(Liquids.water, 2).boost();
 
-lib.setBuildingSimple(block, Drill.DrillBuild, {
-
+const lightColor = Color.valueOf("9a48ff")
+lib.setBuildingSimple(block, Drill.DrillBuild, block => ({
+    lightup: 0,
     updateTile() {
         if (this.dominantItem == null) {
             return;
         }
         if (this.timer.get(block.timerDump, block.dumpTime)) {
-            this.dump(this.dominantItem);
-            this.dump(this.dominantItem);
-            this.dump(this.dominantItem);
-            this.dump(this.dominantItem);
             this.dump(this.dominantItem);
             this.dump(this.dominantItem);
         }
@@ -78,6 +79,9 @@ lib.setBuildingSimple(block, Drill.DrillBuild, {
 
             if (this.cons.optionalValid()) {
                 speed = block.liquidBoostIntensity;
+                this.lightup = Mathf.lerpDelta(this.lightup, 1, block.warmupSpeed);
+            } else {
+                this.lightup = Mathf.lerpDelta(this.lightup, 0, block.warmupSpeed);
             }
 
             speed *= this.efficiency(); // Drill slower when not at full power
@@ -92,6 +96,7 @@ lib.setBuildingSimple(block, Drill.DrillBuild, {
         } else {
             this.lastDrillSpeed = 0;
             this.warmup = Mathf.lerpDelta(this.warmup, 0, block.warmupSpeed);
+            this.lightup = Mathf.lerpDelta(this.lightup, 0, block.warmupSpeed);
             return;
         }
 
@@ -106,9 +111,37 @@ lib.setBuildingSimple(block, Drill.DrillBuild, {
             this.index++;
             this.progress %= delay;
 
-            block.drillEffect.at(this.x + Mathf.range(block.size), this.y + Mathf.range(block.size), this.dominantItem.color);
+            block.drillEffect.at(this.x + Mathf.range(block.size) * 2, this.y + Mathf.range(block.size) * 2, this.dominantItem.color);
         }
     },
+    draw() {
+        var s = 0.3
+        var ts = 0.6
+        Draw.rect(block.region, this.x, this.y)
+        this.drawCracks()
+        if (block.drawRim) {
+            Draw.color(block.heatColor);
+            Draw.alpha(this.warmup * ts * (1 - s + Mathf.absin(Time.time, 3, s)));
+            Draw.blend(Blending.additive);
+            Draw.rect(block.rimRegion, this.x, this.y);
+            Draw.blend();
+            Draw.color();
+        }
+        Draw.rect(block.rotatorRegion, this.x, this.y, this.timeDrilled * block.rotateSpeed);
 
-});
+        Draw.rect(block.topRegion, this.x, this.y);
+
+        if (this.dominantItem != null && this.drawMineItem) {
+            Draw.color(this.dominantItem.color);
+            Draw.rect(block.itemRegion, this.x, this.y);
+            Draw.color();
+        }
+
+        Draw.z(Layer.effect);
+        Draw.color(lightColor);
+        Draw.alpha(this.lightup * 0.9);
+        Draw.rect(rotatorLightRegion, this.x, this.y, this.timeDrilled * block.rotateSpeed);
+        Draw.reset();
+    },
+}));
 exports.hardThoriumDrill = block;

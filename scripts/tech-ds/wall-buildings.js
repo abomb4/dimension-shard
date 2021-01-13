@@ -52,12 +52,12 @@ var wall = (() => {
             if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));
         },
     })
-    lib.setBuildingSimple(block, Wall.WallBuild, {
+    lib.setBuildingSimple(block, Wall.WallBuild, block => ({
         damage(amount) {
             amount = Math.max(amount - armor, Vars.minArmorDamage * amount);
             this.super$damage(amount);
         },
-    });
+    }));
     block.size = 1;
     block.health = 950;
     block.requirements = ItemStack.with(items.hardThoriumAlloy, 6);
@@ -76,12 +76,12 @@ var wallLarge = (() => {
             if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));
         },
     })
-    lib.setBuildingSimple(block, Wall.WallBuild, {
+    lib.setBuildingSimple(block, Wall.WallBuild, block => ({
         damage(amount) {
             amount = Math.max(amount - armor, Vars.minArmorDamage * amount);
             this.super$damage(amount);
         },
-    });
+    }));
     block.size = 2;
     block.health = wall.health * 4;
     block.requirements = ItemStack.mult(wall.requirements, 4);

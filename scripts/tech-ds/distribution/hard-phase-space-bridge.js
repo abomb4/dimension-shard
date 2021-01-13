@@ -76,7 +76,7 @@ hardPhaseSpaceBridge.requirements = ItemStack.with(
 );
 hardPhaseSpaceBridge.consumes.power(0.8);
 
-lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
+lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
 
     drawConfigure() {
         var entity = this;
@@ -241,6 +241,6 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, {
         var other = Vars.world.tile(this.link);
         return (!this.block.linkValid(this.tile, other, false));
     }
-});
+}));
 
 exports.hardPhaseSpaceBridge = hardPhaseSpaceBridge;
