@@ -120,6 +120,7 @@ exports.timeFlow = (() => {
     v.temperature = 0.1;
     v.viscosity = 0.85;
     v.effect = exports.timeFreezingEffect;
+    v.lightColor = Color.valueOf("a76ab333");
     return v;
 })();
 
@@ -156,6 +157,7 @@ exports.ionLiquid = (() => {
     v.flammability = 2;
     v.explosiveness = 3;
     v.viscosity = 0.3;
+    v.lightColor = Color.valueOf("cee0e988");
     v.effect = exports.ionBurningEffect;
     return v;
 })();

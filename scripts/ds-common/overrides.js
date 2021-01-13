@@ -48,8 +48,8 @@ Blocks.scatter.ammoTypes.put(dimensionShard, (() => {
     v.splashDamageRadius = 28;
     v.knockback = 0.6;
     v.reloadMultiplier = 0.6;
-    v.frontColor = items.dimensionShardColor
-    v.backColor = items.dimensionShardColorLight
+    v.frontColor = items.dimensionShardColorLight
+    v.backColor = items.dimensionShardColor
     // v.status = StatusEffects.blasted;
     return v;
 })());
@@ -66,8 +66,8 @@ Blocks.cyclone.ammoTypes.put(dimensionShard, (() => {
     v.splashDamageRadius = 34;
     v.knockback = 0.6;
     v.reloadMultiplier = 0.8;
-    v.frontColor = items.dimensionShardColor
-    v.backColor = items.dimensionShardColorLight
+    v.frontColor = items.dimensionShardColorLight
+    v.backColor = items.dimensionShardColor
     v.collidesGround = true;
     // v.status = StatusEffects.blasted;
     return v;
@@ -83,8 +83,8 @@ Blocks.ripple.ammoTypes.put(dimensionShard, (() => {
     v.splashDamageRadius = 40;
     v.knockback = 2;
     v.reloadMultiplier = 0.8;
-    v.frontColor = items.dimensionShardColor
-    v.backColor = items.dimensionShardColorLight
+    v.frontColor = items.dimensionShardColorLight
+    v.backColor = items.dimensionShardColor
     v.collidesTiles = false;
     // v.status = StatusEffects.blasted;
     return v;
