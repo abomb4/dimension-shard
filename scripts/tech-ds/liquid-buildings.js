@@ -26,6 +26,7 @@ var hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {
 hardThoriumConduit.buildVisibility = BuildVisibility.shown;
 hardThoriumConduit.size = 1;
 hardThoriumConduit.health = 300;
+hardThoriumConduit.liquidCapacity = 24;
 hardThoriumConduit.liquidPressure = 1.05;
 hardThoriumConduit.requirements = ItemStack.with(
     Items.metaglass, 4,
@@ -78,7 +79,7 @@ var hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router',
 hardThoriumLiquidRouter.buildVisibility = BuildVisibility.shown;
 hardThoriumLiquidRouter.size = 1;
 hardThoriumLiquidRouter.health = 300;
-hardThoriumLiquidRouter.liquidCapacity = 20;
+hardThoriumLiquidRouter.liquidCapacity = 30;
 hardThoriumLiquidRouter.requirements = ItemStack.with(
     Items.graphite, 12,
     Items.metaglass, 6,
