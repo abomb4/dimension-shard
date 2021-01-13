@@ -127,7 +127,7 @@ Blocks.spectre.ammoTypes.put(hardThoriumAlloy, (() => {
 Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
     var fxShoot = lib.newEffect(24, e => {
         e.scaled(10, cons(b => {
-            Draw.color(items.spaceCrystalColorLight, items.spaceCrystalColor, b.fin());
+            Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, b.fin());
             Lines.stroke(b.fout() * 3 + 0.2);
             Lines.circle(b.x, b.y, b.fin() * 50);
         }));
@@ -141,7 +141,7 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
     });
     var fxBlackTrail = new Effect(30, cons(e => {
         for (var i = 0; i < 2; i++) {
-            Draw.color(i == 0 ? items.spaceCrystalColorLight : items.spaceCrystalColor);
+            Draw.color(i == 0 ? items.spaceCrystalColor : items.spaceCrystalColorLight);
 
             var m = i == 0 ? 1 : 0.5;
 
