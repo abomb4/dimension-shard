@@ -89,6 +89,28 @@ exports.defineMultiCrafter = function (originConfig) {
         return 1 - Math.pow((1 - ratio), count) + 0.00000000000000006;
     }
 
+    /**
+     *
+     * @param {{usage: number, consume: Boolf<Building>}[]} list Consume list
+     */
+    function defineMultipleConditionanConsumePower(list) {
+        var total = 0;
+        for (var consumeInfo of list) {
+            total += consumeInfo.usage;
+        }
+        return new JavaAdapter(ConsumePower, {
+            requestedPower(entity) {
+                var total = 0;
+                for (var consumeInfo of list) {
+                    if (consumeInfo.consume.get(entity)) {
+                        total += consumeInfo.usage;
+                    }
+                }
+                return total;
+            },
+        }, total, 0, false);
+    }
+
     function func(getter) { return new Func({ get: getter }); }
     function cons2(fun) { return new Cons2({ get: (v1, v2) => fun(v1, v2) }); }
     function randomLoop(list, func) {
@@ -222,7 +244,10 @@ exports.defineMultiCrafter = function (originConfig) {
         }
     }
 
-    /** 初始化 plan 封装结构 */
+    /**
+     * Init the plan obj
+     * @param {Plan} plan
+     */
     function initPlan(plan) {
         const craftEffect = plan.craftEffect;
         const craftTime = plan.craftTime;
@@ -275,15 +300,59 @@ exports.defineMultiCrafter = function (originConfig) {
         }
 
         function getProgressEfficiency(entity) {
-            return entity.edelta() * getAttributeEfficiency(entity) * getMultiPlanEfficiencyAffect(entity);
+            return (plan.consume.power <= 0 ? entity.delta() : entity.edelta())
+                    * getAttributeEfficiency(entity) * getMultiPlanEfficiencyAffect(entity);
         }
 
+        /** Power producing efficiency, Not affected by multiplan efficiency */
         function getPowerProgressEfficiency(entity) {
-            return entity.delta() * getAttributeEfficiency(entity) * getMultiPlanEfficiencyAffect(entity);
+            return entity.timeScale * getAttributeEfficiency(entity);
         }
 
         function getProgressAddition(entity, craftTime) {
             return 1 / craftTime * getProgressEfficiency(entity);
+        }
+
+        function canEat(entity) {
+            const data = getData(entity);
+
+            if (data.itemsEaten) { return true; }
+            const consumeItems = plan.consume.items;
+            if (!consumeItems || consumeItems.length == 0) {
+                return true;
+            }
+            const items = entity.items;
+
+            var fail = false;
+            for (var consume of consumeItems) {
+                var have = (consume => (items.has(consume.item, consume.amount)))(consume);
+                if (!have) {
+                    fail = true;
+                    break;
+                }
+            }
+            return !fail;
+        }
+
+        function canDrink(entity) {
+            const consumeLiquids = plan.consume.liquids;
+            if (!consumeLiquids || consumeLiquids.length == 0) {
+                return true;
+            }
+
+            for (var consume of consumeLiquids) {
+
+                var fls = (consume => {
+                    const liquid = consume.liquid;
+                    const use = Math.min(consume.amount * getProgressAddition(entity, craftTime), entity.block.liquidCapacity);
+                    if (entity.liquids == null || entity.liquids.get(liquid) < use) {
+                        return true;
+                    }
+                    return false;
+                })(consume);
+                if (fls) { return false; }
+            }
+            return true;
         }
 
         function eat(entity) {
@@ -298,14 +367,9 @@ exports.defineMultiCrafter = function (originConfig) {
 
             var fail = false;
             for (var consume of consumeItems) {
-                var r = (consume => {
-                    let item = consume.item;
-                    if (!items.has(item, consume.amount)) {
-                        fail = true;
-                        return fail;
-                    }
-                })(consume)
-                if (!r) {
+                var have = (consume => (items.has(consume.item, consume.amount)))(consume);
+                if (!have) {
+                    fail = true;
                     break;
                 }
             }
@@ -395,6 +459,10 @@ exports.defineMultiCrafter = function (originConfig) {
             getData() { return plan; },
             update(entity) {
                 const data = getData(entity);
+                if (isNaN(data.progress)) {
+                    print('NAN!');
+                    data.progress = 0;
+                }
 
                 // if any outputs full, don't update
                 const outputItems = plan.output.items;
@@ -433,7 +501,10 @@ exports.defineMultiCrafter = function (originConfig) {
                 const data = getData(entity);
                 const running = data.running;
 
-                return (plan.consume.power && running) && entity.enabled;
+                if (!entity.enabled) {
+                    return false;
+                }
+                return plan.consume.power <= 0 || running || (canEat(entity) && canDrink(entity));
             },
             getPowerProducing(entity) {
                 const data = getData(entity);
@@ -461,13 +532,14 @@ exports.defineMultiCrafter = function (originConfig) {
 
     block = new JavaAdapter(Block, {
         init() {
-            plans.forEach(plan => {
-                const power = plan.getData().consume.power;
-                if (power) {
-                    this.consumes.powerCond(power, (p => boolf(entity => p.shouldConsumePower(entity)))(plan));
-                }
-            });
+            const powerConsume = defineMultipleConditionanConsumePower(
+                plans.map(plan => ({
+                    usage: plan.getData().consume.power,
+                    consume: boolf(entity => plan.shouldConsumePower(entity))
+                }))
+            )
             this.super$init();
+            this.consumes.add(powerConsume);
         },
         setStats() {
             this.stats.add(Stat.size, "@x@", this.size, this.size);

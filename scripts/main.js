@@ -25,8 +25,6 @@ tech-*: Specific technology
 
 // common
 const lib = require('abomb4/lib')
-const { defineMultiCrafter } = require('abomb4/multi-crafter')
-const { ionLiquid, dimensionShard } = require('ds-common/items')
 
 require('ds-common/items')
 require('ds-common/ds-global')
@@ -80,57 +78,59 @@ if (!Vars.headless) {
     lib.mod.meta.description = lib.getMessage('mod', 'description');
 }
 
-
 Vars.experimental = true;
 
-const b = defineMultiCrafter({
-    name: 'mc-test',
-    noParallelAffect: false,
-    parallelEffectUp: 0.5,
-    itemCapacity: 50,
-    liquidCapacity: 10,
-    updateEffectChance: 0.05,
-    updateEffect: Fx.none,
-    ambientSound: Sounds.machine,
-    ambientSoundVolume: 0.5,
-    plans: [
-        {
-            consume: {
-                power: 5,
-                items: [
-                    { item: Items.thorium, amount: 4 },
-                    { item: Items.sand, amount: 9 },
-                ],
-                liquids: [
-                    { liquid: ionLiquid, amount: 122 },
-                ],
-            },
-            output: {
-                items: [
-                    { item: Items.phaseFabric, amount: 1 },
-                ],
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 60,
-        },
-        {
-            consume: {
-                power: 10,
-                items: [
-                    { item: dimensionShard, amount: 6 },
-                    { item: Items.sand, amount: 18 },
-                ]
-            },
-            output: {
-                items: [
-                    { item: Items.phaseFabric, amount: 2 },
-                ]
-            },
-            craftEffect: Fx.flakExplosion,
-            craftTime: 80,
-        },
-    ]
-});
-b.buildVisibility = BuildVisibility.shown;
-b.size = 7;
-b.category = Category.crafting;
+// const { defineMultiCrafter } = require('abomb4/multi-crafter')
+// const { ionLiquid, dimensionShard } = require('ds-common/items')
+// const b = defineMultiCrafter({
+//     name: 'mc-test',
+//     noParallelAffect: false,
+//     parallelEffectUp: 0.5,
+//     itemCapacity: 50,
+//     liquidCapacity: 10,
+//     updateEffectChance: 0.05,
+//     updateEffect: Fx.none,
+//     ambientSound: Sounds.machine,
+//     ambientSoundVolume: 0.5,
+//     plans: [
+//         {
+//             consume: {
+//                 power: 0,
+//                 items: [
+//                     { item: Items.thorium, amount: 4 },
+//                     { item: Items.sand, amount: 9 },
+//                 ],
+//                 liquids: [
+//                     { liquid: ionLiquid, amount: 122 },
+//                 ],
+//             },
+//             output: {
+//                 items: [
+//                     { item: Items.phaseFabric, amount: 1 },
+//                 ],
+//                 power: 5,
+//             },
+//             craftEffect: Fx.flakExplosion,
+//             craftTime: 60,
+//         },
+//         {
+//             consume: {
+//                 power: 10,
+//                 items: [
+//                     { item: dimensionShard, amount: 6 },
+//                     { item: Items.sand, amount: 18 },
+//                 ]
+//             },
+//             output: {
+//                 items: [
+//                     { item: Items.phaseFabric, amount: 2 },
+//                 ]
+//             },
+//             craftEffect: Fx.flakExplosion,
+//             craftTime: 60,
+//         },
+//     ]
+// });
+// b.buildVisibility = BuildVisibility.shown;
+// b.size = 7;
+// b.category = Category.crafting;
