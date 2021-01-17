@@ -164,7 +164,12 @@ exports.defineMultiCrafter = function (originConfig) {
             check(plan.output.items, v => Array.isArray(v), v => 'plans[' + i + '].output.items must be an array, it was ' + v);
             check(plan.output.liquids, v => !v || Array.isArray(v), v => 'plans[' + i + '].output.liquids must be null or an array, it was ' + v);
             check(plan.output.power, v => !v || (typeof v === 'number' && v >= 0), v => 'plans[' + i + '].output.power must be null or a number and greeter equals to 0, it was ' + v);
-
+            if ((typeof plan.consume.power !== "number") || isNaN(plan.consume.power)) {
+                plan.consume.power = 0;
+            }
+            if ((typeof plan.output.power !== "number") || isNaN(plan.output.power)) {
+                plan.output.power = 0;
+            }
             if (plan.consume.items) {
                 for (var j = 0; j < plan.consume.items.length; j++) {
                     var itemInfo = plan.consume.items[j];
