@@ -149,7 +149,7 @@ turret.ammo(dimensionAlloy, newElectricStormBulletType({
     homingDelay: 30,
     lifetime: 150,
     homingRange: 400,
-    ammoMultiplier: 4,
+    ammoMultiplier: 2,
 }));
 
 turret.consumes.powerCond(75, boolf(b => b.isActive()));

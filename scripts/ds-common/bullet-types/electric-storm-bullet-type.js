@@ -74,7 +74,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
     }));
 
     const mergedOptions = Object.assign({
-        damage: 40,
+        damage: 50,
         speed: 3,
         lifetime: 180,
         pierceCap: 10,
@@ -87,17 +87,17 @@ exports.newElectricStormBulletType = (requestOptions) => {
         homingDelay: 30,
         homingPower: 0.025,
         homingRange: 200,
-        splashDamageRadius: 38,
-        splashDamage: 12,
+        splashDamageRadius: 50,
+        splashDamage: 50,
         weaveMag: 8,
         weaveScale: 6,
         spin: 32.31234,
-        lightning: 6,
+        lightning: 2,
         lightningLength: 10,
         lightningLengthRand: 8,
         lightningCone: 360,
         lightningAngle: 0,
-        lightningDamage: 21,
+        lightningDamage: 45,
         lightningColor: Color.valueOf("69dcee"),
         backColor: transparentColor,
         frontColor: Color.valueOf("79ecfe"),
@@ -107,10 +107,10 @@ exports.newElectricStormBulletType = (requestOptions) => {
         speedStart: 1,
         speedFull: 5,
         flyingLightninColor: Color.valueOf("69dcee"),
-        flyingLightningDamage: 18,
-        flyingLightningChange: 0.06,
+        flyingLightningDamage: 33,
+        flyingLightningChange: 0.07,
         flyingLightningLength: 8,
-        flyingLightningCooldown: 5,
+        flyingLightningCooldown: 6,
     }, requestOptions);
 
     const shouldDisableAnimation = () => Core.graphics.getFramesPerSecond() <= 50;

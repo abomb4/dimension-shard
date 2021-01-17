@@ -34,7 +34,7 @@ dimensionCrystalBattery.requirements = ItemStack.with(
 );
 dimensionCrystalBattery.category = Category.power;
 dimensionCrystalBattery.health = 180;
-dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 10);
+dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 5);
 
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
 

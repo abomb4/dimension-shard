@@ -47,35 +47,27 @@ const options = {
         {
             launchCount: 3,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 2000 },
-                { item: Items.lead, amount: 2000 },
+                { item: Items.copper, amount: 3000 },
+                { item: Items.lead, amount: 3000 },
                 { item: Items.silicon, amount: 2000 },
             ])
         },
         {
             launchCount: 3,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 3400 },
-                { item: Items.lead, amount: 3400 },
-                { item: Items.silicon, amount: 2400 },
-            ])
-        },
-        {
-            launchCount: 3,
-            requirements: defineItemRequirements([
-                { item: Items.copper, amount: 4000 },
-                { item: Items.lead, amount: 4000 },
-                { item: Items.silicon, amount: 2600 },
+                { item: Items.copper, amount: 4400 },
+                { item: Items.lead, amount: 4400 },
+                { item: Items.silicon, amount: 3200 },
                 { item: Items.titanium, amount: 2600 },
             ])
         },
         {
-            launchCount: 3,
+            launchCount: 4,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 5000 },
-                { item: Items.lead, amount: 5000 },
-                { item: Items.silicon, amount: 3000 },
-                { item: Items.titanium, amount: 3000 },
+                { item: Items.copper, amount: 4400 },
+                { item: Items.lead, amount: 4400 },
+                { item: Items.silicon, amount: 3200 },
+                { item: Items.titanium, amount: 2600 },
             ])
         },
         {
@@ -85,41 +77,43 @@ const options = {
                 { item: Items.lead, amount: 6000 },
                 { item: Items.silicon, amount: 3000 },
                 { item: Items.titanium, amount: 3000 },
-            ])
-        },
-        {
-            launchCount: 4,
-            requirements: defineItemRequirements([
-                { item: Items.copper, amount: 8000 },
-                { item: Items.lead, amount: 8000 },
-                { item: Items.silicon, amount: 3500 },
-                { item: Items.titanium, amount: 3500 },
                 { item: Items.thorium, amount: 2600 },
             ])
         },
         {
-            launchCount: 4,
+            launchCount: 5,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 9000 },
-                { item: Items.lead, amount: 9000 },
-                { item: Items.silicon, amount: 4000 },
-                { item: Items.titanium, amount: 4000 },
-                { item: Items.thorium, amount: 3000 },
+                { item: Items.copper, amount: 6000 },
+                { item: Items.lead, amount: 6000 },
+                { item: Items.silicon, amount: 3000 },
+                { item: Items.titanium, amount: 3000 },
+                { item: Items.thorium, amount: 2600 },
             ])
         },
         {
-            launchCount: 4,
+            launchCount: 5,
             requirements: defineItemRequirements([
-                { item: Items.copper, amount: 12000 },
-                { item: Items.lead, amount: 12000 },
+                { item: Items.copper, amount: 9000 },
+                { item: Items.lead, amount: 9000 },
                 { item: Items.silicon, amount: 6000 },
-                { item: Items.titanium, amount: 5000 },
+                { item: Items.titanium, amount: 5500 },
                 { item: Items.thorium, amount: 5000 },
                 { item: Items.phaseFabric, amount: 1000 },
             ])
         },
         {
-            launchCount: 4,
+            launchCount: 6,
+            requirements: defineItemRequirements([
+                { item: Items.copper, amount: 9000 },
+                { item: Items.lead, amount: 9000 },
+                { item: Items.silicon, amount: 6000 },
+                { item: Items.titanium, amount: 5500 },
+                { item: Items.thorium, amount: 5000 },
+                { item: Items.phaseFabric, amount: 1000 },
+            ])
+        },
+        {
+            launchCount: 6,
             requirements: defineItemRequirements([
                 { item: Items.copper, amount: 15000 },
                 { item: Items.lead, amount: 15000 },
@@ -131,7 +125,7 @@ const options = {
             ])
         },
         {
-            launchCount: 4,
+            launchCount: 6,
             requirements: defineItemRequirements([
                 { item: Items.copper, amount: 18000 },
                 { item: Items.lead, amount: 18000 },
@@ -144,7 +138,7 @@ const options = {
             ])
         },
         {
-            launchCount: 4,
+            launchCount: 7,
             requirements: defineItemRequirements([
                 { item: Items.copper, amount: 18000 },
                 { item: Items.lead, amount: 18000 },
@@ -156,22 +150,9 @@ const options = {
                 { item: Items.surgeAlloy, amount: 1200 },
             ])
         },
-        {
-            launchCount: 5,
-            requirements: defineItemRequirements([
-                { item: Items.copper, amount: 18000 },
-                { item: Items.lead, amount: 18000 },
-                { item: Items.silicon, amount: 10000 },
-                { item: Items.pyratite, amount: 300 },
-                { item: Items.titanium, amount: 8500 },
-                { item: Items.thorium, amount: 8500 },
-                { item: Items.phaseFabric, amount: 2000 },
-                { item: Items.surgeAlloy, amount: 1200 },
-            ])
-        },
     ]
 };
-
+const requirementInfoCache = {};
 const block = new JavaAdapter(StorageBlock, {
     setStats() {
         this.super$setStats();
@@ -459,7 +440,30 @@ lib.setBuilding(block, block => {
             if (this._requirementInfoIndex == 0) {
                 return options.requirementInfos[0];
             }
-            return options.requirementInfos[Math.min(this._requirementInfoIndex, options.requirementInfos.length) - 1];
+            if (this._requirementInfoIndex >= options.requirementInfos.length) {
+                // Too many cores, generate requirement info by last requirements
+                var requirementInfo = options.requirementInfos[options.requirementInfos.length - 1];
+                var outof = this._requirementInfoIndex - options.requirementInfos.length + 1;
+
+                if (requirementInfoCache[outof]) {
+                    return requirementInfoCache[outof];
+                }
+
+                var materialMultipler = Math.max(1, Math.pow(1.2, Math.floor((outof + 1) / 2)));
+                var launchTimesAddition = Math.floor(outof / 2);
+                /** @type {RequirementInfo} */
+                var newReq = {};
+                newReq.launchCount = requirementInfo.launchCount + launchTimesAddition;
+                newReq.requirements = {};
+                for (var key of Object.keys(requirementInfo.requirements)) {
+                    var v = requirementInfo.requirements[key];
+                    newReq.requirements[key] = Math.floor(v * materialMultipler);
+                }
+                requirementInfoCache[outof] = newReq;
+                return newReq;
+            } else {
+                return options.requirementInfos[this._requirementInfoIndex - 1];
+            }
         },
         // -=-=-=-=-=-=-=-=-=- divide -=-=-=-=-=-=-=-=-=-
         created() {
@@ -512,12 +516,13 @@ lib.setBuilding(block, block => {
                 const w = region.width * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const h = region.height * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const yAddition = 192 * Interp.pow3In.apply(1 - percent);
+                Draw.z(Layer.weather + 1);
                 Draw.alpha(percent)
                 Draw.rect(region, this.x, this.y + yAddition, w, h, this._toCoreDelay * 2);
                 Draw.color(this.team.color);
                 Draw.alpha(percent)
                 Draw.rect(teamRegion, this.x, this.y + yAddition, w, h, this._toCoreDelay * 2);
-                Draw.color();
+                Draw.reset();
             }
         },
         displayConsumption(table) {
