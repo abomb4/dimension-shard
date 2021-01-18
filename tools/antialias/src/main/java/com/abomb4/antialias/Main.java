@@ -3,38 +3,86 @@ package com.abomb4.antialias;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
 
-    private static int getRGB(BufferedImage image, int ix, int iy) {
+    public static final Set<String> EXCLUSIONS = Set.of(
+        "core-construction-platform-gate-left1.png",
+        "core-construction-platform-gate-left2.png",
+        "electric-storm-turret-middle.png"
+    );
+
+    public static final String SPRITES_RAW = "sprites-raw";
+
+    public static void log(String txt) {
+        System.out.println(txt);
+    }
+    public static int getRGB(BufferedImage image, int ix, int iy) {
         return image.getRGB(Math.max(Math.min(ix, image.getWidth() - 1), 0), Math.max(Math.min(iy, image.getHeight() - 1), 0));
     }
 
-    public static void main(String[] args) throws Exception {
-
-        final String prefix = "D:\\tmp\\ss\\";
-        final File dir = new File(prefix);
-        final List<File> files = Arrays.stream(Optional.of(dir)
-                        .map(File::listFiles)
-                        .orElseGet(() -> new File[0]))
-                        .filter(file -> file.getName().endsWith(".png"))
-                        .filter(File::canWrite)
-                        .filter(File::canRead)
-                        .collect(Collectors.toList());
-        files.forEach(file -> {
-            System.out.println("处理文件 " + file.getAbsolutePath());
-            antialias(file);
-        });
+    public static boolean isExclusion(String filename) {
+        return EXCLUSIONS.contains(filename);
+    }
+    public static File getRawDir(String arg0) {
+        File file = new File(arg0);
+        while (file != null) {
+            if (file.getName().equals("tools")) {
+                try {
+                    return Objects.requireNonNull(file.getParentFile().listFiles((dir, name) -> SPRITES_RAW.equals(name)))[0];
+                } catch (Exception e) {
+                    throw new RuntimeException("Cannot find sprites-raw dir!");
+                }
+            } else {
+                file = file.getParentFile();
+            }
+        }
+        throw new RuntimeException("Please run this tool at tools directory!");
     }
 
-    public static void antialias(File file) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static File getOutFile(File inFile) {
+        final String absolutePath = inFile.getAbsolutePath();
+        final File newFile = new File(absolutePath.replaceAll(SPRITES_RAW, "sprites"));
+        newFile.mkdirs();
+        return newFile;
+    }
+
+    public static void recursive(File[] files) throws IOException {
+        if (files == null) {
+            return;
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                recursive(file.listFiles());
+            } else if (file.getName().endsWith(".png")) {
+                log("处理文件 " + file.getAbsolutePath());
+                final File outFile = getOutFile(file);
+                if (isExclusion(file.getName())) {
+                    log("文件 " + file.getName() + "不进行抗锯齿，直接复制");
+                    Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    antialias(file, outFile);
+                    log("文件输出到 " + outFile.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        final File rawDir = getRawDir(System.getProperty("user.dir"));
+        recursive(rawDir.listFiles());
+    }
+
+    public static void antialias(File inFile, File outFile) {
         try {
-            final BufferedImage image = ImageIO.read(file);
-            final BufferedImage out = ImageIO.read(file);
+            final BufferedImage image = ImageIO.read(inFile);
+            final BufferedImage out = ImageIO.read(inFile);
             final BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
             final int radius = 4;
             var color = new Color();
@@ -99,7 +147,7 @@ public class Main {
                 }
             }
 
-            ImageIO.write(out, "png", file);
+            ImageIO.write(out, "png", outFile);
         } catch (Exception e) {
             throw new RuntimeException("DIE", e);
         }
