@@ -337,6 +337,36 @@ function createPod() {
         toString() {
             return "CoreConstructionPlatformPod#" + this.id;
         },
+        draw() {
+            const engineColor = Pal.engine;
+            var alpha = this.fout(Interp.pow5Out);
+            var scale = (1 - alpha) * 1.3 + 1;
+            var cx = this.cx();
+            var cy = this.cy();
+            var rotation = this.fin() * (130 + Mathf.randomSeedRange(this.id, 50));
+            Draw.z(Layer.effect + 0.001);
+            Draw.color(engineColor);
+            var rad = 0.2 + this.fslope();
+            Tmp.c2.set(engineColor).a = alpha;
+            Tmp.c1.set(engineColor).a = 0;
+            Fill.light(cx, cy, 10, 25 * (rad + scale - 1), Tmp.c2, Tmp.c1);
+            Draw.alpha(alpha);
+            for (var i = 0; i < 4; i++) {
+                Drawf.tri(cx, cy, 6, 40 * (rad + scale - 1), i * 90 + rotation);
+            }
+            Draw.color();
+            Draw.z(Layer.weather - 1);
+            var region = lib.loadRegion("core-construction-platform-pod");
+            var rw = region.width * Draw.scl * scale;
+            var rh = region.height * Draw.scl * scale;
+            Draw.alpha(alpha);
+            Draw.rect(region, cx, cy, rw, rh, rotation);
+            Tmp.v1.trns(225, this.fin(Interp.pow3In) * 250);
+            Draw.z(Layer.flyingUnit + 1);
+            Draw.color(0, 0, 0, 0.22 * alpha);
+            Draw.rect(region, cx + Tmp.v1.x, cy + Tmp.v1.y, rw, rh, rotation);
+            Draw.reset();
+        },
         remove() {
             if (this.added == false) return;
             Groups.all.remove(this);
@@ -346,6 +376,13 @@ function createPod() {
     });
 }
 
+const fxGateOpen = new Effect(25, cons(e => {
+    Draw.color(Color.red);
+    Draw.alpha(e.fout());
+    Draw.rect(lib.loadRegion("core-construction-platform-gate-effect"), e.x, e.y);
+}));
+
+const afterLaunchTimeTotal = 60 * 1.5;
 lib.setBuilding(block, block => {
 
     // var this._isMain = false;
@@ -365,6 +402,7 @@ lib.setBuilding(block, block => {
         _readyLaunch: false,
         _ready: false,
         _requirementInfoIndex: 0,
+        _afterLaunchTime: 0,
         makeMain(cores) {
             Call_MakeMain(this.tile.pos(), cores);
             mainBuilding[this.team.id] = this;
@@ -394,6 +432,8 @@ lib.setBuilding(block, block => {
             entity.team = this.team;
             entity.add();
             Effect.shake(3, 3, this);
+
+            this._afterLaunchTime = afterLaunchTimeTotal;
         },
         becomeCore() {
             Fx.placeBlock.at(this.tile, Blocks.coreShard.size);
@@ -488,6 +528,7 @@ lib.setBuilding(block, block => {
                 if (!this._readyLaunch && this.fullFilled()) {
                     this._readyLaunch = true;
                     this._launchDelay = options.launchTime;
+                    fxGateOpen.at(this);
                 }
                 if (this._readyLaunch) {
                     this._launchDelay -= this.edelta();
@@ -505,14 +546,49 @@ lib.setBuilding(block, block => {
                 if (this._toCoreDelay <= 0) {
                     this.becomeCore();
                 }
+                this._afterLaunchTime = Math.max(0, this._afterLaunchTime - this.delta());
             }
         },
         draw() {
-            this.super$draw();
+            const SCL = 32 / 8;
+            if (this._readyLaunch && this._launchDelay > 0) {
+                // After ready before launch
+                var maxTime = Math.min(60 * 1.5, options.launchTime);
+                var percent = Mathf.clamp((options.launchTime - this._launchDelay) / maxTime, 0, 1);
+                percent = Interp.smooth2.apply(percent);
+                Draw.rect(lib.loadRegion("core-construction-platform-bottom"), this.x, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-pod"), this.x, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - 16 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - 30 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - 16 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - 30 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + 16 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + 30 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + 16 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + 30 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-top"), this.x, this.y);
+            } else if (this._afterLaunchTime > 0) {
+                // After ready before launch
+                var maxTime = afterLaunchTimeTotal;
+                var percent = Mathf.clamp((maxTime - this._afterLaunchTime) / maxTime, 0, 1);
+                percent = Interp.smooth2.apply(1 - percent);
+                Draw.rect(lib.loadRegion("core-construction-platform-bottom"), this.x, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - 16 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - 30 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - 16 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - 30 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + 16 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + 30 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + 16 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + 30 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-top"), this.x, this.y);
+            } else {
+                this.super$draw();
+            }
             if (this._ready) {
                 const region = Blocks.coreShard.region;
                 const teamRegion = Blocks.coreShard.teamRegion;
-                const percent = (1 - Math.min(1, this._toCoreDelay / options.becomeCoreDelay))
+                var percent = (1 - Math.min(1, this._toCoreDelay / options.becomeCoreDelay))
                 const w = region.width * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const h = region.height * Draw.scl * Draw.xscl * (1 + 2 * (1 - percent));
                 const yAddition = 192 * Interp.pow3In.apply(1 - percent);
