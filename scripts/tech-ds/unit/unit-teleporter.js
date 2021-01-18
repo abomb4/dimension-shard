@@ -17,6 +17,7 @@
 
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const dsGlobal = require('ds-common/ds-global');
 
 const ORANGE = Color.valueOf("#fea947");
 const BLUE = Color.valueOf("#3ebdfc");
@@ -92,6 +93,7 @@ var wrapRegion
 var middleRegion
 var innerRegion
 const block = new JavaAdapter(Block, {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
     load() {
         borderRegion = lib.loadRegion("unit-teleporter-border");
         innerRegion = lib.loadRegion("unit-teleporter-inner");
