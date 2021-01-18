@@ -194,7 +194,7 @@ block.requirements = ItemStack.with(
     Items.thorium, 320,
 );
 
-block.consumes.power(4.5);
+block.consumes.powerCond(25, boolf(b => b.getReadyLaunch()));
 
 var platformGroup = {};
 var mainBuilding = {};
@@ -376,8 +376,13 @@ function createPod() {
     });
 }
 
-const fxGateOpen = new Effect(25, cons(e => {
+const fxGateOpen = new Effect(30, cons(e => {
     Draw.color(Color.red);
+    Draw.alpha(e.fout());
+    Draw.rect(lib.loadRegion("core-construction-platform-gate-effect"), e.x, e.y);
+}));
+const fxGateClose = new Effect(30, cons(e => {
+    Draw.color(Color.valueOf("#3494c4"));
     Draw.alpha(e.fout());
     Draw.rect(lib.loadRegion("core-construction-platform-gate-effect"), e.x, e.y);
 }));
@@ -417,6 +422,9 @@ lib.setBuilding(block, block => {
         },
         getIsMain() {
             return this._isMain;
+        },
+        getReadyLaunch() {
+            return this._readyLaunch;
         },
         doLaunch() {
             Call_Launch(this.tile.pos(), this._launchTimes);
@@ -523,8 +531,8 @@ lib.setBuilding(block, block => {
         },
         updateTile() {
             this.super$updateTile();
-            if (this._isMain) {
-                const requirementInfo = this.getRequirementInfo();
+            if (this._isMain && this.consValid()) {
+                var requirementInfo = this.getRequirementInfo();
                 if (!this._readyLaunch && this.fullFilled()) {
                     this._readyLaunch = true;
                     this._launchDelay = options.launchTime;
@@ -536,6 +544,10 @@ lib.setBuilding(block, block => {
                 if (this._launchDelay <= 0 && !Vars.net.client()) {
                     this.doLaunch();
                 }
+            }
+            if (this._isMain) {
+                // If ready, no power needs
+                var requirementInfo = this.getRequirementInfo();
                 if (!this._ready && this._launchTimes === requirementInfo.launchCount) {
                     this._ready = true;
                     this._toCoreDelay = options.becomeCoreDelay + options.becomeCoreDelayDelay;
@@ -546,11 +558,19 @@ lib.setBuilding(block, block => {
                 if (this._toCoreDelay <= 0) {
                     this.becomeCore();
                 }
+
+                // There is only UI effect, no power need
+                var before = this._afterLaunchTime;
                 this._afterLaunchTime = Math.max(0, this._afterLaunchTime - this.delta());
+                if (before != 0 && this._afterLaunchTime == 0) {
+                    fxGateClose.at(this);
+                }
             }
         },
         draw() {
             const SCL = 32 / 8;
+            const DIST2 = 29;
+            const DIST1 = 15;
             if (this._readyLaunch && this._launchDelay > 0) {
                 // After ready before launch
                 var maxTime = Math.min(60 * 1.5, options.launchTime);
@@ -558,14 +578,14 @@ lib.setBuilding(block, block => {
                 percent = Interp.smooth2.apply(percent);
                 Draw.rect(lib.loadRegion("core-construction-platform-bottom"), this.x, this.y);
                 Draw.rect(lib.loadRegion("core-construction-platform-pod"), this.x, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - 16 * percent / SCL, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - 30 * percent / SCL, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - 16 * percent / SCL, 90);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - 30 * percent / SCL, 90);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + 16 * percent / SCL, this.y, 180);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + 30 * percent / SCL, this.y, 180);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + 16 * percent / SCL, 270);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + 30 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - DIST2 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - DIST1 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - DIST2 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - DIST1 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + DIST2 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + DIST1 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + DIST2 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + DIST1 * percent / SCL, 270);
                 Draw.rect(lib.loadRegion("core-construction-platform-top"), this.x, this.y);
             } else if (this._afterLaunchTime > 0) {
                 // After ready before launch
@@ -573,14 +593,14 @@ lib.setBuilding(block, block => {
                 var percent = Mathf.clamp((maxTime - this._afterLaunchTime) / maxTime, 0, 1);
                 percent = Interp.smooth2.apply(1 - percent);
                 Draw.rect(lib.loadRegion("core-construction-platform-bottom"), this.x, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - 16 * percent / SCL, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - 30 * percent / SCL, this.y);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - 16 * percent / SCL, 90);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - 30 * percent / SCL, 90);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + 16 * percent / SCL, this.y, 180);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + 30 * percent / SCL, this.y, 180);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + 16 * percent / SCL, 270);
-                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + 30 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x - DIST2 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x - DIST1 * percent / SCL, this.y);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y - DIST2 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y - DIST1 * percent / SCL, 90);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x + DIST2 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x + DIST1 * percent / SCL, this.y, 180);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left2"), this.x, this.y + DIST2 * percent / SCL, 270);
+                Draw.rect(lib.loadRegion("core-construction-platform-gate-left1"), this.x, this.y + DIST1 * percent / SCL, 270);
                 Draw.rect(lib.loadRegion("core-construction-platform-top"), this.x, this.y);
             } else {
                 this.super$draw();
