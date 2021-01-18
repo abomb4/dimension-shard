@@ -1,65 +1,13 @@
-0.0.1:
-Publish a unfinished unstable version, as if somebody will play this.
+0.18:
+Update Core Construction Platform sprites, power usage;
+Liquid bulidings power up;
+Ion Cannon and Electric Storm more stronger;
+Fix some bug
 
-0.0.2:
-Fix Phase Space Bridge crash bug;
-Mod display name and description localized.
-
-0.0.3:
-Hard Thorium Drill CANNOT boost.
-Decrease Space Crystall requirements.
-Decrease requirements of Resources Dispatching Center.
-
-0.0.4:
-Add DC turret
-adjust many data
-
-0.0.5：
-Add a planet
-Adjust factory costs
-
-0.0.6:
-Reimplement the black hole effects
-Bomb Teleporter can fire Space Crystal now
-Adjust many datas
-
-0.0.7:
-Add armor for Hard Thorium Wall
-
-0.0.8:
-Add T4 unit 'Formula'
-Add units to research tree, now they are available in campagin
-
-0.9:
-Add Unit Teleporter;
-Increase Resources Dispatching Center range;
-Reformat version, three number is unnecessary in dev version
-
-0.10:
-Add unit Collapse;
-Adjust researh tree
-
-0.11:
-Remake burn from T5 to T4
-Fix save problem
-Add unit Beat
-
-0.12:
-Change the Space Crystallizer and Time Condenser from 3x3 to 2x2;
-Significantly improve the efficiency and productivity of the Time Condenser and Ion Collector;
-Enhance the Collapse and Beat;
-Bomb teleporter and Collapse bullet cannot be reflected;
-Significantly reduce all factory prices
-
-0.13:
-Add unit Rhapsody
-
-0.14:
-Add Core Construction Platform
-
-0.15:
-Adjust RTG, Shard radioactivity, Shard Seceiver;
-Hard Thorium Drill can now exceed 60/s
+0.17:
+Add 3.5 turrets sprites
+Increase Space Crystal Ammo of Foreshadow
+Ion Cannon fires arcs now
 
 0.16:
 Add smaller core;
@@ -69,7 +17,66 @@ Adjust the battery;
 Liquid tank more capacity;
 Core Construction Platform multiplayer issue fixed
 
-0.17:
-Add 3.5 turrets sprites
-Increase Space Crystal Ammo of Foreshadow
-Ion Cannon fires arcs now
+0.15:
+Adjust RTG, Shard radioactivity, Shard Seceiver;
+Hard Thorium Drill can now exceed 60/s
+
+0.14:
+Add Core Construction Platform
+
+0.13:
+Add unit Rhapsody
+
+0.12:
+Change the Space Crystallizer and Time Condenser from 3x3 to 2x2;
+Significantly improve the efficiency and productivity of the Time Condenser and Ion Collector;
+Enhance the Collapse and Beat;
+Bomb teleporter and Collapse bullet cannot be reflected;
+Significantly reduce all factory prices
+
+0.11:
+Remake burn from T5 to T4
+Fix save problem
+Add unit Beat
+
+0.10:
+Add unit Collapse;
+Adjust researh tree
+
+0.9:
+Add Unit Teleporter;
+Increase Resources Dispatching Center range;
+Reformat version, three number is unnecessary in dev version
+
+0.0.8:
+Add T4 unit 'Formula'
+Add units to research tree, now they are available in campagin
+
+0.0.7:
+Add armor for Hard Thorium Wall
+
+0.0.6:
+Reimplement the black hole effects
+Bomb Teleporter can fire Space Crystal now
+Adjust many datas
+
+0.0.5：
+Add a planet
+Adjust factory costs
+
+0.0.4:
+Add DC turret
+adjust many data
+
+0.0.3:
+Hard Thorium Drill CANNOT boost.
+Decrease Space Crystall requirements.
+Decrease requirements of Resources Dispatching Center.
+
+0.0.2:
+Fix Phase Space Bridge crash bug;
+Mod display name and description localized.
+
+0.0.1:
+Publish a unfinished unstable version, as if somebody will play this.
+
