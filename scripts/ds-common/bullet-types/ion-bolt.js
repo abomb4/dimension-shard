@@ -58,7 +58,7 @@ const standardFrag1 = newElectricStormBulletType({
     flyingLightningDamage: 12,
     flyingLightninColor: ionLiquid.color,
     flyingLightningChange: 0.07,
-    flyingLightningDelay: 5,
+    flyingLightningDelay: 6,
 })
 
 const standardFrag3 = newElectricStormBulletType({
@@ -68,15 +68,15 @@ const standardFrag3 = newElectricStormBulletType({
     pierceCap: 2,
     splashDamage: 1,
     splashDamageRadius: 24,
-    lightning: 1,
+    lightning: 2,
     lightningLength: 3,
-    lightningDamage: 25,
+    lightningDamage: 30,
     lightningColor: ionLiquid.color,
     frontColor: ionLiquid.color,
-    flyingLightningDamage: 16,
+    flyingLightningDamage: 18,
     flyingLightninColor: ionLiquid.color,
     flyingLightningChange: 0.07,
-    flyingLightningDelay: 5,
+    flyingLightningDelay: 6,
 })
 
 exports.newIonBoltBulletType = (requestOptions) => {
@@ -117,8 +117,8 @@ exports.newIonBoltBulletType = (requestOptions) => {
         smokeEffect: fireEffect,
         despawnEffect: fireEffect,
         splashDamageRadius: 32,
-        splashDamage: 40,
-        lightning: 1,
+        splashDamage: 60,
+        lightning: 2,
         lightningLength: 6,
         lightningLengthRand: 4,
         lightningCone: 360,
@@ -134,7 +134,7 @@ exports.newIonBoltBulletType = (requestOptions) => {
         fragBullets: 1,
         fragBullet: standardFrag3,
         fragLifeMin: 0,
-        fragLifeMax: 1.2,
+        fragLifeMax: 1,
         backColor: ionLiquid.color,
         frontColor: ionLiquid.color,
         overrides: {},
