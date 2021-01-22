@@ -102,7 +102,7 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
         if (this.reload >= this.block.reloadTime) {
             var type = this.peekAmmo();
             this.shoot(type);
-            this.reload = 0;
+            this.reload -= this.block.reloadTime;
         }
     },
     bullet(type, angle) {

@@ -51,6 +51,7 @@ require('tech-ds/power-buildings')
 require('tech-ds/turret/bomb-teleporter')
 require('tech-ds/turret/dc')
 require('tech-ds/turret/ion-bolt-turret')
+require('tech-ds/turret/dark-light')
 require('tech-ds/turret/electric-storm-turret')
 
 require('tech-ds/distribution/phase-space-bridge')

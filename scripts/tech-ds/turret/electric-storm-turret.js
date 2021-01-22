@@ -34,7 +34,7 @@ const turret = blockTypes.newNoRotatingTurret({
     buildVisibility: BuildVisibility.shown,
     category: Category.turret,
     liquidCapacity: 120,
-    health: 5000,
+    health: 5200,
     size: 5,
     reloadTime: 150,
     range: 384,
@@ -80,7 +80,7 @@ const turret = blockTypes.newNoRotatingTurret({
             if (this.reload >= this.block.reloadTime) {
                 var type = this.peekAmmo();
                 this.shoot(type);
-                this.reload = 0;
+                this.reload -= this.block.reloadTime;
             }
         },
         updateTile() {
