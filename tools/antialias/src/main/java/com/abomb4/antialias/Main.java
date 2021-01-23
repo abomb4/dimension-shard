@@ -10,6 +10,9 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 public class Main {
@@ -91,48 +94,54 @@ public class Main {
         return newFile;
     }
 
-    public static void recursive(File[] files) throws IOException {
+    public static void recursive(File[] files, ThreadPoolExecutor executor) throws IOException {
         if (files == null) {
             return;
         }
         for (File file : files) {
             if (file.isDirectory()) {
-                recursive(file.listFiles());
+                recursive(file.listFiles(), executor);
             } else if (file.getName().endsWith(".png")) {
-                log("处理文件 " + file.getAbsolutePath());
+                executor.submit(() -> {
+                    log("处理文件 " + file.getAbsolutePath());
 
-                final GenerationConfig config = FILE_CONFIG.getOrDefault(file.getName(), DEFAULT_CONFIG);
-                if (config.antialias) {
-                    final File outFile = getOutFile(file);
-                    log("生成抗锯齿 " + outFile.getAbsolutePath());
-                    antialias(file, outFile);
-                } else {
-                    final File outFile = getOutFile(file);
-                    log("无需抗锯齿 " + file.getName() + "，直接复制");
-                    Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
-
-                final String outlineFileName = getOutFile(file).getAbsolutePath().replaceAll("\\.png$", "-outline.png");
-                if (config.generateOutline) {
-                    final Color outlineColor = config.outlineColor;
-                    final File outlineOutFile = config.outlineOverride ? getOutFile(file) : new File(outlineFileName);
-                    log("生成 Outline: " + outlineOutFile.getAbsolutePath());
-                    generateOutline(file, outlineOutFile, outlineColor);
-                }
-
-                if (config.generateIcons) {
-                    if (config.generateOutline) {
-                        // 单位图标都是根据 outline 生成的
-                        if (config.outlineOverride) {
-                            generateIcon(getOutFile(file), config.iconNameReplacer);
-                        } else {
-                            generateIcon(new File(outlineFileName), config.iconNameReplacer);
-                        }
+                    final GenerationConfig config = FILE_CONFIG.getOrDefault(file.getName(), DEFAULT_CONFIG);
+                    if (config.antialias) {
+                        final File outFile = getOutFile(file);
+                        log("生成抗锯齿 " + outFile.getAbsolutePath());
+                        antialias(file, outFile);
                     } else {
-                        // 方块图标不需要
-                        generateIcon(file, config.iconNameReplacer);
+                        final File outFile = getOutFile(file);
+                        log("无需抗锯齿 " + file.getName() + "，直接复制");
+                        try {
+                            Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                            throw new RuntimeException("File FUCKED", e);
+                        }
                     }
-                }
+
+                    final String outlineFileName = getOutFile(file).getAbsolutePath().replaceAll("\\.png$", "-outline.png");
+                    if (config.generateOutline) {
+                        final Color outlineColor = config.outlineColor;
+                        final File outlineOutFile = config.outlineOverride ? getOutFile(file) : new File(outlineFileName);
+                        log("生成 Outline: " + outlineOutFile.getAbsolutePath());
+                        generateOutline(file, outlineOutFile, outlineColor);
+                    }
+
+                    if (config.generateIcons) {
+                        if (config.generateOutline) {
+                            // 单位图标都是根据 outline 生成的
+                            if (config.outlineOverride) {
+                                generateIcon(getOutFile(file), config.iconNameReplacer);
+                            } else {
+                                generateIcon(new File(outlineFileName), config.iconNameReplacer);
+                            }
+                        } else {
+                            // 方块图标不需要
+                            generateIcon(file, config.iconNameReplacer);
+                        }
+                    }
+                });
             }
         }
     }
@@ -142,11 +151,18 @@ public class Main {
         // Remove output dir
         final File outputDir = new File(rawDir.getAbsolutePath().replaceAll(SPRITES_RAW, "sprites"));
         outputDir.delete();
-        recursive(rawDir.listFiles());
+
+        final int cores = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+        final ThreadPoolExecutor executor = new ThreadPoolExecutor(cores, cores, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
+        final long start = System.currentTimeMillis();
+        recursive(rawDir.listFiles(), executor);
+        executor.shutdown();
+        executor.awaitTermination(1, TimeUnit.HOURS);
+        log("Total time: " + (System.currentTimeMillis() - start));
     }
 
     /**
-     * @param inFile Input file
+     * @param inFile         Input file
      * @param fileNameMapper param1: Full filename, param2: Icon name, return: New full file name
      */
     public static void generateIcon(File inFile, BiFunction<String, String, String> fileNameMapper) {
@@ -170,6 +186,7 @@ public class Main {
             throw new RuntimeException("ICON DIE!");
         }
     }
+
     public static void generateOutline(File inFile, File outFile, Color outlineColor) {
         final int outline888 = outlineColor.argb8888();
         final int radius = 3;
@@ -326,23 +343,28 @@ public class Main {
             this.antialias = false;
             return this;
         }
+
         public GenerationConfig outline() {
             this.generateOutline = true;
             return this;
         }
+
         public GenerationConfig outline(Color outlineColor) {
             this.generateOutline = true;
             this.outlineColor = outlineColor;
             return this;
         }
+
         public GenerationConfig setOutlineOverride() {
             this.outlineOverride = true;
             return this;
         }
+
         public GenerationConfig icons() {
             this.generateIcons = true;
             return this;
         }
+
         public GenerationConfig setIconNameReplacer(BiFunction<String, String, String> iconNameReplacer) {
             this.iconNameReplacer = iconNameReplacer;
             return this;

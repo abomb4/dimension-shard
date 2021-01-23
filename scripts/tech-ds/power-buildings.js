@@ -60,5 +60,6 @@ timeCompressedRtg.category = Category.power;
 timeCompressedRtg.powerProduction = Blocks.rtgGenerator.powerProduction * rtgMultipler;
 timeCompressedRtg.itemDuration = Blocks.rtgGenerator.itemDuration / (rtgMultipler);
 timeCompressedRtg.canOverdrive = false;
+timeCompressedRtg.heatColor = Color.valueOf("ffc4b7");
 
 exports.timeCompressedRtg = timeCompressedRtg;
