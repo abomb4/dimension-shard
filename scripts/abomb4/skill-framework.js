@@ -384,8 +384,9 @@ function _define_constructor_(clazz, classId) {
                         var skillStatus = {
                             // Definition
                             def: def,
-                            // Reload, def.cooldown means ready
-                            reload: def.cooldown,
+                            // Reload, def.cooldown means ready;
+                            // Available on half seconds because Rhapsody will die when built.
+                            reload: def.cooldown - 30,
                             // is active
                             active: false,
                             // continously skill time left

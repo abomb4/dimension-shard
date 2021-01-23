@@ -184,6 +184,7 @@ exports.newLiquidConverter = (requestOptions) => {
     const options = Object.assign({
         buildVisibility: BuildVisibility.shown,
         convertRatio: 1,
+        drawLiquidLight: true,
         consumes: consumes => {},
         buildingOverrides: () => ({}),
         blockOverrides: {},

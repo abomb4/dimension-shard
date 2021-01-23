@@ -61,6 +61,25 @@ const standardFrag1 = newElectricStormBulletType({
     flyingLightningDelay: 6,
 })
 
+const standardFrag2 = newElectricStormBulletType({
+    lifetime: 18,
+    speedStart: 2.5,
+    damage: 1,
+    pierceCap: 2,
+    splashDamage: 1,
+    splashDamageRadius: 24,
+    lightning: 1,
+    lightningLength: 3,
+    lightningDamage: 26,
+    lightningColor: ionLiquid.color,
+    frontColor: ionLiquid.color,
+    flyingLightningDamage: 18,
+    flyingLightninColor: ionLiquid.color,
+    flyingLightningChange: 0.07,
+    flyingLightningDelay: 6,
+});
+exports.standardFrag2 = standardFrag2;
+
 const standardFrag3 = newElectricStormBulletType({
     lifetime: 20,
     speedStart: 2.5,

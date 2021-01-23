@@ -20,6 +20,7 @@ const items = require('ds-common/items')
 const { newIonBoltBulletType } = require('ds-common/bullet-types/index');
 const { mechConstructor } = require('abomb4/skill-framework');
 const { largeIonLaser } = require('ds-common/bullet-types/index');
+const { standardFrag2 } = require('ds-common/bullet-types/ion-bolt');
 
 const unitType = (() => {
     const skillY = 10;
@@ -160,7 +161,7 @@ const unitType = (() => {
     m.rotateSpeed = 1.8;
     m.flying = false;
     m.rotateShooting = true;
-    m.hitSize = 30;
+    m.hitSize = 26;
     m.destructibleWreck = false;
     m.canDrown = false;
     m.mechFrontSway = 1.5;
@@ -200,7 +201,13 @@ const unitType = (() => {
                             this.super$init();
                         }
                     },
-                }
+                },
+                fragBullet: standardFrag2,
+                lightning: 1,
+                fragLifeMax: 0.8,
+                splashDamage: 50,
+                damage: 30,
+                width: 3,
             });
             return w;
         })()

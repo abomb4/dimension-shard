@@ -125,6 +125,7 @@ const turret = new JavaAdapter(PowerTurret, {
 
 turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
+turret.liquidCapacity = 30;
 turret.range = 40 * 8;
 turret.chargeTime = 85;
 turret.chargeMaxDelay = 0;

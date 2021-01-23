@@ -42,7 +42,7 @@ const unitType = (() => {
     const maxRange = 120;
     const rangeUpDmg = 1000;
     const maxRangeDmg = 4000;
-    const damageDeflection = 0.25;
+    const damageDeflection = 0.2;
 
     function calculateRangeByDmg(dmg) {
         const base = maxRangeDmg - rangeUpDmg;

@@ -21,6 +21,7 @@ public class Main {
     public static final Color darkMetal = Color.valueOf("6e7080");
     public static final Color darkerMetal = Color.valueOf("565666");
 
+    public static final ThreadPoolExecutor logPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
     public static final GenerationConfig DEFAULT_CONFIG = c();
 
     public static final Map<String, Integer> iconSizeMap = Map.of(
@@ -63,7 +64,7 @@ public class Main {
     public static final String SPRITES_RAW = "sprites-raw";
 
     public static void log(String txt) {
-        System.out.println(txt);
+        logPool.submit(() -> System.out.println(txt));
     }
 
     public static int getRGB(BufferedImage image, int ix, int iy) {
@@ -158,7 +159,9 @@ public class Main {
         recursive(rawDir.listFiles(), executor);
         executor.shutdown();
         executor.awaitTermination(1, TimeUnit.HOURS);
-        log("Total time: " + (System.currentTimeMillis() - start));
+        log("Task done: " + (System.currentTimeMillis() - start));
+        logPool.shutdown();
+        logPool.awaitTermination(1, TimeUnit.HOURS);
     }
 
     /**

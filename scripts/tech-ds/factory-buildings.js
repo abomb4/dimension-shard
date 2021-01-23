@@ -242,6 +242,31 @@ exports.ionCollector = blockTypes.newLiquidConverter({
     blockOverrides: {
         isHidden() { return !dsGlobal.techDsAvailable(); },
     },
+    buildingOverrides() {
+        return {
+            updateTile() {
+                this.super$updateTile();
+                this.liquids.add(timeFlow, 0);
+            },
+        };
+    },
+    drawer: new JavaAdapter(DrawBlock, {
+        draw(entity) {
+            Draw.rect(entity.block.region, entity.x, entity.y, 0);
+
+            Draw.color(spaceCrystal.color);
+            Draw.alpha(Mathf.sin(entity.progress / entity.block.craftTime * Math.PI * 2));
+            Draw.rect(lib.loadRegion("ion-collector-heat"), entity.x, entity.y, 0);
+
+            Draw.color(entity.block.outputLiquid.liquid.color);
+            Draw.alpha(entity.liquids.get(entity.block.outputLiquid.liquid) / entity.block.liquidCapacity);
+            Draw.rect(lib.loadRegion("ion-collector-liquid"), entity.x, entity.y, 0);
+
+            Draw.color(timeFlow.color);
+            Draw.alpha(entity.liquids.get(timeFlow) / entity.block.liquidCapacity);
+            Draw.rect(lib.loadRegion("ion-collector-liquid-in"), entity.x, entity.y, 0);
+        },
+    }),
 });
 
 // -=-=-=-=-=-=-=-=-=-=-=- Dimension Alloy Smelter -=-=-=-=-=-=-=-=-=-=-=-

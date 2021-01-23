@@ -45,11 +45,10 @@ block.constructTime = 60 * 60 * 4;
 
 block.consumes.power(25);
 block.consumes.items(ItemStack.with(
-    Items.silicon, 1000,
-    items.hardThoriumAlloy, 600,
-    items.spaceCrystal, 300,
-    items.timeCrystal, 200,
-    items.dimensionAlloy, 100,
+    items.hardThoriumAlloy, 900,
+    items.spaceCrystal, 900,
+    items.timeCrystal, 500,
+    items.dimensionAlloy, 200,
 ));
 block.consumes.liquid(items.ionLiquid, 1);
 
@@ -61,4 +60,19 @@ block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.scepter, rhapsody),
     lib.createUnitPlan(beat, rhapsody),
 );
+
+lib.setBuildingSimple(block, Reconstructor.ReconstructorBuild, block => ({
+    displayConsumption(table) {
+        table.left();
+        var i = 0;
+        for (var cons of block.consumes.all()) {
+            if (cons.isOptional() && cons.isBoost()) continue;
+            print(i);
+            cons.build(this, table);
+            if (++i % 4 == 0) {
+                table.row();
+            }
+        }
+    },
+}));
 exports.t5Factory = block;
