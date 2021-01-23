@@ -1,3 +1,8 @@
+0.19:
+Adjust the data of Electric Storm and Ion Cannon to adapt to version 123
+Add turret "Dark Light"
+Fix some bugs such as Vault HP
+
 0.18:
 Update Core Construction Platform sprites, power usage;
 Liquid bulidings power up;
@@ -79,4 +84,3 @@ Mod display name and description localized.
 
 0.0.1:
 Publish a unfinished unstable version, as if somebody will play this.
-

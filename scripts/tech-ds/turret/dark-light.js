@@ -76,6 +76,10 @@ const shootDuration = 60 * 5;
 
 const turret = new JavaAdapter(PowerTurret, {
     isHidden() { return !dsGlobal.techDsAvailable(); },
+    load() {
+        this.super$load();
+        this.baseRegion = lib.loadRegion('dark-light-base');
+    },
     init() {
         this.consumes.powerCond(this.powerUse, boolf(entity => entity.getBullet() != null || entity.target != null));
         this.super$init();
@@ -83,7 +87,6 @@ const turret = new JavaAdapter(PowerTurret, {
     setStats() {
         this.super$setStats();
         this.stats.remove(Stat.booster);
-        this.stats.remove(Stat.input);
         const block = this;
         this.stats.add(Stat.input, new JavaAdapter(StatValue, {
             display(table) {
@@ -113,7 +116,7 @@ const turret = new JavaAdapter(PowerTurret, {
         }));
         this.stats.remove(Stat.damage);
         this.stats.add(Stat.damage, this.shootType.damage * 60 / 5, StatUnit.perSecond);
-        this.stats.add(Stat.cooldownTime, this.reloadTime / 60 + " + " + this.chargeTime / 60 + " s", [null]);
+        this.stats.add(Stat.cooldownTime, this.reloadTime / 60 + " + " + Strings.autoFixed(this.chargeTime / 60, 2) + " s", [null]);
         this.stats.add(Stat.lightningDamage, (lightningDamage), StatUnit.none);
     },
     getTr() { return this.tr; },
@@ -122,13 +125,13 @@ const turret = new JavaAdapter(PowerTurret, {
 
 turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
-turret.range = 46 * 8;
+turret.range = 40 * 8;
 turret.chargeTime = 85;
 turret.chargeMaxDelay = 0;
 turret.chargeEffects = 0;
 turret.chargeSound = chargeSound;
 turret.recoilAmount = 2;
-turret.reloadTime = 60 * 6;
+turret.reloadTime = 60 * 7.5;
 turret.cooldown = 0.04;
 turret.powerUse = 90;
 turret.shootShake = 2;
@@ -136,7 +139,7 @@ turret.shootEffect = shootEffect;
 turret.smokeEffect = Fx.none;
 turret.chargeEffect = chargeEffect;
 turret.chargeBeginEffect = chargeEffect;
-turret.heatColor = Color.red;
+turret.heatColor = Color.valueOf("a955f7");;
 turret.size = 5;
 turret.health = 6000;
 turret.shootSound = shootSound;
@@ -146,10 +149,16 @@ turret.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <
 turret.coolantMultiplier = 0.5;
 
 turret.requirements = ItemStack.with(
-    Items.copper, 200,
-    Items.silicon, 130,
-    Items.thorium, 110,
-    items.spaceCrystal, 30
+    Items.copper, 2100,
+    Items.lead, 3000,
+    Items.graphite, 1800,
+    Items.silicon, 1400,
+    Items.phaseFabric, 850,
+    Items.surgeAlloy, 1150,
+    items.spaceCrystal, 1200,
+    items.timeCrystal, 400,
+    items.hardThoriumAlloy, 850,
+    items.dimensionAlloy, 375
 );
 turret.shootType = (() => {
     const rect = new Rect();
@@ -187,8 +196,7 @@ turret.shootType = (() => {
                 }
 
                 function dragPowerPercent(dst, radius) {
-                    var falloff = 0.8;
-                    var scaled = Mathf.lerp(1 - dst / radius, 1, falloff);
+                    var scaled = Interp.sineOut.apply(1 - dst / radius);
                     return scaled;
                 }
                 Units.nearbyEnemies(b.team, rect, ((length, b) => cons(u => {
@@ -241,7 +249,7 @@ turret.shootType = (() => {
                 Effect.shake(this.shake, this.shake, b);
             }
         }
-    }, 95);
+    }, 100);
     bt.largeHit = true;
     bt.shootEffect = Fx.none;
     bt.hitEffect = hitEffect;
@@ -250,8 +258,8 @@ turret.shootType = (() => {
     bt.despawnEffect = Fx.none;
     // bt.status = StatusEffects.sapped;
     bt.statusDuration = 120;
-    bt.length = 48 * 8;
-    bt.width = 14;
+    bt.length = 42 * 8;
+    bt.width = 12;
     bt.incendChance = 0;
     bt.colors[0] = laserColor1;
     bt.colors[1] = laserColor2;
