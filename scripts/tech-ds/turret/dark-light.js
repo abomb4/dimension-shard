@@ -134,7 +134,7 @@ turret.recoilAmount = 2;
 turret.reloadTime = 60 * 7.5;
 turret.cooldown = 0.04;
 turret.powerUse = 90;
-turret.shootShake = 2;
+turret.shootShake = 3;
 turret.shootEffect = shootEffect;
 turret.smokeEffect = Fx.none;
 turret.chargeEffect = chargeEffect;
@@ -250,6 +250,7 @@ turret.shootType = (() => {
             }
         }
     }, 100);
+    bt.shake = 1.5;
     bt.largeHit = true;
     bt.shootEffect = Fx.none;
     bt.hitEffect = hitEffect;
@@ -259,6 +260,7 @@ turret.shootType = (() => {
     // bt.status = StatusEffects.sapped;
     bt.statusDuration = 120;
     bt.length = 42 * 8;
+    bt.width = 12;
     bt.width = 12;
     bt.incendChance = 0;
     bt.colors[0] = laserColor1;

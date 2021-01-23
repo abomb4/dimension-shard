@@ -1,12 +1,16 @@
 package com.abomb4.antialias;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class Main {
 
@@ -14,20 +18,43 @@ public class Main {
     public static final Color darkMetal = Color.valueOf("6e7080");
     public static final Color darkerMetal = Color.valueOf("565666");
 
-    public static final Set<String> COPY_ONLY = Set.of(
-        "collapse-full.png",
-        "core-construction-platform-gate-left1.png",
-        "core-construction-platform-gate-left2.png"
+    public static final GenerationConfig DEFAULT_CONFIG = c();
+
+    public static final Map<String, Integer> iconSizeMap = Map.of(
+        "large", 40,
+        "medium", 32,
+        "small", 24,
+        "tiny", 16,
+        "xlarge", 48
     );
 
-    public static final Map<String, Color> GENERATE_OUTLINE = Map.of(
-        "beat.png", darkerMetal,
-        "beat-full.png", darkerMetal,
-        "beat-weapon.png", darkerMetal,
-        "collapse.png", darkerMetal,
-        "collapse-weapon-0.png", darkerMetal,
-        "collapse-weapon-1.png", darkerMetal,
-        "collapse-weapon-2.png", darkerMetal
+    public static final Map<String, GenerationConfig> FILE_CONFIG = Map.ofEntries(
+        Map.entry("core-construction-platform-gate-left1.png", c().noAntialias()),
+        Map.entry("core-construction-platform-gate-left2.png", c().noAntialias()),
+
+        Map.entry("beat.png", c().outline()),
+        Map.entry("beat-full.png", c().outline().setOutlineOverride().icons()),
+        Map.entry("beat-weapon.png", c().outline()),
+        Map.entry("beat-base.png", c().outline().setOutlineOverride()),
+        Map.entry("beat-leg.png", c().outline().setOutlineOverride()),
+
+        Map.entry("burn.png", c().outline()),
+        Map.entry("burn-full.png", c().outline().setOutlineOverride().icons()),
+        Map.entry("burn-ion-cannon.png", c().outline()),
+
+        Map.entry("equa.png", c().outline().icons().setIconNameReplacer((fn, in) -> fn.replaceAll("-outline\\.png", "-" + in + ".png"))),
+        Map.entry("formula.png", c().outline().icons().setIconNameReplacer((fn, in) -> fn.replaceAll("-outline\\.png", "-" + in + ".png"))),
+
+        Map.entry("rhapsody.png", c().outline()),
+        Map.entry("rhapsody-full.png", c().outline().setOutlineOverride().icons()),
+        Map.entry("rhapsody-base.png", c().outline().setOutlineOverride()),
+        Map.entry("rhapsody-leg.png", c().outline().setOutlineOverride()),
+
+        Map.entry("collapse.png", c().outline()),
+        Map.entry("collapse-full.png", c().noAntialias().icons()),
+        Map.entry("collapse-weapon-0.png", c().outline()),
+        Map.entry("collapse-weapon-1.png", c().outline()),
+        Map.entry("collapse-weapon-2.png", c().outline())
     );
 
     public static final String SPRITES_RAW = "sprites-raw";
@@ -38,10 +65,6 @@ public class Main {
 
     public static int getRGB(BufferedImage image, int ix, int iy) {
         return image.getRGB(Math.max(Math.min(ix, image.getWidth() - 1), 0), Math.max(Math.min(iy, image.getHeight() - 1), 0));
-    }
-
-    public static boolean isCopyOnly(String filename) {
-        return COPY_ONLY.contains(filename);
     }
 
     public static File getRawDir(String arg0) {
@@ -77,18 +100,37 @@ public class Main {
                 recursive(file.listFiles());
             } else if (file.getName().endsWith(".png")) {
                 log("处理文件 " + file.getAbsolutePath());
-                final File outFile = getOutFile(file);
-                if (isCopyOnly(file.getName())) {
-                    log("文件 " + file.getName() + "不进行抗锯齿，直接复制");
-                    Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                } else {
+
+                final GenerationConfig config = FILE_CONFIG.getOrDefault(file.getName(), DEFAULT_CONFIG);
+                if (config.antialias) {
+                    final File outFile = getOutFile(file);
+                    log("生成抗锯齿 " + outFile.getAbsolutePath());
                     antialias(file, outFile);
-                    log("文件输出到 " + outFile.getAbsolutePath());
-                    if (GENERATE_OUTLINE.containsKey(file.getName())) {
-                        final Color outlineColor = GENERATE_OUTLINE.get(file.getName());
-                        final File outlineOutFile = new File(getOutFile(file).getAbsolutePath().replaceAll("\\.png$", "-outline.png"));
-                        log("生成 -outline: " + outlineOutFile.getAbsolutePath());
-                        generateOutline(file, outlineOutFile, outlineColor);
+                } else {
+                    final File outFile = getOutFile(file);
+                    log("无需抗锯齿 " + file.getName() + "，直接复制");
+                    Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+
+                final String outlineFileName = getOutFile(file).getAbsolutePath().replaceAll("\\.png$", "-outline.png");
+                if (config.generateOutline) {
+                    final Color outlineColor = config.outlineColor;
+                    final File outlineOutFile = config.outlineOverride ? getOutFile(file) : new File(outlineFileName);
+                    log("生成 Outline: " + outlineOutFile.getAbsolutePath());
+                    generateOutline(file, outlineOutFile, outlineColor);
+                }
+
+                if (config.generateIcons) {
+                    if (config.generateOutline) {
+                        // 单位图标都是根据 outline 生成的
+                        if (config.outlineOverride) {
+                            generateIcon(getOutFile(file), config.iconNameReplacer);
+                        } else {
+                            generateIcon(new File(outlineFileName), config.iconNameReplacer);
+                        }
+                    } else {
+                        // 方块图标不需要
+                        generateIcon(file, config.iconNameReplacer);
                     }
                 }
             }
@@ -103,6 +145,31 @@ public class Main {
         recursive(rawDir.listFiles());
     }
 
+    /**
+     * @param inFile Input file
+     * @param fileNameMapper param1: Full filename, param2: Icon name, return: New full file name
+     */
+    public static void generateIcon(File inFile, BiFunction<String, String, String> fileNameMapper) {
+
+        try {
+            final BufferedImage image = ImageIO.read(inFile);
+            for (Map.Entry<String, Integer> entry : iconSizeMap.entrySet()) {
+                final String iconName = entry.getKey();
+                final String outFileName = fileNameMapper.apply(getOutFile(inFile).getAbsolutePath(), iconName);
+                final Integer maxSize = entry.getValue();
+                final BigDecimal scale = BigDecimal.valueOf(maxSize).divide(BigDecimal.valueOf(Math.max(image.getWidth(), image.getHeight())), 4, RoundingMode.HALF_UP);
+                final int width = scale.multiply(BigDecimal.valueOf(image.getWidth())).intValue();
+                final int height = scale.multiply(BigDecimal.valueOf(image.getHeight())).intValue();
+                final BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+                final Graphics2D newGraph = newImage.createGraphics();
+                newGraph.drawImage(image.getScaledInstance(width, height, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, width, height, null);
+                ImageIO.write(newImage, "png", new File(outFileName));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("ICON DIE!");
+        }
+    }
     public static void generateOutline(File inFile, File outFile, Color outlineColor) {
         final int outline888 = outlineColor.argb8888();
         final int radius = 3;
@@ -245,5 +312,44 @@ public class Main {
         } catch (Exception e) {
             throw new RuntimeException("DIE", e);
         }
+    }
+
+    public static class GenerationConfig {
+        boolean antialias = true;
+        boolean generateOutline = false;
+        boolean outlineOverride = false;
+        boolean generateIcons = false;
+        BiFunction<String, String, String> iconNameReplacer = (name, iconName) -> name.replaceAll("-full\\.png$", "-" + iconName + ".png");
+        Color outlineColor = darkerMetal;
+
+        public GenerationConfig noAntialias() {
+            this.antialias = false;
+            return this;
+        }
+        public GenerationConfig outline() {
+            this.generateOutline = true;
+            return this;
+        }
+        public GenerationConfig outline(Color outlineColor) {
+            this.generateOutline = true;
+            this.outlineColor = outlineColor;
+            return this;
+        }
+        public GenerationConfig setOutlineOverride() {
+            this.outlineOverride = true;
+            return this;
+        }
+        public GenerationConfig icons() {
+            this.generateIcons = true;
+            return this;
+        }
+        public GenerationConfig setIconNameReplacer(BiFunction<String, String, String> iconNameReplacer) {
+            this.iconNameReplacer = iconNameReplacer;
+            return this;
+        }
+    }
+
+    public static GenerationConfig c() {
+        return new GenerationConfig();
     }
 }
