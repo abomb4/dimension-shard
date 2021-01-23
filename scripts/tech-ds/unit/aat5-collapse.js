@@ -20,6 +20,21 @@ const items = require('ds-common/items')
 const bulletTypes = require('ds-common/bullet-types/index');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
+const teleportColor = Color.valueOf("69dcee");
+const shootEffect = new Effect(16, 24, cons(e => {
+    Draw.color(teleportColor);
+    for (var i = 0; i < 4; i++) {
+        Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
+    }
+
+    Lines.stroke(Math.max(0, e.fout() - 0.5) * 2.5);
+    Lines.circle(e.x, e.y, 24 * e.finpow());
+
+    Draw.color();
+    for (var i = 0; i < 4; i++) {
+        Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
+    }
+}));
 const unitType = (() => {
     const cooldown = 60 * 10;
     const activeTime = 60 * 3;
@@ -148,15 +163,17 @@ const unitType = (() => {
             const w = new Weapon(lib.modName + "-collapse-weapon-0");
             w.mirror = false;
             w.shake = 4;
-            w.shootY = 8;
+            w.shootY = 14;
             w.x = 0;
-            w.y = -4;
+            w.y = -1;
             w.rotateSpeed = 4.2;
             w.reload = 110;
-            w.recoil = 4;
+            w.recoil = 2;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
             w.shadow = 20;
+            w.heatColor = teleportColor;
+            w.cooldownTime = 100;
             w.rotate = true;
             w.bullet = (() => {
                 const bt = new JavaAdapter(PointBulletType, {
@@ -168,7 +185,7 @@ const unitType = (() => {
                     }
                 });
                 bt.lifetime = 1;
-                bt.shootEffect = Fx.none;
+                bt.shootEffect = shootEffect;
                 bt.hitEffect = bulletTypes.fxBlackHoleExplode;
                 bt.smokeEffect = Fx.none;
                 bt.trailEffect = Fx.none;
@@ -190,20 +207,22 @@ const unitType = (() => {
         (() => {
             const w = new Weapon(lib.modName + "-collapse-weapon-1");
             w.shake = 4;
-            w.shootY = 8;
-            w.x = 20;
-            w.y = 2;
+            w.shootY = 13;
+            w.x = 23;
+            w.y = 0;
             w.rotateSpeed = 4.3;
             w.reload = 60;
-            w.recoil = 4;
+            w.recoil = 2;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
             w.shadow = 20;
+            w.heatColor = teleportColor;
+            w.cooldownTime = 90;
             w.rotate = true;
             w.bullet = (() => {
                 const bt = new PointBulletType();
                 bt.lifetime = 1;
-                bt.shootEffect = Fx.none;
+                bt.shootEffect = shootEffect;
                 bt.hitEffect = Fx.none;
                 bt.smokeEffect = Fx.smokeCloud;
                 bt.trailEffect = Fx.none;
@@ -224,20 +243,22 @@ const unitType = (() => {
         (() => {
             const w = new Weapon(lib.modName + "-collapse-weapon-2");
             w.shake = 4;
-            w.shootY = 5;
-            w.x = 14;
+            w.shootY = 10;
+            w.x = 12;
             w.y = 20;
             w.rotateSpeed = 4.1;
             w.reload = 40;
-            w.recoil = 4;
+            w.recoil = 2;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
             w.shadow = 20;
+            w.heatColor = teleportColor;
+            w.cooldownTime = 70;
             w.rotate = true;
             w.bullet = (() => {
                 const bt = new PointBulletType();
                 bt.lifetime = 1;
-                bt.shootEffect = Fx.none;
+                bt.shootEffect = shootEffect;
                 bt.hitEffect = Fx.none;
                 bt.smokeEffect = Fx.none;
                 bt.trailEffect = Fx.none;
@@ -257,20 +278,22 @@ const unitType = (() => {
         (() => {
             const w = new Weapon(lib.modName + "-collapse-weapon-2");
             w.shake = 4;
-            w.shootY = 5;
-            w.x = 12;
+            w.shootY = 10;
+            w.x = 13;
             w.y = -20;
             w.rotateSpeed = 4;
             w.reload = 36;
-            w.recoil = 4;
+            w.recoil = 2;
             w.shootCone = 5;
             w.shootSound = lib.loadSound('bomb-teleport');
             w.shadow = 20;
+            w.heatColor = teleportColor;
+            w.cooldownTime = 50;
             w.rotate = true;
             w.bullet = (() => {
                 const bt = new PointBulletType();
                 bt.lifetime = 1;
-                bt.shootEffect = Fx.none;
+                bt.shootEffect = shootEffect;
                 bt.hitEffect = Fx.none;
                 bt.smokeEffect = Fx.none;
                 bt.trailEffect = Fx.none;

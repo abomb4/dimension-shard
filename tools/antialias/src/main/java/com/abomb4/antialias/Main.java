@@ -7,13 +7,27 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
 
-    public static final Set<String> EXCLUSIONS = Set.of(
+    public static final Color OUTLINE_BLOCK = Color.valueOf("404049");
+    public static final Color darkMetal = Color.valueOf("6e7080");
+    public static final Color darkerMetal = Color.valueOf("565666");
+
+    public static final Set<String> COPY_ONLY = Set.of(
+        "collapse-full.png",
         "core-construction-platform-gate-left1.png",
         "core-construction-platform-gate-left2.png"
+    );
+
+    public static final Map<String, Color> GENERATE_OUTLINE = Map.of(
+        "beat.png", darkerMetal,
+        "beat-full.png", darkerMetal,
+        "beat-weapon.png", darkerMetal,
+        "collapse.png", darkerMetal,
+        "collapse-weapon-0.png", darkerMetal,
+        "collapse-weapon-1.png", darkerMetal,
+        "collapse-weapon-2.png", darkerMetal
     );
 
     public static final String SPRITES_RAW = "sprites-raw";
@@ -21,13 +35,15 @@ public class Main {
     public static void log(String txt) {
         System.out.println(txt);
     }
+
     public static int getRGB(BufferedImage image, int ix, int iy) {
         return image.getRGB(Math.max(Math.min(ix, image.getWidth() - 1), 0), Math.max(Math.min(iy, image.getHeight() - 1), 0));
     }
 
-    public static boolean isExclusion(String filename) {
-        return EXCLUSIONS.contains(filename);
+    public static boolean isCopyOnly(String filename) {
+        return COPY_ONLY.contains(filename);
     }
+
     public static File getRawDir(String arg0) {
         File file = new File(arg0);
         while (file != null) {
@@ -62,12 +78,18 @@ public class Main {
             } else if (file.getName().endsWith(".png")) {
                 log("处理文件 " + file.getAbsolutePath());
                 final File outFile = getOutFile(file);
-                if (isExclusion(file.getName())) {
+                if (isCopyOnly(file.getName())) {
                     log("文件 " + file.getName() + "不进行抗锯齿，直接复制");
                     Files.copy(file.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } else {
                     antialias(file, outFile);
                     log("文件输出到 " + outFile.getAbsolutePath());
+                    if (GENERATE_OUTLINE.containsKey(file.getName())) {
+                        final Color outlineColor = GENERATE_OUTLINE.get(file.getName());
+                        final File outlineOutFile = new File(getOutFile(file).getAbsolutePath().replaceAll("\\.png$", "-outline.png"));
+                        log("生成 -outline: " + outlineOutFile.getAbsolutePath());
+                        generateOutline(file, outlineOutFile, outlineColor);
+                    }
                 }
             }
         }
@@ -75,15 +97,53 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         final File rawDir = getRawDir(System.getProperty("user.dir"));
+        // Remove output dir
+        final File outputDir = new File(rawDir.getAbsolutePath().replaceAll(SPRITES_RAW, "sprites"));
+        outputDir.delete();
         recursive(rawDir.listFiles());
+    }
+
+    public static void generateOutline(File inFile, File outFile, Color outlineColor) {
+        final int outline888 = outlineColor.argb8888();
+        final int radius = 3;
+        final float flouat = .00001F;
+        final Color color = new Color();
+        try {
+            final BufferedImage image = ImageIO.read(inFile);
+            final BufferedImage out = ImageIO.read(inFile);
+
+            for (int x = 0; x < image.getWidth(); x++) {
+                for (int y = 0; y < image.getHeight(); y++) {
+                    final int point = getRGB(image, x, y);
+                    out.setRGB(x, y, point);
+                    if (point == 0) {
+                        boolean found = false;
+                        outer:
+                        for (int rx = -radius; rx <= radius; rx++) {
+                            for (int ry = -radius; ry <= radius; ry++) {
+                                if (Mathf.within(rx, ry, radius + flouat) && color.argb8888(getRGB(image, rx + x, ry + y)).a > 0.01f) {
+                                    found = true;
+                                    break outer;
+                                }
+                            }
+                        }
+                        if (found) {
+                            out.setRGB(x, y, outline888);
+                        }
+                    }
+                }
+            }
+            ImageIO.write(out, "png", outFile);
+            antialias(outFile, outFile);
+        } catch (Exception e) {
+            throw new RuntimeException("OUTLINE DIE", e);
+        }
     }
 
     public static void antialias(File inFile, File outFile) {
         try {
             final BufferedImage image = ImageIO.read(inFile);
             final BufferedImage out = ImageIO.read(inFile);
-            final BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            final int radius = 4;
             var color = new Color();
             var sum = new Color();
             var suma = new Color();
@@ -92,14 +152,14 @@ public class Main {
             for (int x = 0; x < image.getWidth(); x++) {
                 for (int y = 0; y < image.getHeight(); y++) {
                     int A = getRGB(image, x - 1, y + 1),
-                            B = getRGB(image, x, y + 1),
-                            C = getRGB(image, x + 1, y + 1),
-                            D = getRGB(image, x - 1, y),
-                            E = getRGB(image, x, y),
-                            F = getRGB(image, x + 1, y),
-                            G = getRGB(image, x - 1, y - 1),
-                            H = getRGB(image, x, y - 1),
-                            I = getRGB(image, x + 1, y - 1);
+                        B = getRGB(image, x, y + 1),
+                        C = getRGB(image, x + 1, y + 1),
+                        D = getRGB(image, x - 1, y),
+                        E = getRGB(image, x, y),
+                        F = getRGB(image, x + 1, y),
+                        G = getRGB(image, x - 1, y - 1),
+                        H = getRGB(image, x, y - 1),
+                        I = getRGB(image, x + 1, y - 1);
 
                     Arrays.fill(p, E);
 

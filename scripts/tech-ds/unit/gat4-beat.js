@@ -48,6 +48,7 @@ const unitType = (() => {
     m.weapons.add(
         (() => {
             const w = new Weapon(lib.modName + "-beat-weapon");
+            w.top = false;
             w.shake = 3;
             w.shots = 8;
             w.shotDelay = 0.5;
