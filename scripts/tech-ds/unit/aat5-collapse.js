@@ -21,90 +21,115 @@ const bulletTypes = require('ds-common/bullet-types/index');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
+    const cooldown = 60 * 10;
+    const activeTime = 60 * 3;
+    const initRange = 50;
+    const maxRange = 120;
+    const rangeUpDmg = 1000;
+    const maxRangeDmg = 4000;
+    const damageDeflection = 0.25;
+
+    function calculateRangeByDmg(dmg) {
+        const base = maxRangeDmg - rangeUpDmg;
+        const percent = Math.min(1, Math.max(0, dmg - rangeUpDmg) / base);
+        return initRange + (maxRange - initRange) * percent;
+    }
+
     const m = extendContent(UnitType, 'collapse', {
+        load() {
+            this.super$load();
+            this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [
+                cooldown / 60,
+                activeTime / 60,
+                damageDeflection * 100,
+                initRange / Vars.tilesize,
+                maxRange / Vars.tilesize,
+                maxRangeDmg
+            ]);
+        },
         /**
          * @returns {import('abomb4/skill-framework').SkillDefinition[]}
          */
         getSkillDefinitions() {
-            return [
-                {
-                    name: 'damage-deflection',
-                    range: 20,
-                    icon: lib.loadRegion('damage-deflection'),
-                    directivity: false,
-                    exclusive: false,
-                    activeTime: 60 * 3,
-                    cooldown: 60 * 10,
-                    aiCheckInterval: 30,
-                    aiCheck(skill, unit) {
-                        const dps = 800;
-                        const healthDanger = dps * this.aiCheckInterval / 60;
-                        const enemyRange = 50 * 1.5;
+            // num1: total damage
+            // num2: color Status
+            // num3: AI check
+            // num4: display radius
+            return [ {
+                name: 'damage-deflection',
+                range: 20,
+                icon: lib.loadRegion('damage-deflection'),
+                directivity: false,
+                exclusive: false,
+                activeTime: activeTime,
+                cooldown: cooldown,
+                aiCheckInterval: 30,
+                aiCheck(skill, unit) {
+                    const dps = 800;
+                    const healthDanger = dps * this.aiCheckInterval / 60;
+                    const enemyRange = maxRange;
 
-                        if (skill.numValue3 > 0
-                            && skill.numValue3 - unit.health > healthDanger
-                            && Units.bestTarget(unit.team, unit.x, unit.y, enemyRange, boolf(e => !e.dead), boolf(b => true), Blocks.duo.unitSort)
-                            ) {
-                            unit.tryActiveSkill(this.name, {});
-                            skill.numValue3 = 0;
-                            return;
-                        }
-                        skill.numValue3 = unit.health;
-                    },
-                    active(skill, unit, data) {
-                        Fx.heal.at(unit.x, unit.y);
-                        skill.numValue1 = 0;
-                        skill.numValue2 = 0;
-
-                        // Try active skill if serval Collapse under control
-                        unit.controlling.each(cons(mem => {
-                            if (mem.type == unit.type) {
-                                mem.tryActiveSkill(this.name, data);
-                            }
-                        }));
-                    },
-                    preUpdate(skill, unit, lastFrame) {
-                        skill.numValue2 = Mathf.lerpDelta(skill.numValue2, 0, 1 / 10);
-                    },
-                    postUpdate(skill, unit, lastFrame) {
-                        if (lastFrame && unit && !unit.dead) {
-                            Fx.massiveExplosion.at(unit.x, unit.y);
-                            Sounds.explosionbig.at(unit.x, unit.y)
-                            Damage.damage(unit.team, unit.x, unit.y, 100, skill.numValue1);
-                        }
-                    },
-                    draw(skill, unit, lastFrame) {
-                        Draw.z(Layer.shields);
-
-                        const radius = 50 * Math.min((skill.def.activeTime - skill.activeTimeLeft) / 8, 1);
-                        const danger = skill.numValue1 / 4000;
-                        const color = items.dimensionShardColorLight.cpy().lerp(Color.red, danger);
-                        Draw.color(color, Color.white, skill.numValue2 * (1 - danger * 0.5));
-                        if (Core.settings.getBool("animatedshields")) {
-                            Fill.circle(unit.x, unit.y, radius);
-                        } else {
-                            Lines.stroke(1.5);
-                            Draw.alpha(0.09 + Mathf.clamp(0.08 * skill.numValue2));
-                            Fill.circle(unit.x, unit.y, radius);
-                            Draw.alpha(1);
-                            Lines.circle(unit.x, unit.y, radius);
-                            Draw.reset();
-                        }
-                    },
-                    updateDamage(skill, unit, amount) {
-                        skill.numValue1 += amount;
-                        skill.numValue2 = 1;
-                        return amount;
-                    },
+                    if (skill.numValue3 > 0
+                        && skill.numValue3 - unit.health > healthDanger
+                        && Units.bestTarget(unit.team, unit.x, unit.y, enemyRange, boolf(e => !e.dead), boolf(b => true), Blocks.duo.unitSort)
+                        ) {
+                        unit.tryActiveSkill(this.name, {});
+                        skill.numValue3 = 0;
+                        return;
+                    }
+                    skill.numValue3 = unit.health;
                 },
-            ];
+                active(skill, unit, data) {
+                    Fx.heal.at(unit.x, unit.y);
+                    skill.numValue1 = 0;
+                    skill.numValue2 = 0;
+                    skill.numValue4 = 0;
+
+                    // Try active skill if serval Collapse under control
+                    unit.controlling.each(cons(mem => {
+                        if (mem.type == unit.type) {
+                            mem.tryActiveSkill(this.name, data);
+                        }
+                    }));
+                },
+                preUpdate(skill, unit, lastFrame) {
+                    skill.numValue2 = Mathf.lerpDelta(skill.numValue2, 0, 1 / 10);
+                    skill.numValue4 = Mathf.lerpDelta(skill.numValue4, calculateRangeByDmg(skill.numValue1), 0.2);
+                },
+                postUpdate(skill, unit, lastFrame) {
+                    if (lastFrame && unit && !unit.dead) {
+                        if (skill.numValue1 > 1500) {
+                            Fx.dynamicExplosion.at(unit.x, unit.y, calculateRangeByDmg(skill.numValue1) / 8 / 2);
+                        } else {
+                            Fx.bigShockwave.at(unit.x, unit.y);
+                        }
+                        Sounds.explosionbig.at(unit.x, unit.y)
+                        Damage.damage(unit.team, unit.x, unit.y, calculateRangeByDmg(skill.numValue1) * 1.1, skill.numValue1 * damageDeflection);
+                    }
+                },
+                draw(skill, unit, lastFrame) {
+                    Draw.z(Layer.shields + 1);
+
+                    const radius = skill.numValue4;
+                    const danger = skill.numValue1 / maxRangeDmg;
+                    const color = items.dimensionShardColorLight.cpy().lerp(Color.red, danger);
+                    Draw.color(color, Color.white, skill.numValue2 * (1 - danger * 0.5));
+                    Draw.alpha(0.3);
+                    Fill.circle(unit.x, unit.y, radius);
+                },
+                updateDamage(skill, unit, amount) {
+                    skill.numValue1 += amount;
+                    skill.numValue2 = 1;
+                    return amount * (1 - damageDeflection);
+                },
+            } ];
         },
     });
 
     m.constructor = flyingConstructor;
 
     m.armor = 10;
-    m.health = 18000;
+    m.health = 16500;
     m.speed = 0.6;
     m.rotateSpeed = 1;
     m.accel = 0.04;

@@ -60,7 +60,7 @@ const chargeSound = lib.loadSound("dark-light-charge");
 const loopSound = lib.loadSound("dark-light-loop");
 const shootSound = lib.loadSound("dark-light-shoot");
 const dragRadius = 9 * 8;
-const dragPower = 0.21;
+const dragPower = 0.23;
 
 const lightningSound = lib.loadSound("dark-light-lightning");
 const lightningSpacing = 45;
