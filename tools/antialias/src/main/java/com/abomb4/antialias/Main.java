@@ -13,8 +13,7 @@ public class Main {
 
     public static final Set<String> EXCLUSIONS = Set.of(
         "core-construction-platform-gate-left1.png",
-        "core-construction-platform-gate-left2.png",
-        "electric-storm-turret-middle.png"
+        "core-construction-platform-gate-left2.png"
     );
 
     public static final String SPRITES_RAW = "sprites-raw";
@@ -112,7 +111,42 @@ public class Main {
                     if (H == D && H != F && D != B) p[6] = D;
                     if ((F == H && F != B && H != D && E != G) || (H == D && H != F && D != B && E != I)) p[7] = H;
                     if (F == H && F != B && H != D) p[8] = F;
+                    // Ugly way to deal with Vertical and Horizontal line
+                    // A B C   0 1 2
+                    // D E F   3 4 5
+                    // G H I   6 7 8
+                    if (E == 0 && Arrays.stream(p).noneMatch(v -> v != 0)) {
+                        if (A == 0 && C == 0 && B == 0 && D == 0 && F == 0 && H != 0) {
+                            // p[6] = G;
+                            p[7] = H;
+                            // p[8] = I;
+                        } else if (A == 0 && G == 0 && B == 0 && D == 0 && F != 0 && H == 0) {
+                            // p[2] = C;
+                            p[5] = F;
+                            // p[8] = I;
+                        } else if (C == 0 && I == 0 && B == 0 && D != 0 && F == 0 && H == 0) {
+                            // p[0] = A;
+                            p[3] = D;
+                            // p[6] = G;
+                        } else if (G == 0 && I == 0 && B != 0 && D == 0 && F == 0 && H == 0) {
+                            // p[0] = A;
+                            p[1] = B;
+                            // p[2] = C;
+                        } else if (D != 0 && H != 0) {
+                            p[3] = D;
+                            p[7] = H;
+                        } else if (F != 0 && H != 0) {
+                            p[5] = F;
+                            p[7] = H;
+                        } else if (D != 0 && B != 0) {
+                            p[3] = D;
+                            p[1] = B;
+                        } else if (F != 0 && B != 0) {
+                            p[5] = F;
+                            p[1] = B;
+                        }
 
+                    }
                     suma.set(0);
 
                     for (int val : p) {
