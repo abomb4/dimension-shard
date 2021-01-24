@@ -183,7 +183,7 @@ exports.timeCrystallizer = timeCrystallizer;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Radioisotope Weaver -=-=-=-=-=-=-=-=-=-=-=-
-const radioisotopeWeaver = extend(GenericSmelter, "radioisotope-weaver", {
+const radioisotopeWeaver = extend(GenericCrafter, "radioisotope-weaver", {
     isHidden() { return !dsGlobal.techDsAvailable(); },
 });
 radioisotopeWeaver.size = 3;
@@ -201,7 +201,6 @@ radioisotopeWeaver.craftEffect = Fx.smeltsmoke;
 radioisotopeWeaver.outputItem = new ItemStack(Items.phaseFabric, 2);
 radioisotopeWeaver.craftTime = 80;
 radioisotopeWeaver.hasPower = true;
-radioisotopeWeaver.flameColor = Items.phaseFabric.color;
 radioisotopeWeaver.itemCapacity = 50;
 radioisotopeWeaver.ambientSound = Sounds.techloop;
 radioisotopeWeaver.ambientSoundVolume = 0.02;
@@ -211,6 +210,65 @@ radioisotopeWeaver.consumes.items(ItemStack.with(
     Items.sand, 18
 ));
 radioisotopeWeaver.consumes.power(10);
+radioisotopeWeaver.drawer = (() => {
+    var regionHeat1 = lib.loadRegion("radioisotope-weaver-heat1");
+    var regionHeat2 = lib.loadRegion("radioisotope-weaver-heat2");
+    var regionHeat3 = lib.loadRegion("radioisotope-weaver-heat3");
+    var regionWeaver = lib.loadRegion("radioisotope-weaver-weaver");
+    var regionTop = lib.loadRegion("radioisotope-weaver-top");
+    return new JavaAdapter(DrawBlock, {
+        load(block) {
+            regionHeat1 = lib.loadRegion("radioisotope-weaver-heat1");
+            regionHeat2 = lib.loadRegion("radioisotope-weaver-heat2");
+            regionHeat3 = lib.loadRegion("radioisotope-weaver-heat3");
+            regionWeaver = lib.loadRegion("radioisotope-weaver-weaver");
+            regionTop = lib.loadRegion("radioisotope-weaver-top");
+        },
+        draw(entity) {
+            var lightWave = (0.7 + 0.3 * Mathf.sin(entity.totalProgress % 90 / 90 * Math.PI * 2));
+            var color = dimensionShard.color;
+            var colorLight = color.cpy().lerp(Color.white, 0.3);
+            Draw.rect(entity.block.region, entity.x, entity.y, 0);
+
+            Draw.color(colorLight);
+            Draw.alpha(entity.warmup * lightWave);
+            Draw.blend(Blending.additive);
+            Draw.rect(regionHeat1, entity.x, entity.y, 0);
+            Draw.blend();
+            Draw.color();
+
+            Draw.rect(regionWeaver, entity.x, entity.y, entity.totalProgress);
+
+            Draw.color(color);
+            Draw.alpha(entity.warmup * lightWave);
+            Draw.blend(Blending.additive);
+            Draw.rect(regionHeat2, entity.x, entity.y, entity.totalProgress);
+            Draw.blend();
+            Draw.color();
+
+            Draw.color(Pal.accent);
+            Draw.alpha(entity.warmup * 0.8);
+            var dst = Mathf.sin(entity.totalProgress, 6, Vars.tilesize * entity.block.size / 6);
+            var rot = entity.totalProgress + 90;
+            Lines.lineAngleCenter(
+                entity.x + Angles.trnsx(rot, dst),
+                entity.y + Angles.trnsy(rot, dst),
+                rot + 90,
+                entity.block.size * Vars.tilesize / 3
+            );
+            Draw.reset();
+
+            Draw.rect(regionTop, entity.x, entity.y, 0);
+
+            Draw.color(colorLight);
+            Draw.alpha(entity.warmup * lightWave);
+            Draw.blend(Blending.additive);
+            Draw.rect(regionHeat3, entity.x, entity.y, 0);
+            Draw.blend();
+            Draw.reset();
+        },
+    })
+})();
 exports.radioisotopeWeaver = radioisotopeWeaver;
 
 
@@ -256,7 +314,9 @@ exports.ionCollector = blockTypes.newLiquidConverter({
 
             Draw.color(spaceCrystal.color);
             Draw.alpha(Mathf.sin(entity.progress / entity.block.craftTime * Math.PI * 2));
+            Draw.blend(Blending.additive);
             Draw.rect(lib.loadRegion("ion-collector-heat"), entity.x, entity.y, 0);
+            Draw.blend();
 
             Draw.color(entity.block.outputLiquid.liquid.color);
             Draw.alpha(entity.liquids.get(entity.block.outputLiquid.liquid) / entity.block.liquidCapacity);
