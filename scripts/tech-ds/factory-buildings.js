@@ -157,6 +157,35 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
     blockOverrides: {
         isHidden() { return !dsGlobal.techDsAvailable(); },
     },
+    buildingOverrides() {
+        const heatColor = timeFlow.color.cpy().lerp(Color.white, 0.5);
+        const heatRegion = lib.loadRegion("time-condenser-heat");
+        const liquidRegion = lib.loadRegion("time-condenser-liquid");
+        const rotatorRegion = lib.loadRegion("time-condenser-rotator");
+        const bottomRegion = lib.loadRegion("time-condenser-bottom");
+        return {
+            draw() {
+                const entity = this;
+                Draw.rect(bottomRegion, entity.x, entity.y, 0);
+
+                Draw.color(Liquids.cryofluid.color);
+                Draw.alpha(entity.liquids.get(Liquids.cryofluid) / entity.block.liquidCapacity * 1);
+                Draw.rect(liquidRegion, entity.x, entity.y, 0);
+                Draw.color();
+
+                Draw.rect(rotatorRegion, entity.x, entity.y, entity.progress / entity.block.craftTime * 90);
+
+                Draw.rect(entity.block.region, entity.x, entity.y, 0);
+
+                Draw.color(heatColor);
+                Draw.alpha(entity.warmup * (0.7 + 0.3 * Mathf.sin(entity.progress / entity.block.craftTime * Math.PI * 2)));
+                Draw.blend(Blending.additive);
+                Draw.rect(heatRegion, entity.x, entity.y, 0);
+                Draw.blend();
+                Draw.reset();
+            },
+        };
+    },
 });
 
 
