@@ -1,4 +1,4 @@
-0.20:
+0.21:
 Update all factory sprites;
 Each sprite automatically generates anti-aliasing, black borders, and icons;
 Add skill description, in the unit introduction;
