@@ -1,3 +1,9 @@
+0.20:
+Update all factory sprites;
+Each sprite automatically generates anti-aliasing, black borders, and icons;
+Add skill description, in the unit introduction;
+Improve the skills of collapse and equa;
+
 0.19:
 Adjust the data of Electric Storm and Ion Cannon to adapt to version 123
 Add turret "Dark Light"
