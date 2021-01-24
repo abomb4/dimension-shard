@@ -62,7 +62,7 @@ Blocks.cyclone.ammoTypes.put(dimensionShard, (() => {
     v.width = 8;
     v.height = 10;
     v.hitEffect = fxDimensionShardExplosion;
-    v.splashDamage = 54;
+    v.splashDamage = 40;
     v.splashDamageRadius = 34;
     v.knockback = 0.6;
     v.reloadMultiplier = 0.8;
@@ -79,7 +79,7 @@ Blocks.ripple.ammoTypes.put(dimensionShard, (() => {
     v.ammoMultiplier = 2;
     v.width = v.height = 13;
     v.hitEffect = fxDimensionShardExplosion;
-    v.splashDamage = 56;
+    v.splashDamage = 42;
     v.splashDamageRadius = 40;
     v.knockback = 2;
     v.reloadMultiplier = 0.8;
