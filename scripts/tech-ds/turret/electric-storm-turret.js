@@ -36,7 +36,7 @@ const turret = blockTypes.newNoRotatingTurret({
     liquidCapacity: 120,
     health: 5200,
     size: 5,
-    reloadTime: 150,
+    reloadTime: 150 - 1,
     range: 384,
     inaccuracy: 6,
     spread: 45,

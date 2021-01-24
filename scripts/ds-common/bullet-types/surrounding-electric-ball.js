@@ -45,7 +45,7 @@ exports.newSurroundingElectricBall = (requestOptions) => {
     const options = Object.assign({
         damage: 20,
         lifetime: 180,
-        pierceCap: 5,
+        pierceCap: 4,
         pierce: true,
         pierceBuilding: false,
         width: 30,
@@ -55,17 +55,17 @@ exports.newSurroundingElectricBall = (requestOptions) => {
         homingDelay: 0,
         homingPower: 0,
         homingRange: 0,
-        splashDamageRadius: 38,
-        splashDamage: 12,
+        splashDamageRadius: 36,
+        splashDamage: 30,
         weaveMag: 8,
         weaveScale: 6,
         spin: 6,
-        lightning: 5,
+        lightning: 2,
         lightningLength: 8,
         lightningLengthRand: 8,
         lightningCone: 360,
         lightningAngle: 0,
-        lightningDamage: 18,
+        lightningDamage: 22,
         lightningColor: Color.valueOf("69dcee"),
         backColor: transparentColor,
         frontColor: Color.valueOf("79ecfe"),
@@ -76,9 +76,9 @@ exports.newSurroundingElectricBall = (requestOptions) => {
         radius: 64,
         flyingLightninColor: Color.valueOf("69dcee"),
         flyingLightningDamage: 18,
-        flyingLightningChange: 0.08,
+        flyingLightningChange: 0.07,
         flyingLightningLength: 10,
-        flyingLightningCooldown: 5,
+        flyingLightningCooldown: 7,
     }, requestOptions);
 
     const fxLightningLine = new Effect(8, 500, cons(e => {
@@ -99,26 +99,17 @@ exports.newSurroundingElectricBall = (requestOptions) => {
             b.data.flyingLightningCooldown = options.flyingLightningCooldown;
             b.data.animationDisabled = shouldDisableAnimation();
             b.data.center = b.owner ? b.owner : new Vec2(b.x, b.y);
-            b.data.rotation = b.rotation();
-            b.x += b.vel.x * options.lifetime / options.radius;
-            b.y += b.vel.y * options.lifetime / options.radius;
+            b.data.baseRad = b.rotation();
+            b.data.rotation = 0;
+            b.data.len = 0;
             b.vel.setZero();
         },
         update(b) {
             // Calculate rotate end position and move to
-            Tmp.v1.set(b.x, b.y).sub(b.data.center.x, b.data.center.y);
-            // Raduis out
-            const dst = Tmp.v1.len();
-            if (dst < options.radius) {
-                const len = Tmp.v1.len() + options.radiusSpeed;
-                Tmp.v1.setLength(Math.min(options.radius, len));
-            } else {
-                Tmp.v1.setLength(options.radius);
-            }
-            // rotate
-            Tmp.v1.rotate(options.angleSpeed);
-            Tmp.v1.sub(Tmp.v2.set(b.x, b.y).sub(b.data.center.x, b.data.center.y));
-            b.move(Tmp.v1.x * Time.delta, Tmp.v1.y * Time.delta);
+            Tmp.v1.trns(b.data.baseRad + b.data.rotation, b.data.len)
+                .add(b.data.center.x, b.data.center.y)
+                .sub(b.x, b.y);
+            b.move(Tmp.v1.x, Tmp.v1.y);
 
             if (this.trailChance > 0) {
                 if (Mathf.chanceDelta(this.trailChance)) {
@@ -156,6 +147,9 @@ exports.newSurroundingElectricBall = (requestOptions) => {
             }
 
             b.data.flyingLightningCooldown = Math.max(b.data.flyingLightningCooldown - 1, 0);
+            b.data.len = Math.min(b.data.len + options.radiusSpeed * Time.delta, options.radius);
+            b.data.rotation += options.angleSpeed * Time.delta;
+            b.data.rotation %= 360;
         },
     }, 0.1, options.damage, lib.modName + '-surrounding-electric-ball');
 

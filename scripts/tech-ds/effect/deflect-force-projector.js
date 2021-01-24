@@ -163,17 +163,13 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, block => ({
         if (!this.broken) {
             var radius = this.realRadius();
             Draw.z(Layer.shields);
+            Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
             if (Core.settings.getBool("animatedshields")) {
-                Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
                 Fill.poly(x, y, 6, radius);
-                Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
-                Lines.poly(x, y, 6, radius);
             } else {
                 Lines.stroke(1.5);
-                Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
                 Draw.alpha(0.09 + Mathf.clamp(0.08 * hit));
                 Fill.poly(x, y, 6, radius);
-                Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
                 Draw.alpha(1);
                 Lines.poly(x, y, 6, radius);
                 Draw.reset();

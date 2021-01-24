@@ -66,7 +66,7 @@ const unitType = (() => {
             w.x = 0;
             w.y = 0;
             w.mirror = false;
-            w.reload = 10 * 60;
+            w.reload = 10 * 60 - 1;
             w.recoil = 0;
             w.shootSound = Blocks.salvo.shootSound;
             w.shootCone = 360;

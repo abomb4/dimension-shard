@@ -34,7 +34,7 @@ dimensionCrystalBattery.requirements = ItemStack.with(
 );
 dimensionCrystalBattery.category = Category.power;
 dimensionCrystalBattery.health = 180;
-dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 5);
+dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 3);
 
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
 
@@ -58,7 +58,7 @@ timeCompressedRtg.requirements = ItemStack.with(
 );
 timeCompressedRtg.category = Category.power;
 timeCompressedRtg.powerProduction = Blocks.rtgGenerator.powerProduction * rtgMultipler;
-timeCompressedRtg.itemDuration = Blocks.rtgGenerator.itemDuration / (rtgMultipler);
+timeCompressedRtg.itemDuration = Blocks.rtgGenerator.itemDuration / (rtgMultipler - 1);
 timeCompressedRtg.canOverdrive = false;
 timeCompressedRtg.heatColor = Color.valueOf("ffc4b7");
 

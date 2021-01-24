@@ -127,6 +127,7 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.liquidCapacity = 30;
 turret.range = 40 * 8;
+turret.canOverdrive = false;
 turret.chargeTime = 85;
 turret.chargeMaxDelay = 0;
 turret.chargeEffects = 0;
@@ -224,7 +225,7 @@ turret.shootType = (() => {
             if (lightningSpacing > 0 && b.timer.get(3, 59)) {
                 var idx = 0;
                 var rot = b.rotation();
-                lightningSound.at(b.x + Angles.trnsx(rot, length / 2), b.y + Angles.trnsy(rot, length / 2));
+                // lightningSound.at(b.x + Angles.trnsx(rot, length / 2), b.y + Angles.trnsy(rot, length / 2));
                 for (var i = (lightningSpacing + Mathf.random(lightningSpacing)) / 2;
                     i <= length; i += lightningSpacing) {
                     var cx = b.x + Angles.trnsx(rot, i),

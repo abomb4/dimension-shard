@@ -102,6 +102,7 @@ blockType.category = Category.distribution;
 blockType.size = 6;
 blockType.health = 4000;
 
+blockType.canOverdrive = false;
 blockType.update = true;
 blockType.solid = true;
 blockType.hasItems = true;

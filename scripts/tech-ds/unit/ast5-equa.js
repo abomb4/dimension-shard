@@ -20,7 +20,20 @@ const { newDeflectForceFieldAbility } = require('abomb4/abilities');
 const { payloadConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
+    const cooldown1 = 60 * 3;
+    const range1 = 22 * Vars.tilesize;
+    const cooldown2 = 60 * 12;
+    const range2 = 26 * Vars.tilesize;
     const m = extendContent(UnitType, 'equa', {
+        load() {
+            this.super$load();
+            this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [
+                cooldown1 / 60,
+                range1 / Vars.tilesize,
+                cooldown2 / 60,
+                range2 / Vars.tilesize
+            ]);
+        },
         /**
          * @returns {import('abomb4/skill-framework').SkillDefinition[]}
          */
@@ -45,9 +58,9 @@ const unitType = (() => {
             return [
                 {
                     name: 'teleport',
-                    range: 200,
-                    icon: lib.loadRegion('teleport'),
-                    cooldown: 60 * 2,
+                    range: range1,
+                    icon: lib.loadRegion('teleport1'),
+                    cooldown: cooldown1,
                     directivity: true,
                     activeTime: -1,
                     active(skill, unit, data) {
@@ -63,22 +76,22 @@ const unitType = (() => {
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
                         // find commands
-                        unit.controlling.each(cons(mem => {
-                            teleportEffect.at(mem.x, mem.y);
-                            teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
-                            mem.x += Tmp.v1.x;
-                            mem.y += Tmp.v1.y;
-                            mem.snapInterpolation();
-                            teleportEffect.at(mem.x, mem.y);
-                            teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
-                        }));
+                        // unit.controlling.each(cons(mem => {
+                        //     teleportEffect.at(mem.x, mem.y);
+                        //     teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
+                        //     mem.x += Tmp.v1.x;
+                        //     mem.y += Tmp.v1.y;
+                        //     mem.snapInterpolation();
+                        //     teleportEffect.at(mem.x, mem.y);
+                        //     teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
+                        // }));
                     },
                 },
                 {
                     name: 'teleport-2',
-                    range: 200,
-                    icon: lib.loadRegion('teleport'),
-                    cooldown: 60 * 3,
+                    range: range2,
+                    icon: lib.loadRegion('teleport2'),
+                    cooldown: cooldown2,
                     directivity: true,
                     activeTime: -1,
                     active(skill, unit, data) {

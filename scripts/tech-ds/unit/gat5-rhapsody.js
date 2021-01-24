@@ -27,6 +27,9 @@ const unitType = (() => {
     const chargeSound = Sounds.lasercharge;
     const shootSound = Sounds.laserblast;
     const laserBullet = largeIonLaser;
+    const cooldown = 60 * 12;
+    const chargeTime = 60 * 3;
+    const range = largeIonLaser.length;
     const laserShake = 14;
     const fxIonLaserCharge = new Effect(60 * 3, 100, cons(e => {
         const data = e.data;
@@ -39,7 +42,7 @@ const unitType = (() => {
         Fill.circle(x, y, e.fin() * 20);
 
         Angles.randLenVectors(e.id, 20, 40 * e.fout(), lib.floatc2((x, y) => {
-            Fill.circle(x + x, y + y, e.fin() * 5);
+            Fill.circle(e.x + x, e.y + y, e.fin() * 5);
         }));
 
         Draw.color();
@@ -47,8 +50,18 @@ const unitType = (() => {
         Fill.circle(x, y, e.fin() * 10);
     }));
 
-    var tmp = {};
     const m = extendContent(UnitType, 'rhapsody', {
+        load() {
+            this.super$load();
+            this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [
+                cooldown / 60,
+                chargeTime / 60,
+                laserBullet.damage,
+                range / Vars.tilesize,
+                laserBullet.lightningDamage,
+                laserBullet.statusDuration / 60
+            ]);
+        },
         /**
          * @returns {import('abomb4/skill-framework').SkillDefinition[]}
          */
@@ -56,12 +69,12 @@ const unitType = (() => {
             return [
                 {
                     name: 'ion-laser-large',
-                    range: 20,
+                    range: range,
                     icon: lib.loadRegion('ion-laser-large'),
                     directivity: true,
                     exclusive: true,
-                    activeTime: 60 * 3,
-                    cooldown: 60 * 12,
+                    activeTime: chargeTime,
+                    cooldown: cooldown,
                     aiCheck(skill, unit) {
                         const target = Units.bestTarget(unit.team, unit.x, unit.y, laserBullet.length - 10,
                             boolf(e => !e.dead), boolf(b => true), Blocks.duo.unitSort);
