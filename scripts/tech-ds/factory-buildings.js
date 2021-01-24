@@ -67,11 +67,22 @@ spaceCrystallizer.requirements = ItemStack.with(
 spaceCrystallizer.buildVisibility = BuildVisibility.shown;
 spaceCrystallizer.category = Category.crafting;
 
-spaceCrystallizer.craftEffect = Fx.smeltsmoke;
+spaceCrystallizer.craftEffect = new Effect(40, cons(e => {
+    Angles.randLenVectors(e.id, 6, 5 + e.fin() * 8, lib.floatc2((x, y) => {
+        Draw.color(spaceCrystal.color, Color.lightGray, e.fin());
+        Fill.square(e.x + x, e.y + y, 0.2 + e.fout() * 2, 45);
+    }));
+}));
+spaceCrystallizer.updateEffect = new Effect(40, cons(e => {
+    Angles.randLenVectors(e.id, 5, 3 + e.fin() * 5, lib.floatc2((x, y) => {
+        Draw.color(spaceCrystal.color.cpy().lerp(Color.white, 0.8), Color.gray, e.fin());
+        Fill.circle(e.x + x, e.y + y, e.fout());
+    }));
+}));
 spaceCrystallizer.outputItem = new ItemStack(spaceCrystal, 2);
 spaceCrystallizer.craftTime = 90;
 spaceCrystallizer.hasPower = true;
-spaceCrystallizer.flameColor = spaceCrystal.color;
+spaceCrystallizer.flameColor = Color.valueOf("00000000");
 spaceCrystallizer.itemCapacity = 20;
 spaceCrystallizer.boostScale = 0.15;
 
