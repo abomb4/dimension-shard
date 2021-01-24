@@ -206,7 +206,7 @@ for (var team of Team.baseTeams) {
 }
 
 const Call_Launch = (() => {
-    const TYPE = 'CCPLaunch';
+    const TYPE = lib.modName + '-CCPLaunch';
     const DELIMITER = ', ';
 
     function makePackage(tilePos, launchCountBefore) {
@@ -256,7 +256,7 @@ const Call_Launch = (() => {
     }
 })()
 const Call_MakeMain = (() => {
-    const TYPE = 'CCPMakeMain';
+    const TYPE = lib.modName + '-CCPMakeMain';
     const DELIMITER = ', ';
 
     function makePackage(tilePos, cores) {

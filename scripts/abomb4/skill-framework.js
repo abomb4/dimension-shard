@@ -41,7 +41,7 @@ Skill can:
 
 /** Send packet, assume skill is fired in local */
 const Call_ActiveSkill = (() => {
-    const TYPE = 'sfActiveSkill';
+    const TYPE = lib.modName + '-sfActiveSkill';
     const DELIMITER = ', ';
 
     function makePackage(unit, skillName, data) {
