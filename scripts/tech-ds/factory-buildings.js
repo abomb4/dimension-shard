@@ -181,7 +181,7 @@ timeCrystallizer.craftEffect = Fx.smeltsmoke;
 timeCrystallizer.outputItem = new ItemStack(timeCrystal, 1);
 timeCrystallizer.craftTime = 60;
 timeCrystallizer.hasPower = true;
-timeCrystallizer.flameColor = timeCrystal.color;
+timeCrystallizer.flameColor = Color.valueOf("00000000");
 timeCrystallizer.itemCapacity = 20;
 timeCrystallizer.boostScale = 0.2;
 
@@ -190,6 +190,31 @@ timeCrystallizer.consumes.items(ItemStack.with(
 ));
 timeCrystallizer.consumes.power(2.5);
 timeCrystallizer.consumes.liquid(timeFlow, 0.1);
+lib.setBuildingSimple(timeCrystallizer, AttributeSmelter.AttributeSmelterBuild, () => {
+
+    const heatColor = timeCrystal.color.cpy().lerp(Color.white, 0.5);
+    const heatRegion = lib.loadRegion("time-crystallizer-heat");
+    const liquidRegion = lib.loadRegion("time-crystallizer-liquid");
+    const topRegion = lib.loadRegion("time-crystallizer-top");
+    return {
+        draw() {
+            const entity = this;
+            Draw.rect(entity.block.region, entity.x, entity.y, 0);
+
+            Draw.color(heatColor);
+            Draw.alpha(entity.warmup * (0.7 + 0.3 * Mathf.sin(entity.progress / entity.block.craftTime * Math.PI * 2)));
+            Draw.blend(Blending.additive);
+            Draw.rect(heatRegion, entity.x, entity.y, 0);
+            Draw.blend();
+
+            Draw.color(timeFlow.color);
+            Draw.alpha(entity.liquids.get(timeFlow) / entity.block.liquidCapacity);
+            Draw.rect(liquidRegion, entity.x, entity.y, 0);
+
+            Draw.rect(topRegion, entity.x, entity.y, 0);
+        },
+    };
+});
 exports.timeCrystallizer = timeCrystallizer;
 
 
