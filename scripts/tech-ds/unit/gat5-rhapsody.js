@@ -205,8 +205,6 @@ const unitType = (() => {
                 fragBullet: standardFrag2,
                 lightning: 1,
                 fragLifeMax: 0.8,
-                splashDamage: 50,
-                damage: 30,
                 width: 3,
             });
             return w;
