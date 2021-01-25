@@ -46,6 +46,6 @@ Mod 中设计规划有 3 条科技线，现在只有次元科技实现了。
 
 欢迎反馈各种问题！
 
-Steam 工坊：https://steamcommunity.com/sharedfiles/filedetails/?id=2321869572
-QQ 群：779147200
-GitHub：https://github.com/abomb4/dimension-shard
+- Steam 工坊：https://steamcommunity.com/sharedfiles/filedetails/?id=2321869572
+- QQ 群：779147200
+- GitHub：https://github.com/abomb4/dimension-shard
