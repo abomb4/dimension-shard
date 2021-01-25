@@ -51,8 +51,8 @@ If you have fun with this mod, please star me, thanks.
 
 Welcome to feedback!
 
-Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2321869572
-QQ Group: 779147200
-Github: https://github.com/abomb4/dimension-shard
+- Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2321869572
+- QQ Group: 779147200
+- Github: https://github.com/abomb4/dimension-shard
 
 
