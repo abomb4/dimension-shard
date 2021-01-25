@@ -1,5 +1,5 @@
 # Dimension Shard
-English | #[中文](README_cn.md)
+English | [中文](README_cn.md)
 
 A Mindustry Mod with time and space technology as the story background.
 
