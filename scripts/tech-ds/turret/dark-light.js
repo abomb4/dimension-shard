@@ -208,7 +208,7 @@ turret.shootType = (() => {
                     var x = xy[0];
                     var y = xy[1];
                     var absY = Math.abs(y);
-                    if (x < 0 || x > length || absY > dragRadius) {
+                    if (x < 0 || x > length || absY > dragRadius || absY < 4) {
                         return;
                     }
                     // drag to the line
