@@ -76,12 +76,12 @@ const unitType = (() => {
         })()
     )
 
-    const puddles = 40;
-    const puddleRange = 30;
-    const puddleAmount = 20;
+    const puddles = 36;
+    const puddleRange = 24;
+    const puddleAmount = 16;
     const puddleLiquid = items.ionLiquid;
-    const lightning = 16;
-    const lightningDamage = 22;
+    const lightning = 12;
+    const lightningDamage = 20;
     const lightningLength = 24;
     const lightningLengthRand = 8;
     Events.on(UnitDestroyEvent, cons(event => {
