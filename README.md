@@ -1,4 +1,6 @@
 # Dimension Shard
+![](ad/logo.png)
+
 English | [中文](README_cn.md)
 
 A Mindustry Mod with time and space technology as the story background.
@@ -7,6 +9,8 @@ Keep balance with the original game, contains some interesting mechanics,
 such as skills, another transportation systems or other things.
 
 Three technology line designed in this Mod, currently only the Dimension Shard technology implemented.
+
+![](ad/steam1.png)
 
 The contents will be in 1.0:
 ## Common technology line:
@@ -54,5 +58,3 @@ Welcome to feedback!
 - Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2321869572
 - QQ Group: 779147200
 - Github: https://github.com/abomb4/dimension-shard
-
-

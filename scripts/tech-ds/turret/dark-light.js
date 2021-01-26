@@ -60,7 +60,7 @@ const chargeSound = lib.loadSound("dark-light-charge");
 const loopSound = lib.loadSound("dark-light-loop");
 const shootSound = lib.loadSound("dark-light-shoot");
 const dragRadius = 9 * 8;
-const dragPower = 0.23;
+const dragPower = 0.22;
 
 const lightningSound = lib.loadSound("dark-light-lightning");
 const lightningSpacing = 45;
@@ -127,6 +127,7 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.liquidCapacity = 30;
 turret.range = 40 * 8;
+turret.shootCone = 8;
 turret.canOverdrive = false;
 turret.chargeTime = 85;
 turret.chargeMaxDelay = 0;
