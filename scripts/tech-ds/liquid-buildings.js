@@ -177,3 +177,23 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => 
 }));
 
 exports.spaceLiquidTank = spaceLiquidTank;
+
+var spacePump = extend(Pump, 'space-pump', {
+    isHidden() { return !dsGlobal.techDsAvailable(); },
+});
+spacePump.buildVisibility = BuildVisibility.shown;
+spacePump.size = 3;
+spacePump.health = 500;
+spacePump.liquidCapacity = Blocks.thermalPump.liquidCapacity * 2;
+spacePump.requirements = ItemStack.with(
+    Items.copper, 100,
+    Items.metaglass, 120,
+    Items.plastanium, 45,
+    items.spaceCrystal, 60,
+    items.hardThoriumAlloy, 50
+);
+spacePump.category = Category.liquid;
+spacePump.pumpAmount = 0.3;
+spacePump.consumes.power(2.8);
+spacePump.hasPower = true;
+exports.spacePump = spacePump;

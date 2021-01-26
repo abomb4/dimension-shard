@@ -28,7 +28,7 @@ const {
     radioisotopeWeaver, dimensionAlloySmelter, timeCondenser,
     ionCollector, shardReceiver
 } = require('tech-ds/factory-buildings')
-const { hardThoriumConduit, hardThoriumLiquidRouter, spaceLiquidTank } = require('tech-ds/liquid-buildings')
+const { hardThoriumConduit, hardThoriumLiquidRouter, spaceLiquidTank, spacePump } = require('tech-ds/liquid-buildings')
 const { dimensionCrystalBattery, timeCompressedRtg } = require('tech-ds/power-buildings')
 
 const { dc } = require('tech-ds/turret/dc')
@@ -107,6 +107,7 @@ lib.addToResearch(hardThoriumAlloyWallLarge, { parent: hardThoriumAlloyWall.name
 lib.addToResearch(hardThoriumConduit, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(hardThoriumLiquidRouter, { parent: hardThoriumConduit.name, });
 lib.addToResearch(spaceLiquidTank, { parent: hardThoriumLiquidRouter.name, });
+lib.addToResearch(spacePump, { parent: hardThoriumLiquidRouter.name, });
 
 // drill line
 lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore3.name, });
