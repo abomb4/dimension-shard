@@ -60,7 +60,7 @@ const chargeSound = lib.loadSound("dark-light-charge");
 const loopSound = lib.loadSound("dark-light-loop");
 const shootSound = lib.loadSound("dark-light-shoot");
 const dragRadius = 9 * 8;
-const dragPower = 0.22;
+const dragPower = 0.215;
 
 const lightningSound = lib.loadSound("dark-light-lightning");
 const lightningSpacing = 45;
@@ -208,7 +208,7 @@ turret.shootType = (() => {
                     var x = xy[0];
                     var y = xy[1];
                     var absY = Math.abs(y);
-                    if (x < 0 || x > length || absY > dragRadius || absY < 4) {
+                    if (x < 0 || x > length || absY > dragRadius || absY < 2) {
                         return;
                     }
                     // drag to the line

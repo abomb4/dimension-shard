@@ -19,6 +19,8 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
+const lastBuildInvalidate = 60 * 10;
+var globalLastBuildTime = 0;
 var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
     isHidden() { return !dsGlobal.techDsAvailable(); },
@@ -52,7 +54,19 @@ var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
         return other.block() === hardPhaseSpaceBridge
             && tile.block() === hardPhaseSpaceBridge
             && (!checkDouble || other.build.link != tile.pos())
-            && tile.within(other, this.range * Vars.tilesize);
+            && tile.within(other, this.range * Vars.tilesize + Math.floor(this.size / 2));
+    },
+    positionsValid(x1, y1, x2, y2) {
+        return Mathf.dst(x1, y1, x2, y2) <= this.range;
+    },
+    changePlacementPath(points, rotation) {
+        Placement.calculateNodes(points, this, rotation, lib.boolf2((point, other) => this.positionsValid(point.x, point.y, other.x, other.y)));
+    },
+    findLink(x, y) {
+        if (Time.time - globalLastBuildTime > lastBuildInvalidate) {
+            return null;
+        }
+        return this.super$findLink(x, y);
     },
 });
 hardPhaseSpaceBridge.buildVisibility = BuildVisibility.shown;
@@ -62,8 +76,9 @@ hardPhaseSpaceBridge.health = 450;
 hardPhaseSpaceBridge.hasItems = true;
 hardPhaseSpaceBridge.hasLiquids = true;
 hardPhaseSpaceBridge.outputsLiquid = true;
-hardPhaseSpaceBridge.itemCapacity = 20;
-hardPhaseSpaceBridge.liquidCapacity = 20;
+hardPhaseSpaceBridge.itemCapacity = 40;
+hardPhaseSpaceBridge.liquidCapacity = 80;
+hardPhaseSpaceBridge.liquidPressure = 1.3;
 hardPhaseSpaceBridge.range = 18;
 hardPhaseSpaceBridge.transportTime = 0.01;
 hardPhaseSpaceBridge.requirements = ItemStack.with(
@@ -76,8 +91,18 @@ hardPhaseSpaceBridge.requirements = ItemStack.with(
 );
 hardPhaseSpaceBridge.consumes.power(0.8);
 
+Events.on(BlockBuildBeginEvent, cons(e => {
+    if (Vars.player != null && Vars.player.unit() == e.unit && e.tile.block() != hardPhaseSpaceBridge) {
+        hardPhaseSpaceBridge.lastBuild = null;
+    }
+}));
+
 lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
 
+    playerPlaced(config) {
+        this.super$playerPlaced(config);
+        globalLastBuildTime = Time.time;
+    },
     drawConfigure() {
         var entity = this;
         var tile = this.tile;

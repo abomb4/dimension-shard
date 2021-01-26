@@ -18,6 +18,8 @@
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 
+const lastBuildInvalidate = 60 * 10;
+var globalLastBuildTime = 0;
 var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
 
     drawPlace(x, y, rotation, valid) {
@@ -50,7 +52,19 @@ var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
         return other.block() === phaseSpaceBridge
             && tile.block() === phaseSpaceBridge
             && (!checkDouble || other.build.link != tile.pos())
-            && tile.within(other, this.range * Vars.tilesize);
+            && this.positionsValid(tile.x, tile.y, other.x, other.y);
+    },
+    positionsValid(x1, y1, x2, y2) {
+        return Mathf.dst(x1, y1, x2, y2) <= this.range;
+    },
+    changePlacementPath(points, rotation) {
+        Placement.calculateNodes(points, this, rotation, lib.boolf2((point, other) => this.positionsValid(point.x, point.y, other.x, other.y)));
+    },
+    findLink(x, y) {
+        if (Time.time - globalLastBuildTime > lastBuildInvalidate) {
+            return null;
+        }
+        return this.super$findLink(x, y);
     },
 });
 phaseSpaceBridge.buildVisibility = BuildVisibility.shown;
@@ -60,8 +74,9 @@ phaseSpaceBridge.health = 220;
 phaseSpaceBridge.hasItems = true;
 phaseSpaceBridge.hasLiquids = true;
 phaseSpaceBridge.outputsLiquid = true;
-phaseSpaceBridge.itemCapacity = 20;
+phaseSpaceBridge.itemCapacity = 25;
 phaseSpaceBridge.liquidCapacity = 20;
+phaseSpaceBridge.liquidPressure = 1.2;
 phaseSpaceBridge.range = 15;
 phaseSpaceBridge.transportTime = 0.01;
 phaseSpaceBridge.requirements = ItemStack.with(
@@ -73,8 +88,18 @@ phaseSpaceBridge.requirements = ItemStack.with(
 );
 phaseSpaceBridge.consumes.power(0.5);
 
+Events.on(BlockBuildBeginEvent, cons(e => {
+    if (Vars.player != null && Vars.player.unit() == e.unit && e.tile.block() != phaseSpaceBridge) {
+        phaseSpaceBridge.lastBuild = null;
+    }
+}));
+
 lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
 
+    playerPlaced(config) {
+        this.super$playerPlaced(config);
+        globalLastBuildTime = Time.time;
+    },
     drawConfigure() {
         var entity = this;
         var tile = this.tile;

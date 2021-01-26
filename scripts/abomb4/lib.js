@@ -35,6 +35,7 @@ exports.newEffect = (lifetime, renderer) => new Effect(lifetime, cons(renderer))
 
 exports.cons2 = (func) => new Cons2({ get: (v1, v2) => func(v1, v2) });
 exports.floatc2 = (func) => new Floatc2({ get: (v1, v2) => func(v1, v2) });
+exports.boolf2 = (func) => new Boolf2({ get: (v1, v2) => func(v1, v2) });
 exports.func = (getter) => new Func({ get: getter });
 
 exports.loadRegion = (name) => Vars.headless ? null : Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("clear"));
