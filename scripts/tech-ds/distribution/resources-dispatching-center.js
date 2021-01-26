@@ -231,6 +231,12 @@ blockType.buildType = prov(() => {
                 }
             }
             Drawf.dashCircle(this.x, this.y, range, Pal.accent);
+
+            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
+                Time.run(Mathf.random(10), run(() => {
+                    inEffect.at(this.x, this.y, 0);
+                }));
+            }
         },
         draw() {
             this.super$draw();
@@ -243,12 +249,6 @@ blockType.buildType = prov(() => {
 
             Draw.alpha(1);
             Draw.rect(topRegion, this.x, this.y);
-
-            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
-                Time.run(Mathf.random(10), run(() => {
-                    inEffect.at(this.x, this.y, 0);
-                }));
-            }
         },
         display(table) {
             this.super$display(table);

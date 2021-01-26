@@ -221,6 +221,12 @@ blockType.buildType = prov(() => {
             slowdownDelay = Math.max(0, slowdownDelay - 1);
             updateFairLoopOffset(links.size);
             this.dump();
+
+            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
+                Time.run(Mathf.random(10), run(() => {
+                    outEffect.at(this.x, this.y, 0);
+                }));
+            }
         },
         display(table) {
             this.super$display(table);
@@ -264,12 +270,6 @@ blockType.buildType = prov(() => {
             Draw.color(itemType == null ? Color.clear : itemType.color);
             Draw.rect("unloader-center", this.x, this.y);
             Draw.color();
-
-            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
-                Time.run(Mathf.random(10), run(() => {
-                    outEffect.at(this.x, this.y, 0);
-                }));
-            }
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
