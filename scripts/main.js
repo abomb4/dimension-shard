@@ -32,6 +32,8 @@ require('ds-common/bullet-types/index')
 require('ds-common/overrides')
 
 // dimension technology
+// - Core units
+require('tech-ds/unit/core1-electron');
 // - air support
 require('tech-ds/unit/ast4-formula');
 require('tech-ds/unit/ast5-equa');

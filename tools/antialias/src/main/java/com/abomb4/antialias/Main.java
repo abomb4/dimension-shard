@@ -36,6 +36,9 @@ public class Main {
         Map.entry("core-construction-platform-gate-left1.png", c().noAntialias()),
         Map.entry("core-construction-platform-gate-left2.png", c().noAntialias()),
 
+        Map.entry("electric.png", c().outline().icons().setIconNameReplacer((fn, in) -> fn.replaceAll("-outline\\.png", "-" + in + ".png"))),
+        Map.entry("lightning.png", c().outline().icons().setIconNameReplacer((fn, in) -> fn.replaceAll("-outline\\.png", "-" + in + ".png"))),
+
         Map.entry("beat.png", c().outline()),
         Map.entry("beat-full.png", c().outline().setOutlineOverride().icons()),
         Map.entry("beat-weapon.png", c().outline()),

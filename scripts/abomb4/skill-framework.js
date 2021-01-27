@@ -477,6 +477,9 @@ function _define_constructor_(clazz, classId) {
                     this.super$damage(amount, withEffect);
                 }
             },
+            speed() {
+                return this.super$speed() * this.speedMultiplier;
+            },
             draw() {
                 this.super$draw();
                 statusList.forEach(status => {

@@ -17,6 +17,7 @@
 
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
+const { electron } = require('tech-ds/unit/core1-electron');
 
 const block = extend(CoreBlock, "dimension-technology-core-3", {
 });
@@ -27,7 +28,7 @@ block.health = 6000;
 block.itemCapacity = 14000;
 block.unitCapModifier = 22;
 block.researchCostMultiplier = 0.07;
-block.unitType = UnitTypes.gamma;
+block.unitType = electron;
 
 block.requirements = ItemStack.with(
     Items.copper, 8000,
