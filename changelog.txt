@@ -1,3 +1,12 @@
+0.22:
+Added a reminder of ‘Need Dimension Technology Core’ on the Bomb Teleporter;
+Rhapsody death will cause an explosion;
+Add Dimensional Core 5x5 unit 'Electron';
+Slightly enhance the liquid transfer efficiency of the Space Phase Bridge;
+The Space Phase Bridge will no longer be automatically connected after 10s or after other buildings are built;
+Fix some effect bugs;
+Fix the bug of the distance of Space Phase Bridge holding Ctrl;
+
 0.21:
 Update all factory sprites;
 Each sprite automatically generates anti-aliasing, black borders, and icons;
