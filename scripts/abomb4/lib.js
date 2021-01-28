@@ -37,6 +37,9 @@ exports.cons2 = (func) => new Cons2({ get: (v1, v2) => func(v1, v2) });
 exports.floatc2 = (func) => new Floatc2({ get: (v1, v2) => func(v1, v2) });
 exports.boolf2 = (func) => new Boolf2({ get: (v1, v2) => func(v1, v2) });
 exports.func = (getter) => new Func({ get: getter });
+exports.raycaster = (func) => new World.Raycaster({ accept: func });
+exports.intc2 = (func) => new Intc2({ get: func });
+exports.floatf = (func) => new Floatf({ get: func });
 
 exports.loadRegion = (name) => Vars.headless ? null : Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("clear"));
 
@@ -50,8 +53,8 @@ exports.int = (v) => new java.lang.Integer(v);
  */
 exports.getMessage = (type, key, msgs) =>
     Vars.headless
-    ? ''
-    : Core.bundle.format(type + "." + exports.modName + "." + key, msgs || []);
+        ? ''
+        : Core.bundle.format(type + "." + exports.modName + "." + key, msgs || []);
 
 /** Cannot use java.lang.reflect.Array, but Arrays.copyOf available! Lucky! */
 exports.createUnitPlan = (unitFrom, unitTo) => {
@@ -196,3 +199,111 @@ exports.createProbabilitySelector = function () {
         }
     }
 }
+
+/**
+ * Damage line, three modes:
+ * - "normal": Normal laser
+ * - "pierce":Ignore plastic wall
+ * - "blocking":Block by any enemy
+ */
+exports.damageLine = (() => {
+    var tr = new Vec2();
+    var collidedBlocks = new IntSet();
+    var seg1 = new Vec2();
+    var seg2 = new Vec2();
+    var rect = new Rect();
+    var units = new Seq();
+    var hitrect = new Rect();
+    return (hitter, team, effect, x, y, angle, length, large, mode) => {
+        if (!mode || (mode != "pierce" && mode != "blocking")) {
+            mode = "normal";
+        }
+        if (mode == "normal") {
+            Damage.collideLine(hitter, team, effect, x, y, angle, length, large);
+        } else if (mode == "blocking") {
+            // TODO
+            // Tmp.v1.trns(hitter.rotation(), length);
+            // // Find block
+            // var building;
+            // var buildingFound = Vars.world.raycast(b.tileX(), b.tileY(), World.toTile(b.x + Tmp.v1.x), World.toTile(b.y + Tmp.v1.y),
+            //     this.raycaster((x, y) => { (building = Vars.world.tile(x, y)) != null && building.team() != b.team }));
+            // var dstBuilding = buildingFound ? Tmp.v2.set(x, y).dst(building) : Infinity;
+            // // Find unit
+        } else {
+            collidedBlocks.clear();
+            tr.trns(angle, length);
+            var collider = exports.intc2((cx, cy) => {
+                var tile = Vars.world.build(cx, cy);
+                var collide = tile != null && collidedBlocks.add(tile.pos());
+                if (hitter.damage > 0) {
+                    var health = !collide ? 0 : tile.health;
+                    if (collide && tile.team != team && tile.collide(hitter)) {
+                        tile.collision(hitter);
+                        hitter.type.hit(hitter, tile.x, tile.y);
+                    }
+
+                    if (collide && hitter.type.testCollision(hitter, tile)) {
+                        hitter.type.hitTile(hitter, tile, health, false);
+                    }
+                }
+            });
+
+            if (hitter.type.collidesGround) {
+                seg1.set(x, y);
+                seg2.set(seg1).add(tr);
+                Vars.world.raycastEachWorld(x, y, seg2.x, seg2.y, exports.raycaster((cx, cy) => {
+                    collider.get(cx, cy);
+                    for (var p of Geometry.d4) {
+                        var other = Vars.world.tile(p.x + cx, p.y + cy);
+                        if (other != null && (large || Intersector.intersectSegmentRectangle(seg1, seg2, other.getBounds(Tmp.r1)))) {
+                            collider.get(cx + p.x, cy + p.y);
+                        }
+                    }
+                    return false;
+                }));
+            }
+
+            rect.setPosition(x, y).setSize(tr.x, tr.y);
+            var x2 = tr.x + x;
+            var y2 = tr.y + y;
+            if (rect.width < 0) {
+                rect.x += rect.width;
+                rect.width *= -1;
+            }
+
+            if (rect.height < 0) {
+                rect.y += rect.height;
+                rect.height *= -1;
+            }
+
+            const expand = 3;
+            rect.y -= expand;
+            rect.x -= expand;
+            rect.width += expand * 2;
+            rect.height += expand * 2;
+
+            var con = cons(e => {
+                e.hitbox(hitrect);
+
+                var vec = Geometry.raycastRect(x, y, x2, y2, hitrect.grow(expand * 2));
+
+                if (vec != null && hitter.damage > 0) {
+                    effect.at(vec.x, vec.y);
+                    e.collision(hitter, vec.x, vec.y);
+                    hitter.collision(e, vec.x, vec.y);
+                }
+            });
+
+            units.clear();
+
+            Units.nearbyEnemies(team, rect, cons(u => {
+                if (u.checkTarget(hitter.type.collidesAir, hitter.type.collidesGround)) {
+                    units.add(u);
+                }
+            }));
+
+            units.sort(exports.floatf(u => u.dst2(hitter)));
+            units.each(con);
+        }
+    }
+})();

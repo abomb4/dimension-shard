@@ -34,6 +34,7 @@ require('ds-common/overrides')
 // dimension technology
 // - Core units
 require('tech-ds/unit/core1-electron');
+require('tech-ds/unit/core2-lightning');
 // - air support
 require('tech-ds/unit/ast4-formula');
 require('tech-ds/unit/ast5-equa');

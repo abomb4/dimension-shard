@@ -17,7 +17,7 @@
 
 const lib = require('abomb4/lib');
 const items = require('ds-common/items');
-const { electron } = require('tech-ds/unit/core1-electron');
+const { lightning } = require('tech-ds/unit/core2-lightning');
 
 const block = extend(CoreBlock, "dimension-technology-core", {
 });
@@ -28,15 +28,15 @@ block.health = 10000;
 block.itemCapacity = 24000;
 block.unitCapModifier = 34;
 block.researchCostMultiplier = 0.08;
-block.unitType = electron;
+block.unitType = lightning;
 
 block.requirements = ItemStack.with(
     Items.copper, 15000,
     Items.lead, 15000,
-    Items.silicon, 8000,
-    Items.thorium, 6000,
+    Items.silicon, 10000,
+    Items.thorium, 8000,
     Items.phaseFabric, 3000,
-    items.dimensionShard, 6000,
+    items.dimensionShard, 8000,
 );
 
 exports.dimensionTechnologyCore4 = block;

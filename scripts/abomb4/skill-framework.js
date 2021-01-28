@@ -170,6 +170,9 @@ const skillFrag = (() => {
                 if (selectSkill >= 0 && Core.input.keyTap(Binding.select) && notClickedAtOtherFrag()) {
                     activeSkill();
                     rebuild();
+                } else if (Core.input.keyTap(Binding.deselect)) {
+                    selectSkill = -1;
+                    rebuild();
                 } else if (haveKeyboard()) {
                     if (Core.input.keyTap(Packages.arc.input.KeyCode.f1)) {
                         trySelectSkill(0);
@@ -259,7 +262,19 @@ const skillFrag = (() => {
                             }));
                             full.add(skillButton).update(cons(v => {
                                 v.setChecked(selectSkill == index);
-                                v.setDisabled(skill.reload < skill.def.cooldown);
+                                v.setDisabled(boolp(() => {
+                                    if (skill.reload < skill.def.cooldown) {
+                                        return true;
+                                    }
+                                    var exclusive = false;
+                                    for (var s of skillList) {
+                                        if (s.active && s.def.exclusive) {
+                                            exclusive = true;
+                                            break;
+                                        }
+                                    }
+                                    return exclusive;
+                                }));
                             })).width(80).height(80);
                             full.row()
                         })(i);

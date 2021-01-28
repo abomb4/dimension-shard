@@ -66,7 +66,6 @@ const unitType = (() => {
         v.color = Color.valueOf("cee0e9");
         v.speedMultiplier = hyperSpeedUp;
         v.reloadMultiplier = hyperUp;
-        v.healthMultiplier = 0.9;
         v.damage = damage;
         v.effectChance = 0.4;
         v.effect = hyperspeedEffect;
@@ -130,7 +129,7 @@ const unitType = (() => {
     m.buildSpeed = 1;
     m.drag = 0.05;
     m.speed = 3.25;
-    m.rotateSpeed = 20;
+    m.rotateSpeed = 17;
     m.accel = 0.11;
     m.itemCapacity = 70;
     m.health = 210;
@@ -142,12 +141,12 @@ const unitType = (() => {
         (() => {
             const w = new Weapon();
             w.top = false;
-            w.reload = 20 - 1;
-            w.x = 1;
+            w.reload = 24;
+            w.x = 0;
             w.y = 2;
             w.shots = 3;
             w.spacing = 0;
-            w.shotDelay = 3;
+            w.shotDelay = 4 ;
             w.inaccuracy = 0.1;
             w.ejectEffect = Fx.casing1;
             w.mirror = false;

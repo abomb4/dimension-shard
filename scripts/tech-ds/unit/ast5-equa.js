@@ -75,16 +75,12 @@ const unitType = (() => {
                         unit.snapInterpolation();
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
-                        // find commands
-                        // unit.controlling.each(cons(mem => {
-                        //     teleportEffect.at(mem.x, mem.y);
-                        //     teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
-                        //     mem.x += Tmp.v1.x;
-                        //     mem.y += Tmp.v1.y;
-                        //     mem.snapInterpolation();
-                        //     teleportEffect.at(mem.x, mem.y);
-                        //     teleportSound.at(mem.x, mem.y, Mathf.random(0.9, 1.1));
-                        // }));
+                        // Try active skill if serval Collapse under control
+                        unit.controlling.each(cons(mem => {
+                            if (mem.type == unit.type) {
+                                mem.tryActiveSkill(this.name, data);
+                            }
+                        }));
                     },
                 },
                 {
