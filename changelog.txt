@@ -2,6 +2,7 @@
 Added a reminder of ‘Need Dimension Technology Core’ on the Bomb Teleporter;
 Rhapsody death will cause an explosion;
 Add Dimensional Core 5x5 unit 'Electron';
+Add Dimensional Core 6x6 unit 'Lightning';
 Slightly enhance the liquid transfer efficiency of the Space Phase Bridge;
 The Space Phase Bridge will no longer be automatically connected after 10s or after other buildings are built;
 Fix some effect bugs;
