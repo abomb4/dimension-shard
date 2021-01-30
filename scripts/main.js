@@ -76,6 +76,8 @@ require('tech-ds/unit/unit-teleporter')
 require('ds-common/planets')
 require('ds-common/research-tree')
 
+require('ds-common/changelog')
+
 // l10n mod name and description
 if (!Vars.headless) {
     lib.mod.meta.displayName = lib.getMessage('mod', 'displayName');

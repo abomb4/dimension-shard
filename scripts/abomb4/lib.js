@@ -42,7 +42,6 @@ exports.intc2 = (func) => new Intc2({ get: func });
 exports.floatf = (func) => new Floatf({ get: func });
 
 exports.loadRegion = (name) => Vars.headless ? null : Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("clear"));
-
 exports.int = (v) => new java.lang.Integer(v);
 
 /**
