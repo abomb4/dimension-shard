@@ -245,6 +245,7 @@ const unitType = (() => {
     m.buildSpeed = 1.4;
     m.drag = 0.05;
     m.speed = 3.55;
+    m.armor = 2;
     m.rotateSpeed = 17;
     m.accel = 0.11;
     m.itemCapacity = 100;

@@ -1,3 +1,8 @@
+0.23:
+Add a Changelog dialog;
+Fix Unit Teleporter effect;
+Add 2 armor to Lightning
+
 0.22:
 Added a reminder of ‘Need Dimension Technology Core’ on the Bomb Teleporter;
 Rhapsody death will cause an explosion;
