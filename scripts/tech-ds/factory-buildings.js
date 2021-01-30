@@ -276,11 +276,11 @@ radioisotopeWeaver.consumes.items(ItemStack.with(
 ));
 radioisotopeWeaver.consumes.power(10);
 radioisotopeWeaver.drawer = (() => {
-    var regionHeat1 = lib.loadRegion("radioisotope-weaver-heat1");
-    var regionHeat2 = lib.loadRegion("radioisotope-weaver-heat2");
-    var regionHeat3 = lib.loadRegion("radioisotope-weaver-heat3");
-    var regionWeaver = lib.loadRegion("radioisotope-weaver-weaver");
-    var regionTop = lib.loadRegion("radioisotope-weaver-top");
+    var regionHeat1;
+    var regionHeat2;
+    var regionHeat3;
+    var regionWeaver;
+    var regionTop;
     return new JavaAdapter(DrawBlock, {
         load(block) {
             regionHeat1 = lib.loadRegion("radioisotope-weaver-heat1");
