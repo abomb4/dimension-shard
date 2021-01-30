@@ -149,6 +149,7 @@ block.configurable = true;
 block.unloadable = true;
 block.breakable = true;
 block.solid = false;
+block.expanded = true;
 block.consumes.power(4.5);
 
 function getBuild(pos) {
@@ -177,6 +178,10 @@ function isTeleportActive(building) {
     return building != null && building.getUptime() > 0.2;
 }
 
+const drawArray = [];
+Events.run(Trigger.preDraw, run(() => {
+    while (drawArray.pop()) {}
+}));
 lib.setBuilding(block, (block) => {
     var target = -1;
     // now 'connected' means connected by.
@@ -188,6 +193,7 @@ lib.setBuilding(block, (block) => {
 
     return new JavaAdapter(Building, {
         draw() {
+            drawArray.push(this);
             this.super$draw();
             const entity = this;
             if (entity.getUptime() > 0) {
@@ -208,10 +214,9 @@ lib.setBuilding(block, (block) => {
             if (Mathf.zero(opacity)) return;
 
             const other = getBuild(entity.getTarget());
-            if (!linkValid(entity, other, true)) return;
 
             // Draw line between
-            if (isTeleportActive(entity) && isTeleportActive(other)) {
+            if (linkValid(entity, other, true) && isTeleportActive(entity) && isTeleportActive(other)) {
                 Draw.z(Layer.power);
                 var angle = Angles.angle(entity.x, entity.y, other.x, other.y);
                 Lines.stroke(0.6);
@@ -223,20 +228,50 @@ lib.setBuilding(block, (block) => {
 
                 Draw.color(ORANGE);
                 Draw.alpha(opacity * 0.5);
-                Lines.line(
+                Drawf.laser(this.team, Blocks.powerNode.laser, Blocks.powerNode.laserEnd,
                     entity.x + Angles.trnsx(angle + 90, spreadLength) + lineOffsetX,
                     entity.y + Angles.trnsy(angle + 90, spreadLength) + lineOffsetY,
                     other.x + Angles.trnsx(angle + 90, spreadLength) - lineOffsetX,
-                    other.y + Angles.trnsy(angle + 90, spreadLength) - lineOffsetY
+                    other.y + Angles.trnsy(angle + 90, spreadLength) - lineOffsetY, 0.25
                 );
 
                 Draw.color(BLUE);
                 Draw.alpha(opacity * 0.5);
-                Lines.line(
+                Drawf.laser(this.team, Blocks.powerNode.laser, Blocks.powerNode.laserEnd,
                     entity.x + Angles.trnsx(angle - 90, spreadLength) + lineOffsetX,
                     entity.y + Angles.trnsy(angle - 90, spreadLength) + lineOffsetY,
                     other.x + Angles.trnsx(angle - 90, spreadLength) - lineOffsetX,
-                    other.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY
+                    other.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY, 0.25
+                );
+                Draw.reset();
+            }
+
+            if (linkValid(connected, entity, true) && isTeleportActive(entity) && isTeleportActive(connected) && drawArray.indexOf(connected) < 0) {
+                Draw.z(Layer.power);
+                var angle = Angles.angle(connected.x, connected.y, entity.x, entity.y);
+                Lines.stroke(0.6);
+                // Lines.line(tile.x, tile.y, entity.x, entity.y);
+                var spreadLength = Mathf.absin(Time.time, 6, 1.6);
+                spreadLength = 0.8 - spreadLength;
+                var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
+                var lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
+
+                Draw.color(ORANGE);
+                Draw.alpha(opacity * 0.5);
+                Drawf.laser(this.team, Blocks.powerNode.laser, Blocks.powerNode.laserEnd,
+                    connected.x + Angles.trnsx(angle + 90, spreadLength) + lineOffsetX,
+                    connected.y + Angles.trnsy(angle + 90, spreadLength) + lineOffsetY,
+                    entity.x + Angles.trnsx(angle + 90, spreadLength) - lineOffsetX,
+                    entity.y + Angles.trnsy(angle + 90, spreadLength) - lineOffsetY, 0.25
+                );
+
+                Draw.color(BLUE);
+                Draw.alpha(opacity * 0.5);
+                Drawf.laser(this.team, Blocks.powerNode.laser, Blocks.powerNode.laserEnd,
+                    connected.x + Angles.trnsx(angle - 90, spreadLength) + lineOffsetX,
+                    connected.y + Angles.trnsy(angle - 90, spreadLength) + lineOffsetY,
+                    entity.x + Angles.trnsx(angle - 90, spreadLength) - lineOffsetX,
+                    entity.y + Angles.trnsy(angle - 90, spreadLength) - lineOffsetY, 0.25
                 );
                 Draw.reset();
             }
