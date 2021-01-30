@@ -60,7 +60,7 @@ const chargeSound = lib.loadSound("dark-light-charge");
 const loopSound = lib.loadSound("dark-light-loop");
 const shootSound = lib.loadSound("dark-light-shoot");
 const dragRadius = 9 * 8;
-const dragPower = 0.215;
+const dragPower = 3.8;
 
 const lightningSound = lib.loadSound("dark-light-lightning");
 const lightningSpacing = 45;
@@ -164,6 +164,10 @@ turret.requirements = ItemStack.with(
     items.dimensionAlloy, 375
 );
 turret.shootType = (() => {
+    const darkLightFreeze = new StatusEffect("cannotMove");
+    darkLightFreeze.speedMultiplier = 0;
+    darkLightFreeze.effect = Fx.none;
+
     const rect = new Rect();
     const tr = new Vec2();
     const tr2 = new Vec2();
@@ -208,14 +212,26 @@ turret.shootType = (() => {
                     var x = xy[0];
                     var y = xy[1];
                     var absY = Math.abs(y);
-                    if (x < 0 || x > length || absY > dragRadius || absY < 2) {
+                    if (x < 0 || x > length || absY > dragRadius) {
                         return;
                     }
                     // drag to the line
                     var power = dragPowerPercent(absY, dragRadius);
                     var angle = y > 0 ? rotation - 90 : rotation + 90;
-                    u.impulse(Tmp.v3.set(u).setAngle(angle).scl(dragPower * power));
-                    u.vel.limit(absY);
+                    Tmp.v3.trns(angle, 80).scl(dragPower * power);
+                    // var realPower = Tmp.v3.len() / u.mass();
+                    // print('pre power: ' + Tmp.v3.len() + ', real power: ' + realPower);
+                    // // If too close, stop it moving
+                    // if (absY < 3 && realPower > u.type.speed) {
+                    //     print('stop moving: ' + u + ', u.type.speed: ' + u.type.speed + ', realPower: ' + realPower);
+                    //     u.vel.limit(0);
+                    //     u.apply(darkLightFreeze, 3);
+                    // } else {
+                        u.impulse(Tmp.v3);
+                        u.vel.limit(absY);
+                    // }
+
+
                 }))(length, b));
             }
 
