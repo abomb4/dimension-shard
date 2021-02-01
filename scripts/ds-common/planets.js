@@ -17,6 +17,10 @@
 
 const lib = require("abomb4/lib");
 const { dimensionShardOre } = require("ds-common/items");
+const { burn } = require("tech-ds/unit/aat4-burn");
+const { collapse } = require("tech-ds/unit/aat5-collapse");
+const { beat } = require("tech-ds/unit/gat4-beat");
+const { rhapsody } = require("tech-ds/unit/gat5-rhapsody");
 
 
 const wrek = new JavaAdapter(Planet, {
@@ -37,6 +41,191 @@ dimensionFall.difficulty = 8;
 
 exports.dimensionFall = dimensionFall;
 
+function generateWaves(difficulty, rand, attack) {
+    const never = Packages.java.lang.Integer.MAX_VALUE;
+    const {
+        dagger, mace, fortress, scepter, reign,
+        nova, pulsar, quasar, vela, corvus,
+        crawler, atrax, spiroct, arkyid, toxopid,
+        flare, horizon, zenith, mega, quad, antumbra, eclipse
+    } = UnitTypes;
+    var species = [
+        [ dagger, mace, fortress, scepter, reign ],
+        [ dagger, mace, fortress, beat, rhapsody ],
+        [ nova, pulsar, quasar, vela, corvus ],
+        [ nova, pulsar, quasar, beat, rhapsody ],
+        [ crawler, atrax, spiroct, arkyid, toxopid ],
+        [ flare, horizon, zenith, rand.chance(0.5) ? quad : antumbra, rand.chance(0.1) ? collapse : eclipse ],
+        [ flare, horizon, zenith, burn, collapse ],
+    ];
+
+    //required progression:
+    //- extra periodic patterns
+
+    var out = Seq.of(SpawnGroup);
+
+    //max reasonable wave, after which everything gets boring
+    var cap = 150;
+
+    var shieldStart = 30, shieldsPerWave = 20 + difficulty*30;
+    var scaling = [1, 2, 3, 4, 5];
+
+    var createProgression = lib.intc(start => {
+        //main sequence
+        var curSpecies = Structs.random(species);
+        var curTier = 0;
+
+        for(var i = start; i < cap;){
+            var f = i;
+            var next = rand.random(8, 16) + Mathf.lerp(5, 0, difficulty) + curTier * 4;
+
+            var shieldAmount = Math.max((i - shieldStart) * shieldsPerWave, 0);
+            var space = start == 0 ? 1 : rand.random(1, 2);
+            var ctier = curTier;
+
+            //main progression
+            out.add((() => {
+                var g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
+                g.unitAmount = f == start ? 1 : 6 / scaling[ctier];
+                g.begin = f;
+                g.end = f + next >= cap ? never : f + next;
+                g.max = 13;
+                g.unitScaling = (difficulty < 0.4 ? rand.random(2.5, 5) : rand.random(1, 4)) * scaling[ctier];
+                g.shields = shieldAmount;
+                g.shieldScaling = shieldsPerWave;
+                g.spacing = space;
+                return g;
+            })());
+
+            //extra progression that tails out, blends in
+            out.add((() => {
+                var g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
+                g.unitAmount = 3 / scaling[ctier];
+                g.begin = f + next - 1;
+                g.end = f + next + rand.random(6, 10);
+                g.max = 6;
+                g.unitScaling = rand.random(2, 4);
+                g.spacing = rand.random(2, 4);
+                g.shields = shieldAmount/2;
+                g.shieldScaling = shieldsPerWave;
+                return g;
+            })());
+
+            i += next + 1;
+            if(curTier < 3 || (rand.chance(0.05) && difficulty > 0.8)){
+                curTier ++;
+            }
+
+            //do not spawn bosses
+            curTier = Math.min(curTier, 3);
+
+            //small chance to switch species
+            if(rand.chance(0.3)){
+                curSpecies = Structs.random(species);
+            }
+        }
+    });
+
+    createProgression.get(0);
+
+    var step = 5 + rand.random(5);
+
+    while(step <= cap){
+        createProgression.get(step);
+        step += lib.int(rand.random(15, 30) * Mathf.lerp(1, 0.5, difficulty));
+    }
+
+    var bossWave = lib.int(rand.random(50, 70) * Mathf.lerp(1, 0.7, difficulty));
+    var bossSpacing = lib.int(rand.random(25, 40) * Mathf.lerp(1, 0.6, difficulty));
+
+    var bossTier = difficulty < 0.6 ? 3 : 4;
+
+    //main boss progression
+    out.add((() => {
+        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        g.unitAmount = 1;
+        g.begin = bossWave;
+        g.spacing = bossSpacing;
+        g.end = never;
+        g.max = 16;
+        g.unitScaling = bossSpacing;
+        g.shieldScaling = shieldsPerWave;
+        g.effect = StatusEffects.boss;
+        return g;
+    })());
+
+    //alt boss progression
+    out.add((() => {
+        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        g.unitAmount = 1;
+        g.begin = bossWave + rand.random(3, 5) * bossSpacing;
+        g.spacing = bossSpacing;
+        g.end = never;
+        g.max = 16;
+        g.unitScaling = bossSpacing;
+        g.shieldScaling = shieldsPerWave;
+        g.effect = StatusEffects.boss;
+        return g;
+    })());
+
+    var finalBossStart = 120 + rand.random(30);
+
+    //final boss waves
+    out.add((() => {
+        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        g.unitAmount = 1;
+        g.begin = finalBossStart;
+        g.spacing = bossSpacing/2;
+        g.end = never;
+        g.unitScaling = bossSpacing;
+        g.shields = 500;
+        g.shieldScaling = shieldsPerWave * 4;
+        g.effect = StatusEffects.boss;
+        return g;
+    })());
+
+    //final boss waves (alt)
+    out.add((() => {
+        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        g.unitAmount = 1;
+        g.begin = finalBossStart + 15;
+        g.spacing = bossSpacing/2;
+        g.end = never;
+        g.unitScaling = bossSpacing;
+        g.shields = 500;
+        g.shieldScaling = shieldsPerWave * 4;
+        g.effect = StatusEffects.boss;
+        return g;
+    })());
+
+    //add megas to heal the base.
+    if(attack && difficulty >= 0.5){
+        var amount = Mathf.random(1, 3 + (difficulty*2));
+
+        for(var i = 0; i < amount; i++){
+            var wave = Mathf.random(3, 20);
+            out.add((() => {
+                var g = new SpawnGroup(mega)
+                g.unitAmount = 1;
+                g.begin = wave;
+                g.end = wave;
+                g.max = 16;
+                return g;
+            })());
+        }
+    }
+
+    //shift back waves on higher difficulty for a harder start
+    var shift = Math.max((difficulty * 14 - 5), 0);
+
+    out.each(cons(group => {
+        group.begin -= shift;
+        group.end -= shift;
+    }));
+
+    return out;
+}
+generateWaves(0.5, new Rand(), true);
 const schematicsModifier = (() => {
     function createPart(schem) {
         const part = new BaseRegistry.BasePart(schem);
@@ -276,12 +465,12 @@ function createWrekGenerator() {
     //  v
     // 两极
     var arr = [
-        [Blocks.water, Blocks.mud, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.darkPanel1, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.darksand, Blocks.sand, Blocks.darkPanel2, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.darkPanel3, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.basalt, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.darkPanel1, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.darksand, Blocks.sand, Blocks.darkPanel2, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.darkPanel3, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.basalt, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.deepwater, Blocks.water, Blocks.darksand, Blocks.mud, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.darkPanel2, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.water, Blocks.grass, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.sand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.water, Blocks.grass, Blocks.mud, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.darkPanel3, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.water, Blocks.grass, Blocks.grass, Blocks.mud, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.sand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.water, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.darkPanel3, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.water, Blocks.sand, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.moss, Blocks.stone, Blocks.snow, Blocks.iceSnow, Blocks.dacite, Blocks.space],
         [Blocks.deepwater, Blocks.sandWater, Blocks.sand, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.darkPanel4, Blocks.basalt, Blocks.basalt, Blocks.snow, Blocks.snow, Blocks.iceSnow, Blocks.dacite, Blocks.space],
         [Blocks.magmarock, Blocks.hotrock, Blocks.sand, Blocks.sand, Blocks.darkPanel5, Blocks.moss, Blocks.basalt, Blocks.hotrock, Blocks.basalt, Blocks.ice, Blocks.snow, Blocks.ice, Blocks.ice, Blocks.space],
@@ -575,12 +764,6 @@ function createWrekGenerator() {
                 if (this.ore == Blocks.oreScrap && rand.chance(0.33)) {
                     this.floor = Blocks.metalFloorDamaged;
                 }
-
-                // Walls to space
-                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
-                    this.floor = Blocks.space;
-                    this.block = Blocks.air;
-                }
             }));
 
             this.trimDark();
@@ -589,7 +772,16 @@ function createWrekGenerator() {
 
             this.tech();
 
+            this.trimDark();
+
             this.pass(lib.intc2((x, y) => {
+
+                // Walls to space
+                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
+                    this.floor = Blocks.space;
+                    this.block = Blocks.space;
+                }
+
                 // random moss
                 if (this.floor == Blocks.sporeMoss) {
                     if (Math.abs(0.5 - genNoise(x - 90, y, 4, 0.8, 65)) > 0.02) {
@@ -607,7 +799,7 @@ function createWrekGenerator() {
                 }
 
                 // space corruption
-                {
+                if (this.block == Blocks.air && this.floor != Blocks.space) {
                     if (isMetalFloor(this.floor)) {
                         if (Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) > 0.20 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
                             this.floor = randomBlock.random();
@@ -780,7 +972,7 @@ function createWrekGenerator() {
             Vars.state.rules.waves = sector.info.waves = true;
             Vars.state.rules.enemyCoreBuildRadius = 600;
 
-            Vars.state.rules.spawns = Waves.generate(difficulty, new Rand(), Vars.state.rules.attackMode);
+            Vars.state.rules.spawns = generateWaves(difficulty, new Rand(), Vars.state.rules.attackMode);
             wallModifier.post();
             schematicsModifier.post();
         },
