@@ -23,12 +23,13 @@ exports.dimensionShard = (() => {
     v.explosiveness = 0.2;
     v.hardness = 5;
     v.radioactivity = 1.4;
-    v.cost = 1;
+    v.cost = 1.1;
 
     const ore = new OreBlock(v);
     ore.oreDefault = true;
     ore.oreThreshold = 0.92;
     ore.oreScale = 26;
+    exports.dimensionShardOre = ore;
     return v;
 })();
 exports.fxDimensionShardExplosion = new Effect(24, cons(e => {
@@ -59,7 +60,7 @@ exports.spaceCrystal = (() => {
     const v = new Item("space-crystal", exports.spaceCrystalColor);
     v.explosiveness = 0.5;
     v.hardness = 6;
-    v.cost = 1;
+    v.cost = 1.4;
     return v;
 })();
 
@@ -67,7 +68,7 @@ exports.timeCrystal = (() => {
     const v = new Item("time-crystal", Color.valueOf("9b3db0"));
     v.hardness = 7;
     v.radioactivity = 0.7;
-    v.cost = 1;
+    v.cost = 1.45;
     return v;
 })();
 
@@ -77,7 +78,7 @@ exports.hardThoriumAlloy = (() => {
     const v = new Item("hard-thorium-alloy", exports.hardThoriumAlloyColor);
     v.hardness = 8;
     v.radioactivity = 0.8;
-    v.cost = 1.1;
+    v.cost = 1.43;
     return v;
 })();
 
@@ -86,7 +87,7 @@ exports.dimensionAlloyColorLight = Color.valueOf("69dcee");
 exports.dimensionAlloy = (() => {
     const v = new Item("dimension-alloy", exports.dimensionAlloyColor);
     v.hardness = 12;
-    v.cost = 1.2;
+    v.cost = 1.8;
     return v;
 })();
 

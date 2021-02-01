@@ -59,6 +59,7 @@ const { unitTeleporter } = require('tech-ds/unit/unit-teleporter')
 const { dimensionFall } = require('ds-common/planets');
 const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 const { coreConstructionPlatform } = require('tech-ds/effect/core-construction-platform');
+const { hardPhaseSpaceBridge } = require('tech-ds/distribution/hard-phase-space-bridge');
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
@@ -92,6 +93,7 @@ lib.addToResearch(ionCollector, { parent: timeCondenser.name, });
 lib.addToResearch(dimensionAlloySmelter, { parent: ionCollector.name, });
 
 // distribution line
+lib.addToResearch(hardPhaseSpaceBridge, { parent: phaseSpaceBridge.name, });
 lib.addToResearch(spaceUnloader, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(resourcesDispatchingCenter, { parent: spaceUnloader.name, });
 

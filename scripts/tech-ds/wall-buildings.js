@@ -23,10 +23,10 @@ const dsGlobal = require('ds-common/ds-global');
 var shardWall = extend(Wall, 'shard-phase-wall', {});
 shardWall.size = 1;
 shardWall.health = Blocks.phaseWall.health * (9 / 8);
-shardWall.requirements = ItemStack.with(Items.phaseFabric, 6, items.dimensionShard, 6);
+shardWall.requirements = ItemStack.with(Items.phaseFabric, 4, items.dimensionShard, 2);
 shardWall.buildVisibility = BuildVisibility.shown;
 shardWall.category = Category.defense;
-shardWall.buildCostMultiplier = 6.5;
+shardWall.buildCostMultiplier = 6.6;
 shardWall.flashHit = true;
 shardWall.chanceDeflect = Blocks.phaseWall.chanceDeflect * 1.2;
 
@@ -63,7 +63,7 @@ var wall = (() => {
     block.requirements = ItemStack.with(items.hardThoriumAlloy, 6);
     block.buildVisibility = BuildVisibility.shown;
     block.category = Category.defense;
-    block.buildCostMultiplier = 6.2;
+    block.buildCostMultiplier = 6;
     return block;
 })();
 

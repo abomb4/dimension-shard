@@ -1,7 +1,10 @@
 0.23:
+Reconstruct the planet, generate a wreckage map, and generate a dimensional technology schematics;
 Add a Changelog dialog;
 Fix Unit Teleporter effect;
-Add 2 armor to Lightning
+Add 2 armor to Lightning;
+Adjust the price of the fence, now the hard thorium fence is the strongest fence (the construction time is the longest except for the plastanium);
+Adjust the value of each item;
 
 0.22:
 Added a reminder of ‘Need Dimension Technology Core’ on the Bomb Teleporter;
