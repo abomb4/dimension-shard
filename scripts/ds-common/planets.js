@@ -1034,4 +1034,4 @@ function createWrekGenerator() {
 
 wrek.generator = createWrekGenerator();
 
-PlanetDialog.debugSelect = true;
+// PlanetDialog.debugSelect = true;
