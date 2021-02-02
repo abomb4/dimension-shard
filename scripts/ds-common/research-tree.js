@@ -60,6 +60,7 @@ const { dimensionFall } = require('ds-common/planets');
 const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 const { coreConstructionPlatform } = require('tech-ds/effect/core-construction-platform');
 const { hardPhaseSpaceBridge } = require('tech-ds/distribution/hard-phase-space-bridge');
+const { darkLight } = require('tech-ds/turret/dark-light');
 
 // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
 lib.addToResearch(phaseSpaceBridge, { parent: 'phase-conveyor', });
@@ -118,6 +119,7 @@ lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(bombTeleporter, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(dc, { parent: bombTeleporter.name, });
 lib.addToResearch(ionBoltTurret, { parent: bombTeleporter.name, });
+lib.addToResearch(darkLight, { parent: ionBoltTurret.name, });
 lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, });
 
 // effect line
