@@ -20,6 +20,15 @@ exports.modName = "dimension-shard";
 
 exports.mod = Vars.mods.locateMod(exports.modName);
 
+exports.s = function(format) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return format.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+        ;
+    });
+};
 exports.loadSound = (() => {
     const cache = {};
     return (path) => {
@@ -45,6 +54,24 @@ exports.floatf = (func) => new Floatf({ get: func });
 exports.loadRegion = (name) => Vars.headless ? null : Core.atlas.find(exports.modName + '-' + name, Core.atlas.find("clear"));
 exports.int = (v) => new java.lang.Integer(v);
 
+exports.executeTimer = () => {
+    const disabled = true;
+    var last = new Date().getTime();
+    return {
+        updateDuration() {
+            if (disabled) { return; }
+            last = new Date().getTime();
+        },
+        printDuration(prefix, postfix) {
+            if (disabled) { return; }
+            if (!prefix) { prefix = ""; }
+            if (!postfix) { postfix = ""; }
+            var theLast = last;
+            last = new Date().getTime();
+            print(prefix + (last - theLast) + postfix);
+        }
+    }
+}
 /**
  * Get message from bundle, 'type.mod-name.key'
  * @param {string} type the prefix such as block, unit, mech

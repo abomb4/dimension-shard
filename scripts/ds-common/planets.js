@@ -225,7 +225,6 @@ function generateWaves(difficulty, rand, attack) {
 
     return out;
 }
-generateWaves(0.5, new Rand(), true);
 const schematicsModifier = (() => {
     function createPart(schem) {
         const part = new BaseRegistry.BasePart(schem);
@@ -267,7 +266,7 @@ const schematicsModifier = (() => {
         // Super Spectre
         createPart(Schematics.readBase64("bXNjaAF4nHVSW3LTQBAc62FJlmU55X9KCfxR+oEbUHCCnEBIg70VS6usJCe+AR+cggNwQEyy9EgxVLmgttYz09s925o1bWjjkNcUNVP2UdXcdEo32aeG62P2oeg4ux1aNtlty2VPccVdaVTbg0OU0KvqrMi7XWGqvEed6wObyqgD0+t/npe6bg13HVe56bd0fUnq2qLkfK/uBwVF0dxR0Mn1hmldmFobCEvdHPioDS1a/cAmb3TF9Oay03TnThs11CKpBtVTODR7XVRsKH0oemj5sTdF2aPZzWWDdocRvBj6bFS1ZXp7yflb91zuGr3X2yMuM5y//8+AxAlQcVCao/6ylw+t1SMAondEM5qTM0OIiPA45JLjIgCUPJqqWCpPKod8Sgm5L5UPnhuGUDtY+LVP5FqL4xkIZE80x3bBmgNzAoQI+MYJKYAAZSB4hOAH8ONZa59RgOjL6QKXwJcASwAxVoC/wkwEaQDyN+zvFGLBfYzgCTsc5fGYiW5NS2SwvRTT4iMaGWuS7Nw5QmcYi+hK6oXMIkA4t1q8tAqRpeI5xjmu/4r9A+fxn5bxyMSnIkuE8kvcAYhpJUkyDTmRIQfiaRyJAJjzHABYPkIaivjZPmGjBWbr2BPyE9r59icMJtOrraYnWUnlIY/kWa8k/AbO6ccY")),
         // 3 Ion cannons
-        // createPart(Schematics.readBase64("bXNjaAF4nHVS227TQBA9vsRO4iZ20haEkLgIIYSQn/oHCF74C8fetobYDmuHNr/BCxJvfBV8CBKUNl3ObHqRUjVW9szOzpw5M7t4jKkLv84qhf13ZaXqtmzqZ+9rVa2evc1adYCoUG2uy0XHA2Af0+I6LG2PM12kRY6wa5fkKPF0+3DWVLO0U3O1aHSnNJ5vB7SLLFfpvPy8LIu0y+pPiE8yRqbqtNNZ3jUaw0VzQkfdFApjZhfpQjcflT17tc1nl8UxpV9Rz3RZHCmEeVMXy7JD2OZZJ1LupBbqcE7W9LDRzLut8fpO4M0+16u2y+bpzFKu8HI7VAmjLvO0JVOVdkutVYck01WjVZFS1Be1Yo3ktsd0nmkK7i/reZMVFPrm/vqdyo/rZt4crUilVXqAJ9vBHfdSp6CXZDElN4dzmXZVnopjM6BbKS/uYagWWrUtRevuCMAHwIELV5YeHBceYnDxxck3hR1wkc/tMSDoO+bCXCCgHcITGMALCePQGPOD/59MC5AAfQJJfIIHN7A5nkAEb0AYwe2TxIb0BYbkYkgE697BkJ/j0TmGExHo9JjMyIgn3I24o7AxodcfCYk5B8w/CUFA9LmnCPPHnDHeYZZnLs2a3znxzBgWi4QpJIykg+/8/yLxjhDHhLAH7Hkyh1imRClwYmr36Z+wzZjpEMeQjsSZQEQ5U8JIBjOWBRQBDL2YW8mLrCUJkePTiqVUbB2Bs0srkhz5ucymClF2wa3jyqkV+k2Eej1ux/0e25V7MWz+kiMEesaQMrHVEkesa3nJRl6ykTeBL2S/RR4TJjeiJiT29rArjyLG1I4hsY4BeCz9eS72WJgRuwj7A7PmuNccu0Fg+3XskNe0fPOXuvjAnICxvP6YmRvGkJbt56vtJ+B2LOf7G+nW6l3VfiB3KI6BdQS0dkTkQ96VI8DnAkIsk3tE2xPgM/0PtSczfg==")),
+        createPart(Schematics.readBase64("bXNjaAF4nHVS227TQBA9vsRO4iZ20haEkLgIIYSQn/oHCF74C8fetobYDmuHNr/BCxJvfBV8CBKUNl3ObHqRUjVW9szOzpw5M7t4jKkLv84qhf13ZaXqtmzqZ+9rVa2evc1adYCoUG2uy0XHA2Af0+I6LG2PM12kRY6wa5fkKPF0+3DWVLO0U3O1aHSnNJ5vB7SLLFfpvPy8LIu0y+pPiE8yRqbqtNNZ3jUaw0VzQkfdFApjZhfpQjcflT17tc1nl8UxpV9Rz3RZHCmEeVMXy7JD2OZZJ1LupBbqcE7W9LDRzLut8fpO4M0+16u2y+bpzFKu8HI7VAmjLvO0JVOVdkutVYck01WjVZFS1Be1Yo3ktsd0nmkK7i/reZMVFPrm/vqdyo/rZt4crUilVXqAJ9vBHfdSp6CXZDElN4dzmXZVnopjM6BbKS/uYagWWrUtRevuCMAHwIELV5YeHBceYnDxxck3hR1wkc/tMSDoO+bCXCCgHcITGMALCePQGPOD/59MC5AAfQJJfIIHN7A5nkAEb0AYwe2TxIb0BYbkYkgE697BkJ/j0TmGExHo9JjMyIgn3I24o7AxodcfCYk5B8w/CUFA9LmnCPPHnDHeYZZnLs2a3znxzBgWi4QpJIykg+/8/yLxjhDHhLAH7Hkyh1imRClwYmr36Z+wzZjpEMeQjsSZQEQ5U8JIBjOWBRQBDL2YW8mLrCUJkePTiqVUbB2Bs0srkhz5ucymClF2wa3jyqkV+k2Eej1ux/0e25V7MWz+kiMEesaQMrHVEkesa3nJRl6ykTeBL2S/RR4TJjeiJiT29rArjyLG1I4hsY4BeCz9eS72WJgRuwj7A7PmuNccu0Fg+3XskNe0fPOXuvjAnICxvP6YmRvGkJbt56vtJ+B2LOf7G+nW6l3VfiB3KI6BdQS0dkTkQ96VI8DnAkIsk3tE2xPgM/0PtSczfg==")),
         // Super Foreshadow
         createPart(Schematics.readBase64("bXNjaAF4nH1TzW7TQBAe/8Re/8ZJ2yuKAAkB8olXAF6AGzc33jZGiW3WTkufAHHiGThw5+mQ2iYx3+zSlLYqsdYz6/nmm29mN3RERza5dbGSNHtbrWTdVU09e1fL1cXsw7qVava+UbJbFGVzTlEpu7mq2h4YoimlwJd5q5pPct43iqblDUOODFXm5ZzCtjmXKq+bUlJ4csv14gFWnixBkwMzl/+QPrsP7LHP582qBVcny1z1p/T0PqhdFJ3Mu7YA17GqylNJ47m6aE6W66rMV9UXqUis62VTlPCe3083hRaNqtYr1KrLddXTq/+iltVnplbNugfj6wft7fe9nC/qZtmcXoBZyfwNjc8L5OTyS68K3fOTR3quS3yVj8WbM6lKVZ1JStr1spN74dntGeTLQmEWLx+Xhyl1fbHMj4seoi6I6CMWjYgsPAFZFtmUkGORA4fYjMi24fvCHXbDDmAPO4es4Rq+Qz6jXJrAhQnJ4oyEbBc4l5k9QOwRXoh52GX+MAzfsX46zHVAjo9gRho45SD/ds4IclBbkCAf+jLtib0X770EXqy9VH/z4I0hi1zw/AaLwG122KBWCHPIWgPuz4bxBbocrrQfCGgdNthvhi0atIcrPBssND5cUoQnIVAElI2M4gCtwwnogKXvWDtqBShix2jZ52BIAeuxENsgOaQQyRHGGlImwmHgcaLmVtfmofIMeaoudFlaz07ThqaFkFuwKAYGciLSg4xoxAq+Yf1CKIIG1Ir2QiMjNPorlI8djBEL9YC/kxwDSPxVsG4MCq6NlYlAXxQbuK25AsOl1r2F1h3WBv41SsdGacxKU0rRiz2GVsFTSYy0ZC8tMdKSu9ISM8OUtYxhhNlFxuCK+TBjPsmUi3kwh5z/FesHRGY8nhgIwS2MKeRR64PdYW10I65uxgx4g+g1IgOG7gE/uRFjO0x2wGPO+GVBrsfdZTgJvtEU3UC58YyHxSYlO4PJhM38/K9xJkgVpE1gTGiMPsQpxyxUioxJjZmYGAT8AfgCcOQ=")),
         // Core high defence
@@ -277,15 +276,19 @@ const schematicsModifier = (() => {
         // Two Dark Light
         createPart(Schematics.readBase64("bXNjaAF4nHVT224TMRCd9V5zv9FL0kIr8YAQ2if+AJX/YJN1k8BmN/JuW/KIxAcg8Qm883s0aZLljJ2mUgptvOOxx2fO8YzpgnqCnDSaSepfTWcyzadZevkxlbPF5Ycol5dXkfpCtVjmIzWdF9gk6lATgXE4V9lnOSoyRd348WiYTyIVh/GILg7XhtlsGBYykfNMFVJR6y6CCeXXQkUapT3P7rCQZrEMk0iNJQ2e4YJNmEzHk4I8ld0wzJvDGP2ZT0A+zOfRSIZDNY0B9vYZ2N4fqUVeREk4jApALuj1YWgBPxxls7mSeS7jUBXj54ljeZ3gPsLrTCHr0+1Un3RRcJMmWRSD96t/5shupYrV9FbSu//TLeRokmZJNl6Ak5Lhezo7DDbKb6ObpKAG2IZjmUoVMR2iTxgkyLbIohom+GuwJ8hlz6KAbA5ACH7UJGHD+GSxqRhTQxhMmyMdRnDwbwdeuaGgXFMV1i3XZUk2ZlRuAOEwvAscDeFSnciDAbzApM3GBxwieVn4ME2/LMufGL/Ay+c0zEMf9HEQXsChApAtNlWwEpzA5oM/MH6LAK7DqBU+WAFzELUR6hkTGFMl28FePWiBPoH6plwx8XJZ3gPnHrMHPefvkhx81+Wf8p5E+QBvC6EPTAEYUFRFrg5ZwCMvsPm6cX6D71rUsea7RE3BSgImikTk6Y3KfqPKGxuMpWCUWmBxkNVgdEJsgxzEtiGvwVfAC55eaOIqKoRPE0vE6y2sdwRfkUt2m2+ay9WG1gCMttCx5R3chMBwdE8IrYv1tHVGqCHSoh7Tdkzazi5thXp8sTXqQrGjG8yFYltrWCGwu1fdhWoWs1Pd3avuQjXXWKt24KIaurss1ITRPD1fIWKJNuOqbGG51bgyqAf2A/D2tb8C7a7prxfcGDYo6qL3TNF7XHQbe3UOOeIW8mF073zf9c6R6Z0jiMXvhHuX6JhJCni6W4/5vA3PZU0nSIi9U75mG6bOoKemk7/tOrkPEHRbHw+Gn0WgewMzHOgblL55dQPz6gbmyQz41Qk6MwU5M0/43Dzac347Fr3k4v0FujBiDA==")),
         // An Electric Storm and a Dark Light, monster like
-        createPart(Schematics.readBase64("bXNjaAF4nHVU227kRBAtX8b22J6x5xoS0LIIIYSQn+ALEHyIY3cmZn0Z2p7Nzl8gXhC88VXwAXwCD2zYxJzqSjZRop1R+3SXq0+dqq42vaBTm9w2bxRtvq8a1fZV1778oVXN8eV3ea++pahUfaGr/YAXRCe02dd5P+RtdWiyq7yuszrXO0XJVT4onak3g86LodM0P9dVuVNZ0bXloRpotj/U/cPy0/I+WtZf5rrMzrvmPBtUrfadBhOF++4KhG1XKprDtcz2uvtRGe4vn242j/0lBGf9Pi9UJsHJ74t8YLZnO0p1UYMsu+g03B+ov3rm+H5d6CMSr7NzQ3mkL566KmbUVZH1YGqy4aC1Guizp26isK5+OlRlhkq+ojTXTadVydV5rY6QkT5kf1fg4NDWXV4il68/LHFQxWXb1d3uCCqtsm/oxVPnAWtzCrCCLEFW3UXNUprqDQzLZ+wFJQ9nKfLOnjnl+hVS2l0O9PkHIjZ7rfoeSephR0Q/Y5CNP34uWQyeQCAQCsQCc4Elmd+aHxalbLRoe09lW3i4ZPPc82F0+I3jYOkLBAJTgVAgEogFZuS42LhmZgeaHIZAIBSIBebs6dLCBBEVrqhwRcVEVJgcnQmWUYDkxncYb8cR4wbjlhwMa7zF6nb8DxEnHIABAXzAyofzHxh/2i5eb5hugqtoc8lMPI/jMfhke4CQ93uojxMAlqzFf6yFsDT7A9kfyP6A909RHewPsYrJjjBPyIphXHG1Aw7PBXzEFmIZ8zwUtlDYQmYLAXfvzMbo8cYZllOy54AwSFgM8qfx2hymB3S5HuNbEDGd1OkGhbjhP+bXmF9jfg0NEcfxAUsu1+8Yf9lkYkNLLJJiljQjzsZOAPEEveSwfU3G2RziTPppBqlg+Q3jbyfBcgrvBYrKO4kNCQyptcAMnbgELMlZ4Y3DBUu4n32cYeCb3kYJwDI3LJGZ8fbIsjAz0ecSPZFHYl571hqz1Je2Jxv9kNCCZb3jG2DzW5Pvr5wveiyhVTABG7psHFHLW3QKumUckW9qYqcWz+6lpyI9ZemwQIJN0tEMmG9w7iaRBU050D+cCMgW7+UvIN/Zwg03FmpMUVNjwKW1YDDUS6Fe8QMtTXEwxRG6GB6EcrcSXwG+Q+O/kM23B61gefBFHycIIsQ+ZiblX0zKHpYrDrCWABt+JACTq8Oz8E7Qlj8mbJgbA9+kBV/hE4SCfUv+neMJ+sNiQOevAOZzsxX+E8nilO8o0UdiPJWGPkWXoQHOTL9iNRdIBZYCa4Yz/gQRfcwbGCKBGcMn/NFhwEfnf0NidVA=")),
+        createPart(Schematics.readBase64("bXNjaAF4nHVUXXLbNhBekBRJUZRI/bp2O2k6nUwn0+FTeoJOexBahGU2lKiCVB1dIy+d9K2nag7QI+QltmX2W6wcp/ZEGuADFsC33y4WpGd06pC3ydea5r+Ua71pynrz/NeNXu+f/5w3+icaFLpZmnLbYoHohObbKm/afFPu1tlVXlVZlZuVpuQqb7XJ9JvW5Mu2NjQ6N2Wx0tmy3hS7sqXhdlc1D9Nvi3tvWXOZmyI7r9fnWasrva0NmCja1lcg3NSFphG2FtnW1L9py/3D48O2215CcNZs86XOxDkFzTJvme3JiUJfVCDLLmqD7Q/UL59s/DRfmj0Cr7JzS7mnF4+3amY05TJrwLTO2p0xuqXvHm8ThVX5+64sMmTyNaW5WddGF5ydP/QeMtKH6I8JDnebqs4LxPLjlyW2enm5qat6tQeV0dkrevZ4c4u5vQVYQZYgqvqiYinr8g0MkyfsS0oe7lLknT3ZlJvXCGl12dL3X/C43hrdNAjStCsieotGDv74eaQYfIFQIBKIBUYCE7K/GXeKUjYqWtxTOQqdRw6P/QBGl1dcF9NAIBToC0QCA4FYYEiuh4MzZnahyWUIBSKBWGDEOz0aWyeiwhMVnqjoiQobo9vDdBBGXdd97A5od+Siqe4Os7vupuvgi3lU9xHtFrMeO2KAowAwDXD4b7R/HA/Lc6bt4Uk6nDrr12e/DAE5PiDi8z7y5IaACWsK/q8poCRkHR77h9ceFgLhDIUzFM6QOfvIHDgjzGJyBhgnpGIYp3wTIUvi5H7mIcI05nEkbJGwRcwWAY5r9uDg84NDTPvkjABRmHQ3RN01OWgexj5yxMk42H/XXaO/ltIBqu5AyjrktITQMGA/AWDCp/5Ce++Q9Q0tsUiKWdKQOBonAcQ91JnL9hnZzfaCh1JrQ0gFyzu0f90E0z52j5FoPklsSGBI1RgjVOkEMCF3ihWXE5ZwrQe41zCwdY8UgGVkWQZ2xMcHSmFkvY/EeyJdYpd9NcMoDeRJkIMaSWjMsm75dTi8auP9k+PFXSc0DcPuFjdNtvIOYFY2ny5sPW6g6UFwGDo4c4McH9iF1ZUqHt2HlUpYKYcFC+Q5JC+BAeM5asIGOaY+i/jAQSKx40+hjRGau8A2vHQotQlPrQGPXcFgqSdCPeUOT4DisA9RHppvSxbPh0sDD+j2+P56nFDlYy/qPoETIQ4wsul4a9PhYzplBzNxMOcuAdhYXR5FR0EL/gixYWQN/PLG/PRP4Ar2BQXHjSeoHcWAVzEF2M/UQvhPJIpTftNEX4nxVIr9FLpRHGeoQMWzkUAqMBGYMZzxp4voaz7AMBAYMnzDHysGfKz+A30lh7I=")),
         // Unbeatable
         // createPart(Schematics.readBase64("bXNjaAF4nH2VDXbaRhDHR0IIffApsMHEsZ2X9vW1r7pFe4QeQKCNoRGIChHH58k9eo2ew23q2oCt/mdnnbyHkxgvP412ZnZmdnah13Rqk7NMForGv8wXarme58uLX5dqcX3x23KikjKZZIrCVK2nxXxVYpboBR2tsmRdJsv5ZhFfJVkWZ0lxqagNB2m8KvLf1bTMC+pcJaUqYvW+LBL94jx9WiNez5IijflpkmdlXG6KQpXPFSb5YhKXKlOrvIAv+u5QQX+Vs7zgWKb5Mt3MSwpW+RUWXuaposbTy5++aZrN/9jM07jIN7zMD1/UXc2StYrXq2Sq4kkxT5FyZ1pc528yNl3M38Oy+3lpU5XgTV4oeEnzKzo79FtC1mHjLazHh/NpUrxFbJezkl4dzkkgJnDsxtvnYafqTYa9iBECVD/vjLdZZnmSYsUfn5l8kpEaNjmLJ0mJmlzTz4eqSCvfwPEaRgimnM7my8t4qpbltx2Xajpb5ll+eY3UC/WVquTvVJEW83eKvj+cV5xUMZ/GaySzeGqe118p7mKFQNcK8ZaX5HKPIryXX2rFaZ5lUqDoWfRTIvqT9F+Nv2yBI3AFniAQNAVtQVcQCQaCY8FIMIZX/ieytP8aoy5oCHyq2UAoaAk6gp6gTzWY0pB92uLTkVDr7KyOhyZH7FDLc6tHsjEcDDxXe4wtpDus5yByDbhndAU9QSToC3Q6Di9mYQ3E7gEe6RV9kQKRQpGaIrVEapNOVOdRlzzq7NoHjhpVVX3A+EvXmdjQFd+uOHXFm8tuWAVROHoragHib5DF8AWhoEWWC3Q8VrRhY+uPVd0Svx94Fgpi1XhWb5HHnkOg7gXVnryqoqB6IAIdbJZTPeCz1bJbbXURXauJRXvSFgipBQmxMHxBKEAs3DK6U5rcUBakIy5nKI0RsHkHc8iJEQp0XzWltVpctBBS3+MtaLI9T+oNaaEXtHddnTY1oNMDO3WCWYSnPmkMWLsttm0po+7aPtQaLmWV/O25/Q0DcAe2jNzW+yPk0SHSNWga+oauIXd7F7ZblsH/2Ab8iPHIMvvFuOOYDG1Dx9AFb838rZm/NfO3Zv7RrLM3fOD4TOzMe8MbY39j/N2YOG5MHB+NjWN81g09LozuETltock5NHXwjf87UzNNE9ve6Hlm7sH43xn/O6PHbBh6hj4T42/dBuLDNntA1gA1brHzDvW8dnXHqXCzIkRXq7n63O/wbov09nC/xecey6JwGDY3dy2CvW6RjrRIRxqqK/dZV+a6POcD+sD+K1clRLTREaYjsiNEA51j6OvLKZJbqS/PEc/xw5g1+yINSPcJ8qizryF6U6sPWGsECafWBmrcUUfkeThanB7vCdKyUZtHrhP6y8Kwkdyu2tWGONUBWT2YNLXjCE84h4w2WTytG/9YLudjXiYAcH22ANzFQ8QCAwcYyUWuAxpKQJxerQdEJuyR3JAj8TdirRM64VPA8DmUEYUmlBEKjBhO+EyzuvZ8wjZDPDc5zBO+K/m+HcnvBhk9Lt2YbwZGh6+EMa6EgOS25d+UOsqDZ+wxlNERFZ733GaQ9rh6xlLNsVwdL9iG4fCdc4rM7RCS77mfakzVPZ8f1Pked+B9rQs1PvWA/iE75XuO0WdPp+zeoZcS+CmvUqMzLpePlz63zj/m6JxJaudcbgdoCjpc9XOUyeI5HeyZ/Mqd61NGF9J5F/Lyle5hwBG4Ak8QCJqCtqAriAQDwbFgRNb/C8OLHg==")),
 
         // -- Not important --
-        // at coal, idiot schematic
-        createPart(Schematics.readBase64("bXNjaAF4nF1QS07DMBB9SVra5ldVQqRlyQ4hb7iR41htpCSObFelN+A6nA2JFRBm6gWUxejZ4/cZD3a4jzEbZK8R62dkjXbKtqNvzQCscOOUseqAh6bt9eCoK9xB2kaMB+m0cKNUWtS2bfYa65P02gr94q1U3ljcKtPXR8deYq8HbSV3s9brXjhztEojqzvpvGhs23XYONNJK0Y56E7QiTwf/+f+3pU9Oy87UUtPsWekozlR/GAaDeCJCiUSIEKBJCIoF9M0vVK9Rdxd82PMnBgplkgSgjRAFiAPQPoZQTkH5vGcuhkbZsHwg4PIKSfL5Ia4CxbltDtq5MQBH4D0wtkytWAFjxX9naigYUhZBGURlKDH94ukCpLttWTHfiVHJwQXZRmUK4TgkjMX9NsVc9b0j4ghC5AHoFGWBOUymb4p84vqE/ydDcsYcg66Cxutwkar641WYaNb5vwADDh5kQ==")),
+        // at titanium, plastanium ripple
+        createPart(Schematics.readBase64("bXNjaAF4nF1PQVLDMBBT7KRNk5QOH+DAjYNPvMhNDPWME2fslNKP8Ra+Qqc0yLnAcNjR7lrSytjiTiAfdG8gzDPqzsQ22HGyfgDucB+900GNejBOsXs1WPF5dMTeDJ0J2J30ZIIy71PQ7eQDHjvLp0gHFQ86dGo86GhUHHVr1D7YbjHxR6pQ28n0KvpjaA223ro/PtXoTzQefGewi9bZNjn2xi1CR8+gumCdQxG1e/PYtV471ZphCvblyCtP/5P8zm04x4nsvZ5odwbwAGSQEBlhgyxBwzUEVlwj5ywEuxxSEkpk7FCt5/l2ZV1EwbGGTJwGcpWIBXUiZ5eTNn+wPuUaBR2zktuqLIH5wjWLh7L5C3K+sK7I5xsZPEo6c2yQ7GVF6SZdXkEky28GLEWNNdWiIVAiCUvkMglT0iVruWSdr+kaH6tkl4DULT2r9NeajUzQpH8kP/kDuuCH0Q==")),
         // at dimension shard
         createPart(Schematics.readBase64("bXNjaAF4nF2Q3Y6bMBCFDzY4hPx3H6BS7y21j+SE0S4VYGScpPvkVbvt0mNoblaWzueZOTNjwBP2CnnvOoGSb9jUMl5CM8TG98Aen+qmk35kZMcXF2pbX/D5Y+7su7ON0srgQ5SAXYjP9ll6CS76gKMLnQ9S24vvb/LKzJePE2aJLz40187WoWlbnEbfumAH10treXsW7IZrO0oaU1+biMPQujG6PvXcHVsOd8f1Vn7E4C5p8+rsIjOvKOrG14Inf5PA8TexQ/DfZTYdB39nV0/D/z2bJkpnR38NFwHwFchQQWVQKKAzaF60oqwSNNZQGjmPzmkwoBTYYrEvoAUoOUfNXZibmSyYpNMQBdSKMNAJqwUldEmfTpZ1sqTIQK0J1iqki05SQRtKkWpVqq2QqllCtWCDrKTMwzbJuSG4b0uU5WH6g2z6Pb1P70DS6ef0l/rG6I23X3x9DsVY0ZGTOWlIQ+44oyqAI6dveZShzO/dLQt3j8ikX7FPH2+IOXlYLIdHZFLtuESnpXZ6RKz9AyACjo0=")),
+        // at dimension shard, power + bomb teleporter
+        createPart(Schematics.readBase64("bXNjaAF4nB2OwXLDIAxE15jYadw66anHfgHX/g+2Na5nMHgEbZq/75JBo7eIlRBuuBjY6HeByV8YFsmzbkfZUgTOeM8peHWHjxIc1SoY8g/hSrqLop98KaIPfC7bLjGzzeVvr4ub0j65IkGOpHTgTcvqVomiviTFzeueVBY3p/grD1aGKfhc3KJbCLjePZuc/BX1c/UDH0ADC9NQd2cYg7og0VQALYVpib5qy8M4sch0QgdTb3zrmCzanmjQWlTBwkt1VvS14cIRjIGSeK3zQTw/GlnkFiOa5/cjDcS14h9k5Tnc")),
+        // Dimension Shard Power Center
+        createPart(Schematics.readBase64("bXNjaAF4nG1S0Y6bQAw0EMICF0JImutVVSu1T33gg/pIYJVDAjZaSK7355VOKp1hqz6klVDs8XjGxkQ+SuHLaqh6LRtdXsyLtrUeJm0lbfRY2/YytWYQ2UjRtL0eRqByfK5sUza1pOPVnnU5USa70XSVLS/VoLsS2VnL53vNyfSnctKdvhjLIduXCqHUPyZb1ZOxEtVmaK7tJGtrruzIK9sbq5sSxE2/okVdh85UDbiv9/YTMBr7i9XjCI2dzvLtn73/4tq+jlPVladqwqhX+XLf6kyfjW2vfdnYtuvk039nmpu24G9aRL6LeLISX/B4LjxIwGytXIyVN8/zW4DLszHAz5aNIftZWrsQi++j+CB+iKDoFFHAhjWLaxaJ0MlSJl6AlpxmimYh0KJTdImAMsqVkysnV06uyPmScEKIkpKFyUKR3I9RzyWIJYWttwJaHBLnkNCBHIYkQBm51DmkziHgBsGSxfg3IUkRFGUbvH2QgN4JtBucEMWM12NYLDeOy8gxLGjrOnOaKaDsj3vuNt1xU8V8qa+QRbxxzmWJEh5mx4EJQsCdd+SUFE6D2XsIIC2ctHDSglIBlwtkB8zBNfbOYe++2oG2EULA+xyc/ODkB8rX8o4CX45cPwSK+dWOzvOR+Qpo0R2d7ug2flxOJE/czJP3Eil//ikyv82/FpwoDn2ikcgHNPu/AUtHjNU=")),
         // power
         createPart(Schematics.readBase64("bXNjaAF4nD2NwQrDIBBEp0YQLBLaWz/CS//IxqUNJKZoLv37zsZSXPcpOzOLEaOBLWkVGLnjnKVNdX7v81aAAZe2LanGdyqyRL6egmueVymNgtheqeaYJ4RH2nepn58EuAEnHqPN8k84XpbvCAqrEoXlKjbX4TGoK6jvcCkoMYRTg1OJIvwTQRwpvqf4LvE9RbcNCtvhdEPg9JhR8gWHlhuq")),
         // Small DC
@@ -438,6 +441,14 @@ function dumpTiles(tiles) {
     }));
     return res.map(v => "x: " + v.x + ", y: " + v.y + ", block: " + v.block + "\n");
 }
+// (() => {
+//     var rand = new Rand();
+//     var l = 10;
+//     print("Length: " + l);
+//     for (var i = 0; i < 100; i++) {
+//         print("Rand: " + Math.floor(rand.random(lib.int(l))))
+//     }
+// })();
 const ass = func => new JavaAdapter(Astar.TileHueristic, { cost: func });
 function createWrekGenerator() {
     var rid = new Packages.arc.util.noise.RidgedPerlin(1, 2);
@@ -599,8 +610,10 @@ function createWrekGenerator() {
             return genNoise(x, y, octaves, falloff, scl, mag)
         },
         generate(t, s) {
+            const executeTimer = lib.executeTimer();
             wallModifier.pre();
             schematicsModifier.pre();
+            executeTimer.printDuration("wallModifier.pre() and schematicsModifier.pre(): ");
             if (t !== undefined && s === undefined) {
                 this.tiles = t;
                 this.width = t.width;
@@ -622,27 +635,48 @@ function createWrekGenerator() {
                 this.width = t.width;
                 this.height = t.height;
             }
+            executeTimer.printDuration("into main: ");
             const rand = this.rand;
             const width = this.width;
             const height = this.height;
 
             const the = this;
+            var asdoifjaisodfjoiqwejiofjwqefjq = 0;
             function Room(x, y, radius) {
-                var connected = new ObjectSet();
-                return {
-                    x: x,
-                    y: y,
-                    radius: radius,
-                    connect: to => {
-                        if (connected.contains(to)) {
-                            return;
-                        }
-                        connected.add(to);
-                        var nscl = rand.random(20, 60);
-                        var stroke = rand.random(4, 12);
-                        the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 5 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
+                this.id = asdoifjaisodfjoiqwejiofjwqefjq++;
+                this.connected = {};
+                this.x = Math.floor(x);
+                this.y = Math.floor(y);
+                this.radius = Math.floor(radius);
+                this.connect = function(to) {
+                    if (this.connected[to.id]) {
+                        return;
                     }
+                    this.connected[to.id] = true;
+                    var nscl = rand.random(20, 60);
+                    var stroke = Math.floor(rand.random(6, 16));
+                    the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 }
+                this.connected[this.id] = true;
+                return this;
+                // var r = {
+                //     connected: {},
+                //     x: Math.floor(x),
+                //     y: Math.floor(y),
+                //     radius: Math.floor(radius),
+                //     connect(to) {
+                //         if (this.connected[to]) {
+                //             return;
+                //         }
+                //         this.connected[to] = true;
+                //         var nscl = rand.random(20, 60);
+                //         var stroke = Math.floor(rand.random(6, 16));
+                //         print("pathfind x: "+x+", y: "+y+", to.x: "+to.x+", to.y: "+to.y+", stroke: " + stroke);
+                //         the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
+                //     }
+                // }
+                // r.connected[r] = true;
+                // return r;
             }
 
             this.cells(4);
@@ -650,7 +684,7 @@ function createWrekGenerator() {
             var constraint = 1.3;
             var radius = width / 2 / Mathf.sqrt3;
             var rooms = rand.random(2, 5);
-            var roomseq = new Seq();
+            var roomseq = [];
 
             for (var i = 0; i < rooms; i++) {
                 Tmp.v1.trns(rand.random(360), rand.random(radius / constraint));
@@ -658,7 +692,7 @@ function createWrekGenerator() {
                 var ry = (height / 2 + Tmp.v1.y);
                 var maxrad = radius - Tmp.v1.len();
                 var rrad = Math.min(rand.random(9, maxrad / 2), 30);
-                roomseq.add(new Room(rx, ry, rrad));
+                roomseq.push(new Room(rx, ry, rrad));
             }
 
             // check positions on the map to place the player spawn. this needs to be in the corner of the map
@@ -688,33 +722,43 @@ function createWrekGenerator() {
                 }
 
                 if (waterTiles <= 4 || (i + angleStep >= 360)) {
-                    roomseq.add(spawn = Room(cx, cy, rand.random(8, 15)));
+                    roomseq.push(spawn = new Room(cx, cy, rand.random(8, 15)));
 
                     for (var j = 0; j < enemySpawns; j++) {
                         var enemyOffset = rand.range(60);
                         Tmp.v1.set(cx - width / 2, cy - height / 2).rotate(180 + enemyOffset).add(width / 2, height / 2);
-                        var espawn = Room(Tmp.v1.x, Tmp.v1.y, rand.random(8, 15));
-                        roomseq.add(espawn);
+                        var espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(8, 15));
+                        roomseq.push(espawn);
                         enemies.add(espawn);
                     }
 
                     break;
                 }
             }
-
-            roomseq.each(cons(room => this.erase(room.x, room.y, room.radius)));
-
-            var connections = rand.random(Math.max(rooms - 1, 1), rooms + 3);
-            for (var i = 0; i < connections; i++) {
-                roomseq.random(rand).connect(roomseq.random(rand));
+            for (var room of roomseq) {
+                print(lib.s("this.erase({0}, {1}, {2});", room.x, room.y, room.radius));
+                this.erase(room.x, room.y, room.radius);
             }
 
-            roomseq.each(cons(room => spawn.connect(room)));
+            var connections = rand['random(int,int)'](Math.max(rooms - 1, 1), rooms + 3);
+            for (var i = 0; i < connections; i++) {
+                var ran1 = rand["random(int,int)"](0, roomseq.length - 1);
+                var ran2 = rand["random(int,int)"](0, roomseq.length - 1);
+                print(lib.s("ran1: {0}, ran2: {1}", ran1, ran2));
+                var r1 = roomseq[ran1];
+                var r2 = roomseq[ran2];
+                r1.connect(r2);
+            }
 
+            roomseq.forEach(room => spawn.connect(room));
+
+            executeTimer.printDuration("Rooms created: ");
             this.cells(1);
             this.distort(10, 6);
+            executeTimer.printDuration("this.cells(1) and this.distort(10, 6): ");
 
             this.inverseFloodFill(this.tiles.getn(spawn.x, spawn.y));
+            executeTimer.printDuration("this.inverseFloodFill(this.tiles.getn(spawn.x, spawn.y)): ");
 
             var ores = Seq.with(Blocks.oreCopper, Blocks.oreLead);
             var poles = Math.abs(sector.tile.v.y);
@@ -747,6 +791,7 @@ function createWrekGenerator() {
                 frequencies.add(rand.random(-0.1, 0.01) - i * 0.01 + poles * 0.04);
             }
 
+            executeTimer.printDuration("before ores: ");
             this.pass(lib.intc2((x, y) => {
                 if (!this.floor.asFloor().hasSurface()) return;
 
@@ -765,6 +810,7 @@ function createWrekGenerator() {
                     this.floor = Blocks.metalFloorDamaged;
                 }
             }));
+            executeTimer.printDuration("ores: ");
 
             this.trimDark();
 
@@ -772,12 +818,12 @@ function createWrekGenerator() {
 
             this.tech();
 
-            this.trimDark();
+            executeTimer.printDuration("this.trimDark(); this.median(2); this.tech();: ");
 
             this.pass(lib.intc2((x, y) => {
 
                 // Walls to space
-                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
+                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                     this.floor = Blocks.space;
                     this.block = Blocks.space;
                 }
@@ -792,7 +838,7 @@ function createWrekGenerator() {
                 // tar
                 if (this.floor == Blocks.darksand) {
                     if (Math.abs(0.5 - genNoise(x - 40, y, 2, 0.7, 80)) > 0.25 &&
-                        Math.abs(0.5 - genNoise(x, y + sector.id * 10, 1, 1, 60)) > 0.41 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 15))))) {
+                        Math.abs(0.5 - genNoise(x, y + sector.id * 10, 1, 1, 60)) > 0.41 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 15)) >= 0)) {
                         this.floor = Blocks.tar;
                         this.ore = Blocks.air;
                     }
@@ -801,12 +847,12 @@ function createWrekGenerator() {
                 // space corruption
                 if (this.block == Blocks.air && this.floor != Blocks.space) {
                     if (isMetalFloor(this.floor)) {
-                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) > 0.20 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
+                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) > 0.20 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                             this.floor = randomBlock.random();
                             this.ore = this.floor != Blocks.space && rand.chance(0.25) ? dimensionShardOre : Blocks.air;
                         }
                     } else {
-                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.6, 60)) > 0.24 && !(roomseq.contains(boolf(r => Mathf.within(x, y, r.x, r.y, 25))))) {
+                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.6, 60)) > 0.24 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                             this.floor = randomBlock.random();
                             this.ore = this.floor != Blocks.space && rand.chance(0.25) ? dimensionShardOre : Blocks.air;
                         }
@@ -873,7 +919,7 @@ function createWrekGenerator() {
                     }
                 }
             }));
-
+            executeTimer.printDuration("Main loop: ");
 
             var difficulty = sector.threat;
             ints.clear();
@@ -975,6 +1021,7 @@ function createWrekGenerator() {
             Vars.state.rules.spawns = generateWaves(difficulty, new Rand(), Vars.state.rules.attackMode);
             wallModifier.post();
             schematicsModifier.post();
+            executeTimer.printDuration("Done: ");
         },
         postGenerate(tiles) {
             if (sector.hasEnemyBase()) {
