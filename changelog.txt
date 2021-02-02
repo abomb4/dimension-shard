@@ -1,4 +1,4 @@
-0.23:
+0.23 (2021-02-02):
 Reconstruct the planet, generate a wreckage map, and generate a dimensional technology schematics;
 Add a Changelog dialog;
 Fix Unit Teleporter effect;
