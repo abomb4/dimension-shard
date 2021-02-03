@@ -600,15 +600,6 @@ function createWrekGenerator() {
                 return res;
             }
         },
-        noise(x, y, octaves, falloff, scl, mag) {
-            if (scl === undefined && mag === undefined) {
-                return genNoise(x, y, 1, 1, octaves, falloff)
-            }
-            if (mag === undefined) {
-                return genNoise(x, y, octaves, falloff, scl, 1)
-            }
-            return genNoise(x, y, octaves, falloff, scl, mag)
-        },
         generate(t, s) {
             const executeTimer = lib.executeTimer();
             wallModifier.pre();
@@ -620,6 +611,7 @@ function createWrekGenerator() {
                 this.height = t.height;
             } else if (t !== undefined && s !== undefined) {
                 sector = s;
+                this.sector = s;
                 this.rand.setSeed(s.id);
 
                 var gen = new TileGen();
@@ -706,8 +698,8 @@ function createWrekGenerator() {
 
             for (var i = 0; i < 360; i += angleStep) {
                 var angle = offset + i;
-                var cx = (width / 2 + Angles.trnsx(angle, length));
-                var cy = (height / 2 + Angles.trnsy(angle, length));
+                var cx = Math.floor(width / 2 + Angles.trnsx(angle, length));
+                var cy = Math.floor(height / 2 + Angles.trnsy(angle, length));
 
                 var waterTiles = 0;
 
@@ -1035,4 +1027,6 @@ function createWrekGenerator() {
 
 wrek.generator = createWrekGenerator();
 
-PlanetDialog.debugSelect = lib.mod.meta.version.indexOf("dev") > -1;
+if (lib.isDev()) {
+    PlanetDialog.debugSelect = true;
+}

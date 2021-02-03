@@ -20,6 +20,8 @@ exports.modName = "dimension-shard";
 
 exports.mod = Vars.mods.locateMod(exports.modName);
 
+exports.isDev = () => exports.mod.meta.version.indexOf("dev") >= 0;
+
 exports.s = function(format) {
     var args = Array.prototype.slice.call(arguments, 1);
     return format.replace(/{(\d+)}/g, function(match, number) {
@@ -55,7 +57,7 @@ exports.loadRegion = (name) => Vars.headless ? null : Core.atlas.find(exports.mo
 exports.int = (v) => new java.lang.Integer(v);
 
 exports.executeTimer = () => {
-    const disabled = true;
+    const disabled = !exports.isDev();
     var last = new Date().getTime();
     return {
         updateDuration() {
