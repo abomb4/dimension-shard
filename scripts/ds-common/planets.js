@@ -730,8 +730,6 @@ function createWrekGenerator() {
                         var enemyOffset = previous + angleStep2 + rand.random(12);
                         previous = enemyOffset;
                         Tmp.v1.set(cx - width / 2, cy - height / 2).rotate(180 + enemyOffset).add(width / 2, height / 2);
-                        print(lib.s("j: {0}, Tmp.v1.x: {1}, Tmp.v1.y: {2}, enemyOffset: {3}, cx: {4}, cy: {5}",
-                            j, Tmp.v1.x, Tmp.v1.y, enemyOffset, cx, cy));
                         var espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(16, 32));
                         roomseq.push(espawn);
                         enemies.add(espawn);
