@@ -268,13 +268,13 @@ const schematicsModifier = (() => {
         // 3 Ion cannons
         createPart(Schematics.readBase64("bXNjaAF4nHVS227TQBA9vsRO4iZ20haEkLgIIYSQn/oHCF74C8fetobYDmuHNr/BCxJvfBV8CBKUNl3ObHqRUjVW9szOzpw5M7t4jKkLv84qhf13ZaXqtmzqZ+9rVa2evc1adYCoUG2uy0XHA2Af0+I6LG2PM12kRY6wa5fkKPF0+3DWVLO0U3O1aHSnNJ5vB7SLLFfpvPy8LIu0y+pPiE8yRqbqtNNZ3jUaw0VzQkfdFApjZhfpQjcflT17tc1nl8UxpV9Rz3RZHCmEeVMXy7JD2OZZJ1LupBbqcE7W9LDRzLut8fpO4M0+16u2y+bpzFKu8HI7VAmjLvO0JVOVdkutVYck01WjVZFS1Be1Yo3ktsd0nmkK7i/reZMVFPrm/vqdyo/rZt4crUilVXqAJ9vBHfdSp6CXZDElN4dzmXZVnopjM6BbKS/uYagWWrUtRevuCMAHwIELV5YeHBceYnDxxck3hR1wkc/tMSDoO+bCXCCgHcITGMALCePQGPOD/59MC5AAfQJJfIIHN7A5nkAEb0AYwe2TxIb0BYbkYkgE697BkJ/j0TmGExHo9JjMyIgn3I24o7AxodcfCYk5B8w/CUFA9LmnCPPHnDHeYZZnLs2a3znxzBgWi4QpJIykg+/8/yLxjhDHhLAH7Hkyh1imRClwYmr36Z+wzZjpEMeQjsSZQEQ5U8JIBjOWBRQBDL2YW8mLrCUJkePTiqVUbB2Bs0srkhz5ucymClF2wa3jyqkV+k2Eej1ux/0e25V7MWz+kiMEesaQMrHVEkesa3nJRl6ykTeBL2S/RR4TJjeiJiT29rArjyLG1I4hsY4BeCz9eS72WJgRuwj7A7PmuNccu0Fg+3XskNe0fPOXuvjAnICxvP6YmRvGkJbt56vtJ+B2LOf7G+nW6l3VfiB3KI6BdQS0dkTkQ96VI8DnAkIsk3tE2xPgM/0PtSczfg==")),
         // Super Foreshadow
-        createPart(Schematics.readBase64("bXNjaAF4nH1TzW7TQBAe/8Re/8ZJ2yuKAAkB8olXAF6AGzc33jZGiW3WTkufAHHiGThw5+mQ2iYx3+zSlLYqsdYz6/nmm29mN3RERza5dbGSNHtbrWTdVU09e1fL1cXsw7qVava+UbJbFGVzTlEpu7mq2h4YoimlwJd5q5pPct43iqblDUOODFXm5ZzCtjmXKq+bUlJ4csv14gFWnixBkwMzl/+QPrsP7LHP582qBVcny1z1p/T0PqhdFJ3Mu7YA17GqylNJ47m6aE6W66rMV9UXqUis62VTlPCe3083hRaNqtYr1KrLddXTq/+iltVnplbNugfj6wft7fe9nC/qZtmcXoBZyfwNjc8L5OTyS68K3fOTR3quS3yVj8WbM6lKVZ1JStr1spN74dntGeTLQmEWLx+Xhyl1fbHMj4seoi6I6CMWjYgsPAFZFtmUkGORA4fYjMi24fvCHXbDDmAPO4es4Rq+Qz6jXJrAhQnJ4oyEbBc4l5k9QOwRXoh52GX+MAzfsX46zHVAjo9gRho45SD/ds4IclBbkCAf+jLtib0X770EXqy9VH/z4I0hi1zw/AaLwG122KBWCHPIWgPuz4bxBbocrrQfCGgdNthvhi0atIcrPBssND5cUoQnIVAElI2M4gCtwwnogKXvWDtqBShix2jZ52BIAeuxENsgOaQQyRHGGlImwmHgcaLmVtfmofIMeaoudFlaz07ThqaFkFuwKAYGciLSg4xoxAq+Yf1CKIIG1Ir2QiMjNPorlI8djBEL9YC/kxwDSPxVsG4MCq6NlYlAXxQbuK25AsOl1r2F1h3WBv41SsdGacxKU0rRiz2GVsFTSYy0ZC8tMdKSu9ISM8OUtYxhhNlFxuCK+TBjPsmUi3kwh5z/FesHRGY8nhgIwS2MKeRR64PdYW10I65uxgx4g+g1IgOG7gE/uRFjO0x2wGPO+GVBrsfdZTgJvtEU3UC58YyHxSYlO4PJhM38/K9xJkgVpE1gTGiMPsQpxyxUioxJjZmYGAT8AfgCcOQ=")),
+        createPart(Schematics.readBase64("bXNjaAF4nH1T227TQBA9vl8TJw3PqAIkBMhP/ALwjvgCN942Rolt1k4vX4B44ht44J2vQ6JNYs7YbVpalWwmM7tzZubM7AYzPDFhl9lKYfbu/eGnda304YdKq2aR5dUZolw1c13UbVGVwAHCujpTOi2rXGG8UmWe1rr6rOZtpXGQFzxpiEwZrfM0nyM8vs318oFfHS8ZmhIzV3cSPb8PbLlP59WqZq5G5aluT/DsPqheZI1KmzpjriNd5CcKyVxfVMfLdZGnq+JcafjrclllOa0X98OHQotKF+sVa5X5umjx+r+oZfFFUutq3TLjmwft7fetmi/KalmdXDCzVulbJGcZY1J13uqs7/npIz2XOU/VY/7qVOlcF6cKo3q9bNSe+OT2ntJlpjmLV4/T45SaNlumR1lLUhcAPlLg+hZMWFwu7G4Lg8sFj0xMYBlUAQxxxzBt2DTgULkwHRr0MQyJ13Xdd8pPRth8QZZHZ8LsVFNxymdnmfCkgENlw/Tpdh1g0lve3or2Vkwr7q1Rf0Y8xh5Z20z3m9VdTGGJYsmQaib8PDZFYtJDt6HsYPXS0WnAYZMObXRXEKzve922u+ouux1PXRjEmlJChsOTiGViwCc0caQjj2syGAfS2k56IwmP1c0YwpZfH74QNejbyAYBgyNTEiV+IFzIQ/ihuyRqIxyJ3UpMvyym9Ie+fOlrRB6mZA5gS9lvlF9EB3B8GDEELWX2LIOBZXDNUi6bKQNh6SK8myTmtg8K4QlpaZ8tc5v4obwJGVX35/p1kBqJX1GkgY5oux9sQHxPNxS6Y2YgLuH8PBlLNNCL9vSigV70L71oGGIsfBIqb9iFg+Ib9PgzRn8nLMYngpnEf6X84GYEaYAqIHOOnle7o2y4Ol7ylr+X112Yw9ip+bwwuWFh8gmPWd4IqQKhOEZ44wz66pGwGTPInFAlPvqQKYwpOXuwRPmDCgYVCmQiPlERDJNw/r/+AmySZi8=")),
         // Core high defence
         createPart(Schematics.readBase64("bXNjaAF4nHVV247jRBAtt+3Et9yTmR0W2EVCQgj5iT9A8CGO3TNjcGzTcWYmz7zv077zUYgvQTywu4w5px1mpexupPapqq7LqepuRZ7LRolXZzst6x/Lna73ZVO//KnWu+PLH7K9lrjQ+9yUbQe7yOcSXTdG72+zormXZfF/RAqLKdIil01bZfsuq8vDLr3PqiqtMnOjJWqbe23Suim0jJCurbS8OA/fNrtt2ulKt43ptJGvzh32bZbrtCp/PZRFiiK/yBfnLpTypqp03jVGvjnftp/2Fp2dkm1NWYDfFG7YMM3PQ+A8Mzs0WiBXfaePsIxMcyCpielu0htda5PRMd436DBts1pX8vVHy3W3jeE4kKo4lJ1MtlmHTMfTaL48D+qgW2dYUXC20/ktBppnVdoedq3McnNsrivOYFc+0OM+Q75UP3Qms+yDQ101WaE/MoBCX3M2KY4R3b9v+LsPHJ/0DvXrpmpujmBldPr9hydHadtUXdodjNHdJ3pq7rQpTHmn5dtPV0NzuD9VehqSjPNjXjW1lqDNDC5U9iAinYgjoShHlPiiFLSpuIT5AEtxXXFlHPhQXCwPX0+o+eI5HuSpUJSFOAp7K1Ej6Eg2xicQFWAvGqMWl4tinsSiImxGjPAZEckImgoB2HMBkwCp+75/xPdt/w5BnhPAPh3D+BrrT5dBM3FiwFwkASwEBVGWlXys2KE6YsjvWH85E6hjcaf4gBkBvceASFwPJvQeQUM6BQCxGR1ETbDni0sYDYAsc0AgCA0G7gG5xwDLJiAb224QWP7M6aIfxVH3/0JyqPX/YAoL+CH/UjgBpAlJKAJYJiGZrGBCkjXrobeRohRCmlspghRbKYaUKHJK2PgbO8QNkqK5GNa5OAlgwZNPyGklHKG6kAnMMMQsl2DP4+ElMmeaV1h/IHBC1zVggjILdYmsyBQCHAahBjlOxSczeYYDgikB+Aybydja7W2hI0RrQBWMVNFge3KvIEWDR2wrUUogTVFlQWprwMgGc9QhSf7Nc0fogqG0xu/vHdWE4mg4CaiTIOzfkAfOR/rH/i3JY/He08Pve56KG8IX/REwvDXfxIn0cpjG0h7JXK6EJ2gBBGaYYyKOA1jxRqyYeg3wT9ErXkIerk2+Gk5mPUxqfZrUZ3IBLlA3T5PacFI+7AmfykamQWQv0jvbiEJL/HkMw+IzerSNefaNXyCHwr8VOOLVX/KdODinkAO7HJ7Xb3xe8hyq9bliJh+Q8D48g8/TFGm16diy+g+TsF4w")),
         // With an Electric Storm and Time Flow
-        // createPart(Schematics.readBase64("bXNjaAF4nHVS227TQBA9vsRO4iZ20haEkLgIIYSQn/oHCF74C8fetobYDmuHNr/BCxJvfBV8CBKUNl3ObHqRUjVW9szOzpw5M7t4jKkLv84qhf13ZaXqtmzqZ+9rVa2evc1adYCoUG2uy0XHA2Af0+I6LG2PM12kRY6wa5fkKPF0+3DWVLO0U3O1aHSnNJ5vB7SLLFfpvPy8LIu0y+pPiE8yRqbqtNNZ3jUaw0VzQkfdFApjZhfpQjcflT17tc1nl8UxpV9Rz3RZHCmEeVMXy7JD2OZZJ1LupBbqcE7W9LDRzLut8fpO4M0+16u2y+bpzFKu8HI7VAmjLvO0JVOVdkutVYck01WjVZFS1Be1Yo3ktsd0nmkK7i/reZMVFPrm/vqdyo/rZt4crUilVXqAJ9vBHfdSp6CXZDElN4dzmXZVnopjM6BbKS/uYagWWrUtRevuCMAHwIELV5YeHBceYnDxxck3hR1wkc/tMSDoO+bCXCCgHcITGMALCePQGPOD/59MC5AAfQJJfIIHN7A5nkAEb0AYwe2TxIb0BYbkYkgE697BkJ/j0TmGExHo9JjMyIgn3I24o7AxodcfCYk5B8w/CUFA9LmnCPPHnDHeYZZnLs2a3znxzBgWi4QpJIykg+/8/yLxjhDHhLAH7Hkyh1imRClwYmr36Z+wzZjpEMeQjsSZQEQ5U8JIBjOWBRQBDL2YW8mLrCUJkePTiqVUbB2Bs0srkhz5ucymClF2wa3jyqkV+k2Eej1ux/0e25V7MWz+kiMEesaQMrHVEkesa3nJRl6ykTeBL2S/RR4TJjeiJiT29rArjyLG1I4hsY4BeCz9eS72WJgRuwj7A7PmuNccu0Fg+3XskNe0fPOXuvjAnICxvP6YmRvGkJbt56vtJ+B2LOf7G+nW6l3VfiB3KI6BdQS0dkTkQ96VI8DnAkIsk3tE2xPgM/0PtSczfg==")),
+        createPart(Schematics.readBase64("bXNjaAF4nHVS227TQBA9vsRO4iZ20haEkLgIIYSQn/oHCF74C8fetobYDmuHNr/BCxJvfBV8CBKUNl3ObHqRUjVW9szOzpw5M7t4jKkLv84qhf13ZaXqtmzqZ+9rVa2evc1adYCoUG2uy0XHA2Af0+I6LG2PM12kRY6wa5fkKPF0+3DWVLO0U3O1aHSnNJ5vB7SLLFfpvPy8LIu0y+pPiE8yRqbqtNNZ3jUaw0VzQkfdFApjZhfpQjcflT17tc1nl8UxpV9Rz3RZHCmEeVMXy7JD2OZZJ1LupBbqcE7W9LDRzLut8fpO4M0+16u2y+bpzFKu8HI7VAmjLvO0JVOVdkutVYck01WjVZFS1Be1Yo3ktsd0nmkK7i/reZMVFPrm/vqdyo/rZt4crUilVXqAJ9vBHfdSp6CXZDElN4dzmXZVnopjM6BbKS/uYagWWrUtRevuCMAHwIELV5YeHBceYnDxxck3hR1wkc/tMSDoO+bCXCCgHcITGMALCePQGPOD/59MC5AAfQJJfIIHN7A5nkAEb0AYwe2TxIb0BYbkYkgE697BkJ/j0TmGExHo9JjMyIgn3I24o7AxodcfCYk5B8w/CUFA9LmnCPPHnDHeYZZnLs2a3znxzBgWi4QpJIykg+/8/yLxjhDHhLAH7Hkyh1imRClwYmr36Z+wzZjpEMeQjsSZQEQ5U8JIBjOWBRQBDL2YW8mLrCUJkePTiqVUbB2Bs0srkhz5ucymClF2wa3jyqkV+k2Eej1ux/0e25V7MWz+kiMEesaQMrHVEkesa3nJRl6ykTeBL2S/RR4TJjeiJiT29rArjyLG1I4hsY4BeCz9eS72WJgRuwj7A7PmuNccu0Fg+3XskNe0fPOXuvjAnICxvP6YmRvGkJbt56vtJ+B2LOf7G+nW6l3VfiB3KI6BdQS0dkTkQ96VI8DnAkIsk3tE2xPgM/0PtSczfg==")),
         // Two Dark Light
-        createPart(Schematics.readBase64("bXNjaAF4nHVT224TMRCd9V5zv9FL0kIr8YAQ2if+AJX/YJN1k8BmN/JuW/KIxAcg8Qm883s0aZLljJ2mUgptvOOxx2fO8YzpgnqCnDSaSepfTWcyzadZevkxlbPF5Ycol5dXkfpCtVjmIzWdF9gk6lATgXE4V9lnOSoyRd348WiYTyIVh/GILg7XhtlsGBYykfNMFVJR6y6CCeXXQkUapT3P7rCQZrEMk0iNJQ2e4YJNmEzHk4I8ld0wzJvDGP2ZT0A+zOfRSIZDNY0B9vYZ2N4fqUVeREk4jApALuj1YWgBPxxls7mSeS7jUBXj54ljeZ3gPsLrTCHr0+1Un3RRcJMmWRSD96t/5shupYrV9FbSu//TLeRokmZJNl6Ak5Lhezo7DDbKb6ObpKAG2IZjmUoVMR2iTxgkyLbIohom+GuwJ8hlz6KAbA5ACH7UJGHD+GSxqRhTQxhMmyMdRnDwbwdeuaGgXFMV1i3XZUk2ZlRuAOEwvAscDeFSnciDAbzApM3GBxwieVn4ME2/LMufGL/Ay+c0zEMf9HEQXsChApAtNlWwEpzA5oM/MH6LAK7DqBU+WAFzELUR6hkTGFMl28FePWiBPoH6plwx8XJZ3gPnHrMHPefvkhx81+Wf8p5E+QBvC6EPTAEYUFRFrg5ZwCMvsPm6cX6D71rUsea7RE3BSgImikTk6Y3KfqPKGxuMpWCUWmBxkNVgdEJsgxzEtiGvwVfAC55eaOIqKoRPE0vE6y2sdwRfkUt2m2+ay9WG1gCMttCx5R3chMBwdE8IrYv1tHVGqCHSoh7Tdkzazi5thXp8sTXqQrGjG8yFYltrWCGwu1fdhWoWs1Pd3avuQjXXWKt24KIaurss1ITRPD1fIWKJNuOqbGG51bgyqAf2A/D2tb8C7a7prxfcGDYo6qL3TNF7XHQbe3UOOeIW8mF073zf9c6R6Z0jiMXvhHuX6JhJCni6W4/5vA3PZU0nSIi9U75mG6bOoKemk7/tOrkPEHRbHw+Gn0WgewMzHOgblL55dQPz6gbmyQz41Qk6MwU5M0/43Dzac347Fr3k4v0FujBiDA==")),
+        // createPart(Schematics.readBase64("bXNjaAF4nHVT224TMRCd9V5zv9FL0kIr8YAQ2if+AJX/YJN1k8BmN/JuW/KIxAcg8Qm883s0aZLljJ2mUgptvOOxx2fO8YzpgnqCnDSaSepfTWcyzadZevkxlbPF5Ycol5dXkfpCtVjmIzWdF9gk6lATgXE4V9lnOSoyRd348WiYTyIVh/GILg7XhtlsGBYykfNMFVJR6y6CCeXXQkUapT3P7rCQZrEMk0iNJQ2e4YJNmEzHk4I8ld0wzJvDGP2ZT0A+zOfRSIZDNY0B9vYZ2N4fqUVeREk4jApALuj1YWgBPxxls7mSeS7jUBXj54ljeZ3gPsLrTCHr0+1Un3RRcJMmWRSD96t/5shupYrV9FbSu//TLeRokmZJNl6Ak5Lhezo7DDbKb6ObpKAG2IZjmUoVMR2iTxgkyLbIohom+GuwJ8hlz6KAbA5ACH7UJGHD+GSxqRhTQxhMmyMdRnDwbwdeuaGgXFMV1i3XZUk2ZlRuAOEwvAscDeFSnciDAbzApM3GBxwieVn4ME2/LMufGL/Ay+c0zEMf9HEQXsChApAtNlWwEpzA5oM/MH6LAK7DqBU+WAFzELUR6hkTGFMl28FePWiBPoH6plwx8XJZ3gPnHrMHPefvkhx81+Wf8p5E+QBvC6EPTAEYUFRFrg5ZwCMvsPm6cX6D71rUsea7RE3BSgImikTk6Y3KfqPKGxuMpWCUWmBxkNVgdEJsgxzEtiGvwVfAC55eaOIqKoRPE0vE6y2sdwRfkUt2m2+ay9WG1gCMttCx5R3chMBwdE8IrYv1tHVGqCHSoh7Tdkzazi5thXp8sTXqQrGjG8yFYltrWCGwu1fdhWoWs1Pd3avuQjXXWKt24KIaurss1ITRPD1fIWKJNuOqbGG51bgyqAf2A/D2tb8C7a7prxfcGDYo6qL3TNF7XHQbe3UOOeIW8mF073zf9c6R6Z0jiMXvhHuX6JhJCni6W4/5vA3PZU0nSIi9U75mG6bOoKemk7/tOrkPEHRbHw+Gn0WgewMzHOgblL55dQPz6gbmyQz41Qk6MwU5M0/43Dzac347Fr3k4v0FujBiDA==")),
         // An Electric Storm and a Dark Light, monster like
         createPart(Schematics.readBase64("bXNjaAF4nHVUXXLbNhBekBRJUZRI/bp2O2k6nUwn0+FTeoJOexBahGU2lKiCVB1dIy+d9K2nag7QI+QltmX2W6wcp/ZEGuADFsC33y4WpGd06pC3ydea5r+Ua71pynrz/NeNXu+f/5w3+icaFLpZmnLbYoHohObbKm/afFPu1tlVXlVZlZuVpuQqb7XJ9JvW5Mu2NjQ6N2Wx0tmy3hS7sqXhdlc1D9Nvi3tvWXOZmyI7r9fnWasrva0NmCja1lcg3NSFphG2FtnW1L9py/3D48O2215CcNZs86XOxDkFzTJvme3JiUJfVCDLLmqD7Q/UL59s/DRfmj0Cr7JzS7mnF4+3amY05TJrwLTO2p0xuqXvHm8ThVX5+64sMmTyNaW5WddGF5ydP/QeMtKH6I8JDnebqs4LxPLjlyW2enm5qat6tQeV0dkrevZ4c4u5vQVYQZYgqvqiYinr8g0MkyfsS0oe7lLknT3ZlJvXCGl12dL3X/C43hrdNAjStCsieotGDv74eaQYfIFQIBKIBUYCE7K/GXeKUjYqWtxTOQqdRw6P/QBGl1dcF9NAIBToC0QCA4FYYEiuh4MzZnahyWUIBSKBWGDEOz0aWyeiwhMVnqjoiQobo9vDdBBGXdd97A5od+Siqe4Os7vupuvgi3lU9xHtFrMeO2KAowAwDXD4b7R/HA/Lc6bt4Uk6nDrr12e/DAE5PiDi8z7y5IaACWsK/q8poCRkHR77h9ceFgLhDIUzFM6QOfvIHDgjzGJyBhgnpGIYp3wTIUvi5H7mIcI05nEkbJGwRcwWAY5r9uDg84NDTPvkjABRmHQ3RN01OWgexj5yxMk42H/XXaO/ltIBqu5AyjrktITQMGA/AWDCp/5Ce++Q9Q0tsUiKWdKQOBonAcQ91JnL9hnZzfaCh1JrQ0gFyzu0f90E0z52j5FoPklsSGBI1RgjVOkEMCF3ihWXE5ZwrQe41zCwdY8UgGVkWQZ2xMcHSmFkvY/EeyJdYpd9NcMoDeRJkIMaSWjMsm75dTi8auP9k+PFXSc0DcPuFjdNtvIOYFY2ny5sPW6g6UFwGDo4c4McH9iF1ZUqHt2HlUpYKYcFC+Q5JC+BAeM5asIGOaY+i/jAQSKx40+hjRGau8A2vHQotQlPrQGPXcFgqSdCPeUOT4DisA9RHppvSxbPh0sDD+j2+P56nFDlYy/qPoETIQ4wsul4a9PhYzplBzNxMOcuAdhYXR5FR0EL/gixYWQN/PLG/PRP4Ar2BQXHjSeoHcWAVzEF2M/UQvhPJIpTftNEX4nxVIr9FLpRHGeoQMWzkUAqMBGYMZzxp4voaz7AMBAYMnzDHysGfKz+A30lh7I=")),
         // Unbeatable
@@ -288,7 +288,7 @@ const schematicsModifier = (() => {
         // at dimension shard, power + bomb teleporter
         createPart(Schematics.readBase64("bXNjaAF4nB2OwXLDIAxE15jYadw66anHfgHX/g+2Na5nMHgEbZq/75JBo7eIlRBuuBjY6HeByV8YFsmzbkfZUgTOeM8peHWHjxIc1SoY8g/hSrqLop98KaIPfC7bLjGzzeVvr4ub0j65IkGOpHTgTcvqVomiviTFzeueVBY3p/grD1aGKfhc3KJbCLjePZuc/BX1c/UDH0ADC9NQd2cYg7og0VQALYVpib5qy8M4sch0QgdTb3zrmCzanmjQWlTBwkt1VvS14cIRjIGSeK3zQTw/GlnkFiOa5/cjDcS14h9k5Tnc")),
         // Dimension Shard Power Center
-        createPart(Schematics.readBase64("bXNjaAF4nG1S0Y6bQAw0EMICF0JImutVVSu1T33gg/pIYJVDAjZaSK7355VOKp1hqz6klVDs8XjGxkQ+SuHLaqh6LRtdXsyLtrUeJm0lbfRY2/YytWYQ2UjRtL0eRqByfK5sUza1pOPVnnU5USa70XSVLS/VoLsS2VnL53vNyfSnctKdvhjLIduXCqHUPyZb1ZOxEtVmaK7tJGtrruzIK9sbq5sSxE2/okVdh85UDbiv9/YTMBr7i9XjCI2dzvLtn73/4tq+jlPVladqwqhX+XLf6kyfjW2vfdnYtuvk039nmpu24G9aRL6LeLISX/B4LjxIwGytXIyVN8/zW4DLszHAz5aNIftZWrsQi++j+CB+iKDoFFHAhjWLaxaJ0MlSJl6AlpxmimYh0KJTdImAMsqVkysnV06uyPmScEKIkpKFyUKR3I9RzyWIJYWttwJaHBLnkNCBHIYkQBm51DmkziHgBsGSxfg3IUkRFGUbvH2QgN4JtBucEMWM12NYLDeOy8gxLGjrOnOaKaDsj3vuNt1xU8V8qa+QRbxxzmWJEh5mx4EJQsCdd+SUFE6D2XsIIC2ctHDSglIBlwtkB8zBNfbOYe++2oG2EULA+xyc/ODkB8rX8o4CX45cPwSK+dWOzvOR+Qpo0R2d7ug2flxOJE/czJP3Eil//ikyv82/FpwoDn2ikcgHNPu/AUtHjNU=")),
+        createPart(Schematics.readBase64("bXNjaAF4nG1S0a6TUBDcQoED3FJKa68ao4k++cAP+UbhpJcEOM0Ber1/bjRaZzjGh2rSsDs7O7PbBXknhSfroeq1bHR5Mc/a1nqYtJW00WNt28vUmkEkk6Jpez2MQOX4VNmmbGpJx9medTlRJrvRdJUtL9WguxLZWcuHe83J9Kdy0p2+GMsh2+cKodRfJ1vVk7ES1WZo5naS0JqZHXlle2N1U4K46he0qHnoTNWA+3RvPwGjsb9YPY7Q2Oksn//Z+y+u7cs4VV15qiaMepGP963O9MnYdu7LxrZdJ+//O9NctQV/1ZK2k+7L0cy4o4h8EVnJWjzBb+XCg/jMQgV0+4GecMGx8m43YDA+XglFPh5bigJqWQpdiMXzUHwQL0BQdI0oYEPIYsgiETpZysT30ZLTTNEsAFp0ii4RUEa5cnLl5MrJFbiVJwknBCgpWZgsEMm9GPVc/FhS2K7WQItD4hwSOpDDkAQoI5c6h9Q5+NzAX7JYNvg7IDagPaKt+AnonUC7walQzHhJhsVy47iMHMOCtq4zp5kCyv64527THTdVzJf6GlnEG+dclijhYXYcmCD43HlHTknhNJi9hwDSwkkLJy0oFXC5QHbAHFxjjxQte/fWDrSNEHze5+DkByc/UB7KK3KeHLl+ABTzrR2d5yPzNdCiOzrd0W38SOsNQrzsKPKGO67ktUT4tr7xa7v9WnAC/P32E/uFPtvYLG+h9X4DlAKXlw==")),
         // power
         createPart(Schematics.readBase64("bXNjaAF4nD2NwQrDIBBEp0YQLBLaWz/CS//IxqUNJKZoLv37zsZSXPcpOzOLEaOBLWkVGLnjnKVNdX7v81aAAZe2LanGdyqyRL6egmueVymNgtheqeaYJ4RH2nepn58EuAEnHqPN8k84XpbvCAqrEoXlKjbX4TGoK6jvcCkoMYRTg1OJIvwTQRwpvqf4LvE9RbcNCtvhdEPg9JhR8gWHlhuq")),
         // Small DC
@@ -654,7 +654,7 @@ function createWrekGenerator() {
                     }
                     this.connected[to.id] = true;
                     var nscl = rand.random(20, 60);
-                    var stroke = Math.floor(rand.random(6, 16));
+                    var stroke = Math.floor(rand.random(8, 16));
                     the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 }
                 this.connected[this.id] = true;
@@ -687,11 +687,11 @@ function createWrekGenerator() {
             var roomseq = [];
 
             for (var i = 0; i < rooms; i++) {
-                Tmp.v1.trns(rand.random(360), rand.random(radius / constraint));
+                Tmp.v1.trns(rand.random(360 / rooms * i, 360 / rooms * (i + 1)), rand.random(radius / constraint));
                 var rx = (width / 2 + Tmp.v1.x);
                 var ry = (height / 2 + Tmp.v1.y);
                 var maxrad = radius - Tmp.v1.len();
-                var rrad = Math.min(rand.random(9, maxrad / 2), 30);
+                var rrad = Math.min(rand.random(16, maxrad / 2), 32);
                 roomseq.push(new Room(rx, ry, rrad));
             }
 
@@ -702,7 +702,7 @@ function createWrekGenerator() {
             var offset = rand.nextInt(360);
             var length = width / 2.55 - rand.random(13, 23);
             var angleStep = 5;
-            var waterCheckRad = 5;
+            var waterCheckRad = 10;
 
             for (var i = 0; i < 360; i += angleStep) {
                 var angle = offset + i;
@@ -722,12 +722,17 @@ function createWrekGenerator() {
                 }
 
                 if (waterTiles <= 4 || (i + angleStep >= 360)) {
-                    roomseq.push(spawn = new Room(cx, cy, rand.random(8, 15)));
+                    roomseq.push(spawn = new Room(cx, cy, rand.random(16, 32)));
 
+                    var previous = -85;
+                    const angleStep2 = 12;
                     for (var j = 0; j < enemySpawns; j++) {
-                        var enemyOffset = rand.range(60);
+                        var enemyOffset = previous + angleStep2 + rand.random(12);
+                        previous = enemyOffset;
                         Tmp.v1.set(cx - width / 2, cy - height / 2).rotate(180 + enemyOffset).add(width / 2, height / 2);
-                        var espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(8, 15));
+                        print(lib.s("j: {0}, Tmp.v1.x: {1}, Tmp.v1.y: {2}, enemyOffset: {3}, cx: {4}, cy: {5}",
+                            j, Tmp.v1.x, Tmp.v1.y, enemyOffset, cx, cy));
+                        var espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(16, 32));
                         roomseq.push(espawn);
                         enemies.add(espawn);
                     }
@@ -736,7 +741,6 @@ function createWrekGenerator() {
                 }
             }
             for (var room of roomseq) {
-                print(lib.s("this.erase({0}, {1}, {2});", room.x, room.y, room.radius));
                 this.erase(room.x, room.y, room.radius);
             }
 
@@ -744,7 +748,6 @@ function createWrekGenerator() {
             for (var i = 0; i < connections; i++) {
                 var ran1 = rand["random(int,int)"](0, roomseq.length - 1);
                 var ran2 = rand["random(int,int)"](0, roomseq.length - 1);
-                print(lib.s("ran1: {0}, ran2: {1}", ran1, ran2));
                 var r1 = roomseq[ran1];
                 var r2 = roomseq[ran2];
                 r1.connect(r2);
@@ -1034,4 +1037,4 @@ function createWrekGenerator() {
 
 wrek.generator = createWrekGenerator();
 
-// PlanetDialog.debugSelect = true;
+PlanetDialog.debugSelect = lib.mod.meta.version.indexOf("dev") > -1;
