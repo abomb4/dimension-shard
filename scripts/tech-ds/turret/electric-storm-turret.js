@@ -69,7 +69,13 @@ const turret = blockTypes.newNoRotatingTurret({
             this.middleRegion = lib.loadRegion('electric-storm-turret-middle');
             this.middleHeatRegion = lib.loadRegion('electric-storm-turret-middle-heat');
         },
-        isHidden() { return !dsGlobal.techDsAvailable(); },
+        isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+        drawPlace(x, y, rotation, valid) {
+            if (!dsGlobal.techDsAvailable()) {
+                this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+            }
+            this.super$drawPlace(x, y, rotation, valid);
+        },
     },
     buildingOverrides: () => ({
         pigu: i++,

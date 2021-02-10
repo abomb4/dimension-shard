@@ -93,7 +93,7 @@ var wrapRegion
 var middleRegion
 var innerRegion
 const block = new JavaAdapter(Block, {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     load() {
         borderRegion = lib.loadRegion("unit-teleporter-border");
         innerRegion = lib.loadRegion("unit-teleporter-inner");
@@ -106,6 +106,9 @@ const block = new JavaAdapter(Block, {
         this.stats.add(Stat.range, RANGE, StatUnit.blocks);
     },
     drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
         const range = RANGE;
         const tilesize = Vars.tilesize;
         Drawf.dashCircle(x * tilesize, y * tilesize, range * tilesize, Pal.accent);

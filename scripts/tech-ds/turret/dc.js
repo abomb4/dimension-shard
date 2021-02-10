@@ -23,7 +23,13 @@ const dsGlobal = require('ds-common/ds-global');
 const { createDirectLightning } = require('ds-common/bullet-types/index');
 
 const turret = new JavaAdapter(PowerTurret, {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 }, 'dc');
 
 turret.cooldown = 0.04;

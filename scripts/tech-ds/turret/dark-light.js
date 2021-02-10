@@ -75,7 +75,13 @@ const firingMoveFract = 0.25;
 const shootDuration = 60 * 5;
 
 const turret = new JavaAdapter(PowerTurret, {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
     load() {
         this.super$load();
         this.baseRegion = lib.loadRegion('dark-light-base');

@@ -53,7 +53,13 @@ exports.shardReceiver = shardReceiver;
 
 // -=-=-=-=-=-=-=-=-=-=-=- Space Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
 const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 spaceCrystallizer.size = 2;
 // spaceCrystallizer.health = 600;
@@ -98,7 +104,13 @@ exports.spaceCrystallizer = spaceCrystallizer;
 
 // -=-=-=-=-=-=-=-=-=-=-=- Hard Thorium Alloy Slelter -=-=-=-=-=-=-=-=-=-=-=-
 const hardThoriumAlloySmelter = extend(GenericSmelter, "hard-thorium-alloy-smelter", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 hardThoriumAlloySmelter.size = 3;
 // hardThoriumAlloySmelter.health = 600;
@@ -155,7 +167,13 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
         consumes.power(3);
     },
     blockOverrides: {
-        isHidden() { return !dsGlobal.techDsAvailable(); },
+        isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+        drawPlace(x, y, rotation, valid) {
+            if (!dsGlobal.techDsAvailable()) {
+                this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+            }
+            this.super$drawPlace(x, y, rotation, valid);
+        },
     },
     buildingOverrides() {
         const heatColor = timeFlow.color.cpy().lerp(Color.white, 0.5);
@@ -191,7 +209,13 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
 
 // -=-=-=-=-=-=-=-=-=-=-=- Time Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
 const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 timeCrystallizer.size = 3;
 // timeCrystallizer.health = 600;
@@ -249,7 +273,13 @@ exports.timeCrystallizer = timeCrystallizer;
 
 // -=-=-=-=-=-=-=-=-=-=-=- Radioisotope Weaver -=-=-=-=-=-=-=-=-=-=-=-
 const radioisotopeWeaver = extend(GenericCrafter, "radioisotope-weaver", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 radioisotopeWeaver.size = 3;
 // radioisotopeWeaver.health = 600;
@@ -363,7 +393,13 @@ exports.ionCollector = blockTypes.newLiquidConverter({
         consumes.power(7);
     },
     blockOverrides: {
-        isHidden() { return !dsGlobal.techDsAvailable(); },
+        isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+        drawPlace(x, y, rotation, valid) {
+            if (!dsGlobal.techDsAvailable()) {
+                this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+            }
+            this.super$drawPlace(x, y, rotation, valid);
+        },
     },
     buildingOverrides() {
         return {
@@ -396,7 +432,13 @@ exports.ionCollector = blockTypes.newLiquidConverter({
 
 // -=-=-=-=-=-=-=-=-=-=-=- Dimension Alloy Smelter -=-=-=-=-=-=-=-=-=-=-=-
 const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 dimensionAlloySmelter.size = 4;
 // dimensionAlloySmelter.health = 600;

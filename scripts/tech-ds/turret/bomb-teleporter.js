@@ -37,18 +37,12 @@ const shootEffect = new Effect(16, 24, cons(e => {
     }
 }));
 const turret = new JavaAdapter(ItemTurret, {
-    isPlaceable() { return dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
             this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
         }
     },
-    canPlaceOn(tile, team) {
-        if (!dsGlobal.techDsAvailable()) {
-            return false;
-        }
-        return this.super$canPlaceOn(tile, team);
-    }
 }, 'bomb-teleporter');
 
 turret.cooldown = 0.04;

@@ -49,7 +49,7 @@ const outEffect = lib.newEffect(38, e => {
 });
 
 const blockType = extendContent(Block, "space-unloader", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     load() {
         this.super$load();
         topRegion = lib.loadRegion("space-unloader-top");
@@ -67,6 +67,9 @@ const blockType = extendContent(Block, "space-unloader", {
     },
     drawPlace(x, y, rotation, valid) {
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
     },
     pointConfig(config, transformer) {
         // Rotate relative points

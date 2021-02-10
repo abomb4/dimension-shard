@@ -23,7 +23,13 @@ const { burn } = require('tech-ds/unit/aat4-burn');
 const { beat } = require('tech-ds/unit/gat4-beat');
 
 const block = extend(Reconstructor, 'dimension-t4-reconstructor', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 block.buildVisibility = BuildVisibility.shown;
 block.size = 7;
