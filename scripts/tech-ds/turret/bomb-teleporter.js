@@ -42,6 +42,7 @@ const turret = new JavaAdapter(ItemTurret, {
         if (!dsGlobal.techDsAvailable()) {
             this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
         }
+        this.super$drawPlace(x, y, rotation, valid);
     },
 }, 'bomb-teleporter');
 
