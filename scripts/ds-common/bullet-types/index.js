@@ -24,9 +24,6 @@ const { newIonLaserBulletType, largeIonLaser } = require('ds-common/bullet-types
 
 exports.newElectricStormBulletType = newElectricStormBulletType;
 exports.newIonBoltBulletType = newIonBoltBulletType;
-exports.standardIonBolt1 = standardIonBolt1;
-exports.standardIonBolt2 = standardIonBolt2;
-exports.standardIonBolt = standardIonBolt;
 exports.createDirectLightningTeam = createDirectLightningTeam;
 exports.createDirectLightning = createDirectLightning;
 exports.blackHole = blackHole;
@@ -35,3 +32,18 @@ exports.fxBlackHoleExplode = fxBlackHoleExplode;
 exports.newSurroundingElectricBall = newSurroundingElectricBall;
 exports.newIonLaserBulletType = newIonLaserBulletType;
 exports.largeIonLaser = largeIonLaser;
+
+// =-=-=-=-=- Standards -=-=-=-=-=
+exports.standardIonBolt1 = standardIonBolt1;
+exports.standardIonBolt2 = standardIonBolt2;
+exports.standardIonBolt = standardIonBolt;
+exports.standardIron = (() => {
+    const bt = new BasicBulletType(3, 11);
+    bt.width = 7;
+    bt.height = 9;
+    bt.lifetime = 50;
+    bt.shootEffect = Fx.shootSmall;
+    bt.smokeEffect = Fx.shootSmallSmoke;
+    bt.ammoMultiplier = 2;
+    return bt;
+})();

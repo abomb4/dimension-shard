@@ -180,6 +180,10 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
     return v;
 })());
 
+// -=-=-=-=-=-=-=-=-=-=-=-= Iron =-=-=-=-=-=-=-=-=-=-=-=-
+Blocks.duo.ammoTypes.put(items.iron, bulletTypes.standardIron)
+Blocks.salvo.ammoTypes.put(items.iron, bulletTypes.standardIron)
+
 // -=-=-=-=-=-=-=-=-=-=-=-= Liquids =-=-=-=-=-=-=-=-=-=-=-=-
 
 Blocks.wave.ammoTypes.put(timeFlow, (() => {

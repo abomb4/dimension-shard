@@ -16,6 +16,8 @@
 // along with Dimension Shard.  If not, see <http://www.gnu.org/licenses/>.
 
 const floatc2 = (func) => new Floatc2({ get: (v1, v2) => func(v1, v2) });
+
+// =-=-=-=-=-=-=-=-=-=- Dimension -=-=-=-=-=-=-=-=-=-=
 exports.dimensionShardColor = Color.valueOf("165282");
 exports.dimensionShardColorLight = Color.valueOf("719ec1");
 exports.dimensionShard = (() => {
@@ -160,5 +162,101 @@ exports.ionLiquid = (() => {
     v.viscosity = 0.3;
     v.lightColor = Color.valueOf("cee0e988");
     v.effect = exports.ionBurningEffect;
+    return v;
+})();
+
+// =-=-=-=-=-=-=-=-=-=- Solid Industry -=-=-=-=-=-=-=-=-=-=
+
+exports.aluminumColor = Color.valueOf("#e8dcc4");
+exports.aluminumColorLight = Color.valueOf("#cec7ad");
+exports.aluminum = (() => {
+    const v = new Item("aluminum", exports.aluminumColor);
+    v.cost = 0.55;
+    v.hardness = 1;
+
+    const ore = new OreBlock(v);
+    ore.oreDefault = true;
+    ore.oreThreshold = 0.815;
+    ore.oreScale = 23.5;
+    exports.aluminumOre = ore;
+    return v;
+})();
+
+exports.ironColor = Color.valueOf("#a6a19e");
+exports.ironColorLight = Color.valueOf("#c5c7c7");
+exports.iron = (() => {
+    const v = new Item("iron", exports.ironColor);
+    v.cost = 0.65;
+    v.hardness = 1;
+
+    const ore = new OreBlock(v);
+    ore.oreDefault = true;
+    ore.oreThreshold = 0.82;
+    ore.oreScale = 23.8;
+    exports.ironOre = ore;
+    return v;
+})();
+
+exports.uraniumColor = Color.valueOf("#259d55");
+exports.uraniumColorLight = Color.valueOf("#648f63");
+exports.uranium = (() => {
+    const v = new Item("uranium", exports.uraniumColor);
+    v.cost = 1.15;
+    v.hardness = 1;
+
+    const ore = new OreBlock(v);
+    ore.oreDefault = true;
+    ore.oreThreshold = 0.89;
+    ore.oreScale = 25.5;
+    exports.uraniumOre = ore;
+    return v;
+})();
+
+exports.steelColor = Color.valueOf("#7e7e7e");
+exports.steel = (() => {
+    const v = new Item("steel", exports.steelColor);
+    v.hardness = 3;
+    v.cost = 0.8;
+    return v;
+})();
+
+exports.titaniumAlloyColor = Color.valueOf("#6898e2");
+exports.titaniumAlloyColorLight = Color.valueOf("#b1d8e9");
+exports.titaniumAlloy = (() => {
+    const v = new Item("titanium-alloy", exports.titaniumAlloyColor);
+    v.hardness = 5;
+    v.cost = 1.3;
+    return v;
+})();
+
+exports.diamondColor = Color.valueOf("#4de3b3");
+exports.diamond = (() => {
+    const v = new Item("diamond", exports.diamondColor);
+    v.hardness = 10;
+    v.cost = 1.4;
+
+    const ore = new OreBlock(v);
+    ore.oreDefault = false;
+    exports.diamondOre = ore;
+    return v;
+})();
+
+exports.rubyColor = Color.valueOf("#da052f");
+exports.ruby = (() => {
+    const v = new Item("ruby", exports.rubyColor);
+    v.hardness = 10;
+    v.cost = 1.25;
+
+    const ore = new OreBlock(v);
+    ore.oreDefault = false;
+    exports.rubyOre = ore;
+    return v;
+})();
+
+exports.depletedUraniumColor = Color.valueOf("#3e7b42");
+exports.depletedUraniumColor = (() => {
+    const v = new Item("depleted-uranium", exports.depletedUraniumColor);
+    v.hardness = 6;
+    v.cost = 1.2;
     return v;
 })();

@@ -73,6 +73,10 @@ require('tech-ds/unit/t4-factory')
 require('tech-ds/unit/t5-factory')
 require('tech-ds/unit/unit-teleporter')
 
+// Solid technology
+require('tech-solid/turret/iron-gun')
+require('tech-solid/turret/thermite-splasher')
+
 require('ds-common/planets')
 require('ds-common/research-tree')
 
