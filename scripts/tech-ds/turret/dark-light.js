@@ -163,6 +163,55 @@ turret.requirements = ItemStack.with(
     items.hardThoriumAlloy, 850,
     items.dimensionAlloy, 375
 );
+
+const Call_DarkLightShot = (() => {
+    const TYPE = lib.modName + '-DarkLightShot';
+    const DELIMITER = ', ';
+
+    function makePackage(tilePos) {
+        const datas = tilePos;
+        return datas;
+    }
+
+    /**
+     * Read packet to objects
+     *
+     * @param {string} str the packet
+     * @returns {{tilePos: number, launchCountBefore: number}}
+     */
+    function readPackage(str) {
+        const datas = str.split(DELIMITER);
+        const tilePos = datas[0];
+        return {
+            tilePos: tilePos
+        };
+    }
+
+    var inited = false;
+    function init() {
+        if (inited) { return; }
+        /** Client receives skill active packet, deal self */
+        if (Vars.netClient) {
+            Vars.netClient.addPacketHandler(TYPE, cons(pack => {
+                const info = readPackage(pack);
+                const tile = Vars.world.tile(info.tilePos)
+                if (tile.block() == turret) {
+                    const building = tile.build;
+                    building.serverShooting();
+                }
+            }));
+        }
+    }
+    Events.on(ClientLoadEvent, cons(e => {
+        init();
+    }));
+    return (tilePos) => {
+        const pack = makePackage(tilePos);
+        // Send to EVERY client if i'm server
+        Call.clientPacketReliable(TYPE, pack);
+    }
+})();
+
 turret.shootType = (() => {
     const darkLightFreeze = new StatusEffect("cannotMove");
     darkLightFreeze.speedMultiplier = 0;
@@ -300,6 +349,10 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     getBullet() {
         return this._bullet;
     },
+    serverShooting() {
+        this.shoot(this.peekAmmo());
+        this.reload = this.block.reloadTime;
+    },
     updateCooling() { },
     updateTile() {
         this.super$updateTile();
@@ -333,8 +386,9 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
         if (this.bulletLife > 0 && this._bullet != null) {
             return;
         }
-        if (this.reload <= 0 && (this.consValid() || this.cheating())) {
+        if (!Vars.netClient && this.reload <= 0 && (this.consValid() || this.cheating())) {
             var type = this.peekAmmo();
+            Call_DarkLightShot(this.tile.pos());
             this.shoot(type);
             this.reload = this.block.reloadTime;
         }
