@@ -168,8 +168,8 @@ const Call_DarkLightShot = (() => {
     const TYPE = lib.modName + '-DarkLightShot';
     const DELIMITER = ', ';
 
-    function makePackage(tilePos) {
-        const datas = tilePos;
+    function makePackage(tilePos, rotation) {
+        const datas = tilePos + DELIMITER + rotation;
         return datas;
     }
 
@@ -182,8 +182,10 @@ const Call_DarkLightShot = (() => {
     function readPackage(str) {
         const datas = str.split(DELIMITER);
         const tilePos = datas[0];
+        const rotation = datas[1];
         return {
-            tilePos: tilePos
+            tilePos: tilePos,
+            rotation: rotation
         };
     }
 
@@ -197,7 +199,7 @@ const Call_DarkLightShot = (() => {
                 const tile = Vars.world.tile(info.tilePos)
                 if (tile.block() == turret) {
                     const building = tile.build;
-                    building.serverShooting();
+                    building.serverShooting(info.rotation);
                 }
             }));
         }
@@ -205,8 +207,8 @@ const Call_DarkLightShot = (() => {
     Events.on(ClientLoadEvent, cons(e => {
         init();
     }));
-    return (tilePos) => {
-        const pack = makePackage(tilePos);
+    return (tilePos, rotation) => {
+        const pack = makePackage(tilePos, rotation);
         // Send to EVERY client if i'm server
         Call.clientPacketReliable(TYPE, pack);
     }
@@ -349,7 +351,8 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     getBullet() {
         return this._bullet;
     },
-    serverShooting() {
+    serverShooting(rotation) {
+        this.rotation = rotation;
         this.shoot(this.peekAmmo());
         this.reload = this.block.reloadTime;
     },
@@ -386,9 +389,10 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
         if (this.bulletLife > 0 && this._bullet != null) {
             return;
         }
-        if (!Vars.netClient && this.reload <= 0 && (this.consValid() || this.cheating())) {
+        if (this.reload <= 0 && (this.consValid() || this.cheating())) {
+            if (Vars.net.client()) return;
             var type = this.peekAmmo();
-            Call_DarkLightShot(this.tile.pos());
+            Call_DarkLightShot(this.tile.pos(), this.rotation);
             this.shoot(type);
             this.reload = this.block.reloadTime;
         }
