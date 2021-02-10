@@ -21,7 +21,13 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
 var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 dimensionCrystalBattery.buildVisibility = BuildVisibility.shown;
 dimensionCrystalBattery.size = 1;
@@ -40,7 +46,13 @@ exports.dimensionCrystalBattery = dimensionCrystalBattery;
 
 
 var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 const rtgMultipler = 12;
 const rtgItemMultipler = 10;

@@ -61,7 +61,13 @@ const block = new JavaAdapter(ForceProjector, {
         this.super$setStats();
         if (chanceDeflect > 0) this.stats.add(Stat.baseDeflectChance, chanceDeflect, StatUnit.none);
     },
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 }, 'deflect-force-projector');
 
 block.buildVisibility = BuildVisibility.shown;

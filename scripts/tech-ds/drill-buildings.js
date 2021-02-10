@@ -28,7 +28,14 @@ const block = extend(Drill, 'hard-thorium-drill', {
         this.rotatorRegion.packedHeight += 10;
         this.rotatorRegion.packedWidth -= 102;
     },
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+            return;
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 block.buildVisibility = BuildVisibility.shown;
 block.size = 4;

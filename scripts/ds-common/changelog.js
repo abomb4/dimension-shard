@@ -84,6 +84,10 @@ function showDialog(firstRun) {
 Events.run(ClientLoadEvent, run(() => {
     const saveVer = Core.settings.getString(SETTING_KEY, null)
 
+    if (lib.isDev()) {
+        showDialog();
+        return;
+    }
     if (version != saveVer) {
         showDialog(saveVer == null);
     }

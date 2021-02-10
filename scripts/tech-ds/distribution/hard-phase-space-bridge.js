@@ -23,8 +23,11 @@ const lastBuildInvalidate = 60 * 10;
 var globalLastBuildTime = 0;
 var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
         const range = this.range;
         const tilesize = Vars.tilesize;
         Drawf.dashCircle(x * tilesize, y * tilesize, range * tilesize, Pal.accent);

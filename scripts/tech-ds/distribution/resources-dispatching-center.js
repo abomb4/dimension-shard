@@ -49,7 +49,13 @@ const inEffect = lib.newEffect(38, e => {
 });
 
 const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+    },
     load() {
         this.super$load();
         topRegion = lib.loadRegion("resources-dispatching-center-top");
@@ -67,9 +73,6 @@ const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
     },
     outputsItems() {
         return false;
-    },
-    drawPlace(x, y, rotation, valid) {
-        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
     },
     pointConfig(config, transformer) {
         // Rotate relative points

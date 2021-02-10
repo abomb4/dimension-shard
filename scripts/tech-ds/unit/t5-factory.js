@@ -26,7 +26,13 @@ const { beat } = require('tech-ds/unit/gat4-beat');
 const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 
 const block = extend(Reconstructor, 'dimension-t5-reconstructor', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 block.buildVisibility = BuildVisibility.shown;
 block.size = 9;

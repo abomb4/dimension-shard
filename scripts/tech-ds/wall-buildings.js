@@ -46,7 +46,12 @@ exports.shardPhaseWallLarge = shardWallLarge;
 var wall = (() => {
     const armor = 5;
     const block = extend(Wall, 'hard-thorium-alloy-wall', {
-        isHidden() { return !dsGlobal.techDsAvailable(); },
+        isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+    },
         setStats() {
             this.super$setStats();
             if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));
@@ -70,7 +75,12 @@ var wall = (() => {
 var wallLarge = (() => {
     const armor = 7;
     const block = extend(Wall, 'hard-thorium-alloy-wall-large', {
-        isHidden() { return !dsGlobal.techDsAvailable(); },
+        isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+    },
         setStats() {
             this.super$setStats();
             if (armor > 0) this.stats.add(Stat.abilities, lib.getMessage('stat', 'blockArmor', armor));

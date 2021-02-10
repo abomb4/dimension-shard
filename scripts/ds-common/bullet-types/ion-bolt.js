@@ -144,6 +144,7 @@ exports.newIonBoltBulletType = (requestOptions) => {
         lightningAngle: 90,
         lightningDamage: 30,
         lightningColor: ionLiquid.color,
+        buildingDamageMultiplier: 0.8,
         puddles: 2,
         puddleRange: 8,
         puddleAmount: 10,

@@ -21,7 +21,14 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
 var hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+            return;
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 hardThoriumConduit.buildVisibility = BuildVisibility.shown;
 hardThoriumConduit.size = 1;
@@ -74,7 +81,13 @@ exports.hardThoriumConduit = hardThoriumConduit;
 
 
 var hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 hardThoriumLiquidRouter.buildVisibility = BuildVisibility.shown;
 hardThoriumLiquidRouter.size = 1;
@@ -127,7 +140,13 @@ exports.hardThoriumLiquidRouter = hardThoriumLiquidRouter;
 
 
 var spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 spaceLiquidTank.buildVisibility = BuildVisibility.shown;
 spaceLiquidTank.size = 3;
@@ -179,7 +198,13 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => 
 exports.spaceLiquidTank = spaceLiquidTank;
 
 var spacePump = extend(Pump, 'space-pump', {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 });
 spacePump.buildVisibility = BuildVisibility.shown;
 spacePump.size = 3;

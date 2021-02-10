@@ -20,7 +20,12 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
 const block = new JavaAdapter(StorageBlock, {
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+    },
 }, 'space-vault');
 
 block.buildVisibility = BuildVisibility.shown;

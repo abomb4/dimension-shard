@@ -47,7 +47,13 @@ const turret = new JavaAdapter(LiquidTurret, {
     myGetTr2() {
         return this.tr2;
     },
-    isHidden() { return !dsGlobal.techDsAvailable(); },
+    isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
+    drawPlace(x, y, rotation, valid) {
+        if (!dsGlobal.techDsAvailable()) {
+            this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+        }
+        this.super$drawPlace(x, y, rotation, valid);
+    },
 }, 'ion-bolt-turret');
 
 turret.recoilAmount = 2;
@@ -66,13 +72,13 @@ turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');
 turret.loopSound = Sounds.none;
 turret.requirements = ItemStack.with(
-    Items.lead, 1600,
-    Items.metaglass, 1200,
-    Items.graphite, 800,
-    Items.plastanium, 1200,
-    Items.surgeAlloy, 600,
+    Items.lead, 1200,
+    Items.metaglass, 500,
+    Items.graphite, 600,
+    Items.plastanium, 600,
+    Items.surgeAlloy, 400,
     items.timeCrystal, 160,
-    items.hardThoriumAlloy, 700
+    items.hardThoriumAlloy, 500
 );
 turret.ammo(ionLiquid, newIonBoltBulletType({
     ammoMultiplier: 1,
