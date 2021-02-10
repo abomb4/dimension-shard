@@ -53,6 +53,7 @@ turret.ammo(
         bt.shootEffect = Fx.shootPyraFlame;
         bt.hitEffect = Fx.hitFlameSmall;
         bt.status = StatusEffects.melting;
+        bt.incendChance = 0.1;
         bt.lifetime = 60;
         bt.pierce = true;
         bt.pierceCap = 8;
