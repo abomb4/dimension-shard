@@ -306,11 +306,11 @@ radioisotopeWeaver.consumes.items(ItemStack.with(
 ));
 radioisotopeWeaver.consumes.power(10);
 radioisotopeWeaver.drawer = (() => {
-    var regionHeat1;
-    var regionHeat2;
-    var regionHeat3;
-    var regionWeaver;
-    var regionTop;
+    let regionHeat1;
+    let regionHeat2;
+    let regionHeat3;
+    let regionWeaver;
+    let regionTop;
     return new JavaAdapter(DrawBlock, {
         load(block) {
             regionHeat1 = lib.loadRegion("radioisotope-weaver-heat1");
@@ -320,9 +320,9 @@ radioisotopeWeaver.drawer = (() => {
             regionTop = lib.loadRegion("radioisotope-weaver-top");
         },
         draw(entity) {
-            var lightWave = (0.7 + 0.3 * Mathf.sin(entity.totalProgress % 90 / 90 * Math.PI * 2));
-            var color = dimensionShard.color;
-            var colorLight = color.cpy().lerp(Color.white, 0.3);
+            let lightWave = (0.7 + 0.3 * Mathf.sin(entity.totalProgress % 90 / 90 * Math.PI * 2));
+            let color = dimensionShard.color;
+            let colorLight = color.cpy().lerp(Color.white, 0.3);
             Draw.rect(entity.block.region, entity.x, entity.y, 0);
 
             Draw.color(colorLight);
@@ -343,8 +343,8 @@ radioisotopeWeaver.drawer = (() => {
 
             Draw.color(Pal.accent);
             Draw.alpha(entity.warmup * 0.8);
-            var dst = Mathf.sin(entity.totalProgress, 6, Vars.tilesize * entity.block.size / 6);
-            var rot = entity.totalProgress + 90;
+            let dst = Mathf.sin(entity.totalProgress, 6, Vars.tilesize * entity.block.size / 6);
+            let rot = entity.totalProgress + 90;
             Lines.lineAngleCenter(
                 entity.x + Angles.trnsx(rot, dst),
                 entity.y + Angles.trnsy(rot, dst),

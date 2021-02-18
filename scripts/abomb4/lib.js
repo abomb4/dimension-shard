@@ -23,7 +23,7 @@ exports.mod = Vars.mods.locateMod(exports.modName);
 exports.isDev = () => exports.mod.meta.version.indexOf("dev") >= 0;
 
 exports.s = function(format) {
-    var args = Array.prototype.slice.call(arguments, 1);
+    let args = Array.prototype.slice.call(arguments, 1);
     return format.replace(/{(\d+)}/g, function(match, number) {
         return typeof args[number] != 'undefined'
         ? args[number]
@@ -58,7 +58,7 @@ exports.int = (v) => new java.lang.Integer(v);
 
 exports.executeTimer = () => {
     const disabled = !exports.isDev();
-    var last = new Date().getTime();
+    let last = new Date().getTime();
     return {
         updateDuration() {
             if (disabled) { return; }
@@ -68,7 +68,7 @@ exports.executeTimer = () => {
             if (disabled) { return; }
             if (!prefix) { prefix = ""; }
             if (!postfix) { postfix = ""; }
-            var theLast = last;
+            let theLast = last;
             last = new Date().getTime();
             print(prefix + (last - theLast) + postfix);
         }
@@ -87,7 +87,7 @@ exports.getMessage = (type, key, msgs) =>
 
 /** Cannot use java.lang.reflect.Array, but Arrays.copyOf available! Lucky! */
 exports.createUnitPlan = (unitFrom, unitTo) => {
-    var a = java.util.Arrays.copyOf(Blocks.tetrativeReconstructor.upgrades.get(0), 2);
+    let a = java.util.Arrays.copyOf(Blocks.tetrativeReconstructor.upgrades.get(0), 2);
     a[0] = unitFrom;
     a[1] = unitTo;
     return a;
@@ -107,17 +107,17 @@ exports.addToResearch = (content, research) => {
     if (!research.parent) {
         throw new Error('research.parent is empty!');
     }
-    var researchName = research.parent;
-    var customRequirements = research.requirements;
-    var objectives = research.objectives;
+    let researchName = research.parent;
+    let customRequirements = research.requirements;
+    let objectives = research.objectives;
 
-    var lastNode = TechTree.all.find(boolf(t => t.content == content));
+    let lastNode = TechTree.all.find(boolf(t => t.content == content));
     if (lastNode != null) {
         lastNode.remove();
     }
 
-    var node = new TechTree.TechNode(null, content, customRequirements !== undefined ? customRequirements : content.researchRequirements());
-    var currentMod = exports.mod;
+    let node = new TechTree.TechNode(null, content, customRequirements !== undefined ? customRequirements : content.researchRequirements());
+    let currentMod = exports.mod;
     if (objectives) {
         node.objectives.addAll(objectives);
     }
@@ -127,7 +127,7 @@ exports.addToResearch = (content, research) => {
     }
 
     // find parent node.
-    var parent = TechTree.all.find(boolf(t => t.content.name.equals(researchName) || t.content.name.equals(currentMod.name + "-" + researchName)));
+    let parent = TechTree.all.find(boolf(t => t.content.name.equals(researchName) || t.content.name.equals(currentMod.name + "-" + researchName)));
 
     if (parent == null) {
         throw new Error("Content '" + researchName + "' isn't in the tech tree, but '" + content.name + "' requires it to be researched.");
@@ -194,14 +194,14 @@ exports.setBuildingSimple = function (blockType, buildingType, overridesGetter) 
 exports.createProbabilitySelector = function () {
     const objects = [];
     const probabilities = [];
-    var maxProbabilitySum = 0;
+    let maxProbabilitySum = 0;
 
     return {
         showProbabilities() {
             const p = [];
-            var previous = 0;
-            for (var i = 0; i < probabilities.length; i++) {
-                var current = probabilities[i];
+            let previous = 0;
+            for (let i = 0; i < probabilities.length; i++) {
+                let current = probabilities[i];
                 p.push(parseFloat(((current - previous) / maxProbabilitySum).toFixed(5)))
                 previous = current;
             }
@@ -218,8 +218,8 @@ exports.createProbabilitySelector = function () {
         random: function () {
             const random = Math.floor(Math.random() * maxProbabilitySum);
             // Can use binary search
-            for (var i = 0; i < probabilities.length; i++) {
-                var max = probabilities[i];
+            for (let i = 0; i < probabilities.length; i++) {
+                let max = probabilities[i];
                 if (random < max) {
                     return objects[i];
                 }
@@ -236,13 +236,13 @@ exports.createProbabilitySelector = function () {
  * - "blocking":Block by any enemy
  */
 exports.damageLine = (() => {
-    var tr = new Vec2();
-    var collidedBlocks = new IntSet();
-    var seg1 = new Vec2();
-    var seg2 = new Vec2();
-    var rect = new Rect();
-    var units = new Seq();
-    var hitrect = new Rect();
+    let tr = new Vec2();
+    let collidedBlocks = new IntSet();
+    let seg1 = new Vec2();
+    let seg2 = new Vec2();
+    let rect = new Rect();
+    let units = new Seq();
+    let hitrect = new Rect();
     return (hitter, team, effect, x, y, angle, length, large, mode) => {
         if (!mode || (mode != "pierce" && mode != "blocking")) {
             mode = "normal";
@@ -253,19 +253,19 @@ exports.damageLine = (() => {
             // TODO
             // Tmp.v1.trns(hitter.rotation(), length);
             // // Find block
-            // var building;
-            // var buildingFound = Vars.world.raycast(b.tileX(), b.tileY(), World.toTile(b.x + Tmp.v1.x), World.toTile(b.y + Tmp.v1.y),
+            // let building;
+            // let buildingFound = Vars.world.raycast(b.tileX(), b.tileY(), World.toTile(b.x + Tmp.v1.x), World.toTile(b.y + Tmp.v1.y),
             //     this.raycaster((x, y) => { (building = Vars.world.tile(x, y)) != null && building.team() != b.team }));
-            // var dstBuilding = buildingFound ? Tmp.v2.set(x, y).dst(building) : Infinity;
+            // let dstBuilding = buildingFound ? Tmp.v2.set(x, y).dst(building) : Infinity;
             // // Find unit
         } else {
             collidedBlocks.clear();
             tr.trns(angle, length);
-            var collider = exports.intc2((cx, cy) => {
-                var tile = Vars.world.build(cx, cy);
-                var collide = tile != null && collidedBlocks.add(tile.pos());
+            let collider = exports.intc2((cx, cy) => {
+                let tile = Vars.world.build(cx, cy);
+                let collide = tile != null && collidedBlocks.add(tile.pos());
                 if (hitter.damage > 0) {
-                    var health = !collide ? 0 : tile.health;
+                    let health = !collide ? 0 : tile.health;
                     if (collide && tile.team != team && tile.collide(hitter)) {
                         tile.collision(hitter);
                         hitter.type.hit(hitter, tile.x, tile.y);
@@ -282,8 +282,8 @@ exports.damageLine = (() => {
                 seg2.set(seg1).add(tr);
                 Vars.world.raycastEachWorld(x, y, seg2.x, seg2.y, exports.raycaster((cx, cy) => {
                     collider.get(cx, cy);
-                    for (var p of Geometry.d4) {
-                        var other = Vars.world.tile(p.x + cx, p.y + cy);
+                    for (let p of Geometry.d4) {
+                        let other = Vars.world.tile(p.x + cx, p.y + cy);
                         if (other != null && (large || Intersector.intersectSegmentRectangle(seg1, seg2, other.getBounds(Tmp.r1)))) {
                             collider.get(cx + p.x, cy + p.y);
                         }
@@ -293,8 +293,8 @@ exports.damageLine = (() => {
             }
 
             rect.setPosition(x, y).setSize(tr.x, tr.y);
-            var x2 = tr.x + x;
-            var y2 = tr.y + y;
+            let x2 = tr.x + x;
+            let y2 = tr.y + y;
             if (rect.width < 0) {
                 rect.x += rect.width;
                 rect.width *= -1;
@@ -311,10 +311,10 @@ exports.damageLine = (() => {
             rect.width += expand * 2;
             rect.height += expand * 2;
 
-            var con = cons(e => {
+            let con = cons(e => {
                 e.hitbox(hitrect);
 
-                var vec = Geometry.raycastRect(x, y, x2, y2, hitrect.grow(expand * 2));
+                let vec = Geometry.raycastRect(x, y, x2, y2, hitrect.grow(expand * 2));
 
                 if (vec != null && hitter.damage > 0) {
                     effect.at(vec.x, vec.y);

@@ -20,7 +20,7 @@ const items = require('ds-common/items');
 
 const dsGlobal = require('ds-common/ds-global');
 
-var hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {
+let hardThoriumConduit = extend(ArmoredConduit, 'hard-thorium-conduit', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -52,9 +52,9 @@ lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, bl
 
         next = next.getLiquidDestination(this, liquid);
         if (next.team == this.team && next.block.hasLiquids && this.liquids.get(liquid) > 0) {
-            var ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
-            var fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
-            var flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
+            let ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
+            let fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
+            let flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
             flow = Math.min(flow, next.block.liquidCapacity - next.liquids.get(liquid));
 
             if (flow > 0 && ofract <= fract && next.acceptLiquid(this, liquid)) {
@@ -62,9 +62,9 @@ lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, bl
                 this.liquids.remove(liquid, flow);
                 return flow;
             } else if (next.liquids.currentAmount() / next.block.liquidCapacity > 0.1 && fract > 0.1) {
-                var fx = (this.x + next.x) / 2.0;
-                var fy = (this.y + next.y) / 2.0;
-                var other = next.liquids.current();
+                let fx = (this.x + next.x) / 2.0;
+                let fy = (this.y + next.y) / 2.0;
+                let other = next.liquids.current();
                 // There was flammability logics, removed
                 if ((liquid.temperature > hotLine && other.temperature < coldLine) || (other.temperature > hotLine && liquid.temperature < coldLine)) {
                     this.liquids.remove(liquid, Math.min(this.liquids.get(liquid), hotLine * Time.delta));
@@ -80,7 +80,7 @@ lib.setBuildingSimple(hardThoriumConduit, ArmoredConduit.ArmoredConduitBuild, bl
 exports.hardThoriumConduit = hardThoriumConduit;
 
 
-var hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router', {
+let hardThoriumLiquidRouter = extend(LiquidRouter, 'hard-thorium-liquid-router', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -111,9 +111,9 @@ lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, b
 
         next = next.getLiquidDestination(this, liquid);
         if (next.team == this.team && next.block.hasLiquids && this.liquids.get(liquid) > 0) {
-            var ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
-            var fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
-            var flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
+            let ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
+            let fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
+            let flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
             flow = Math.min(flow, next.block.liquidCapacity - next.liquids.get(liquid));
 
             if (flow > 0 && ofract <= fract && next.acceptLiquid(this, liquid)) {
@@ -121,9 +121,9 @@ lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, b
                 this.liquids.remove(liquid, flow);
                 return flow;
             } else if (next.liquids.currentAmount() / next.block.liquidCapacity > 0.1 && fract > 0.1) {
-                var fx = (this.x + next.x) / 2.0;
-                var fy = (this.y + next.y) / 2.0;
-                var other = next.liquids.current();
+                let fx = (this.x + next.x) / 2.0;
+                let fy = (this.y + next.y) / 2.0;
+                let other = next.liquids.current();
                 // There was flammability logics, removed
                 if ((liquid.temperature > hotLine && other.temperature < coldLine) || (other.temperature > hotLine && liquid.temperature < coldLine)) {
                     this.liquids.remove(liquid, Math.min(this.liquids.get(liquid), hotLine * Time.delta));
@@ -139,7 +139,7 @@ lib.setBuildingSimple(hardThoriumLiquidRouter, LiquidRouter.LiquidRouterBuild, b
 exports.hardThoriumLiquidRouter = hardThoriumLiquidRouter;
 
 
-var spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {
+let spaceLiquidTank = extend(LiquidRouter, 'space-liquid-tank', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -170,9 +170,9 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => 
 
         next = next.getLiquidDestination(this, liquid);
         if (next.team == this.team && next.block.hasLiquids && this.liquids.get(liquid) > 0) {
-            var ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
-            var fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
-            var flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
+            let ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
+            let fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
+            let flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
             flow = Math.min(flow, next.block.liquidCapacity - next.liquids.get(liquid));
 
             if (flow > 0 && ofract <= fract && next.acceptLiquid(this, liquid)) {
@@ -180,9 +180,9 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => 
                 this.liquids.remove(liquid, flow);
                 return flow;
             } else if (next.liquids.currentAmount() / next.block.liquidCapacity > 0.1 && fract > 0.1) {
-                var fx = (this.x + next.x) / 2.0;
-                var fy = (this.y + next.y) / 2.0;
-                var other = next.liquids.current();
+                let fx = (this.x + next.x) / 2.0;
+                let fy = (this.y + next.y) / 2.0;
+                let other = next.liquids.current();
                 // There was flammability logics, removed
                 if ((liquid.temperature > hotLine && other.temperature < coldLine) || (other.temperature > hotLine && liquid.temperature < coldLine)) {
                     this.liquids.remove(liquid, Math.min(this.liquids.get(liquid), hotLine * Time.delta));
@@ -197,7 +197,7 @@ lib.setBuildingSimple(spaceLiquidTank, LiquidRouter.LiquidRouterBuild, block => 
 
 exports.spaceLiquidTank = spaceLiquidTank;
 
-var spacePump = extend(Pump, 'space-pump', {
+let spacePump = extend(Pump, 'space-pump', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {

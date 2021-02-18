@@ -132,7 +132,7 @@ exports.ionBurningEffect = (() => {
         Lines.stroke(0.3 + e.fout() * 0.5);
 
         Angles.randLenVectors(e.id, 5, e.fin() * 22, new Floatc2({ get: (x, y) => {
-            var ang = Mathf.angle(x, y);
+            let ang = Mathf.angle(x, y);
             Lines.lineAngle(e.x + x, e.y + y, ang, e.fin() * 0.5 + 1);
         }}));
     }));

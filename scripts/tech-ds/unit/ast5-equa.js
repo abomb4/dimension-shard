@@ -45,12 +45,12 @@ const unitType = (() => {
                 // Lines.circle(e.x, e.y, 4 + e.finpow() * 65);
 
                 Draw.color(teleportColor);
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     Drawf.tri(e.x, e.y, 6, 100 * e.fout(), i * 90);
                 }
 
                 Draw.color();
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     Drawf.tri(e.x, e.y, 3, 35 * e.fout(), i * 90);
                 }
             }));
@@ -66,8 +66,8 @@ const unitType = (() => {
                     active(skill, unit, data) {
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
-                        var targetX = data.x;
-                        var targetY = data.y;
+                        let targetX = data.x;
+                        let targetY = data.y;
                         Tmp.v1.set(targetX, targetY).sub(unit.x, unit.y);
                         Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
                         unit.x += Tmp.v1.x;
@@ -93,8 +93,8 @@ const unitType = (() => {
                     active(skill, unit, data) {
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
-                        var targetX = data.x;
-                        var targetY = data.y;
+                        let targetX = data.x;
+                        let targetY = data.y;
                         Tmp.v1.set(targetX, targetY).sub(unit.x, unit.y);
                         Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
                         unit.x += Tmp.v1.x;

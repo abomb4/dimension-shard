@@ -61,8 +61,8 @@ Items.sporePod, (() => {
 
     const bt = new JavaAdapter(BasicBulletType, {
         draw(b) {
-            var fin = b.time / this.lifetime;
-            var fout = 1 - fin;
+            let fin = b.time / this.lifetime;
+            let fout = 1 - fin;
             Draw.color(Color.white, Color.lightGray, fin);
             Draw.alpha(0.7);
             Lines.stroke(fout * 3 + 0.5);

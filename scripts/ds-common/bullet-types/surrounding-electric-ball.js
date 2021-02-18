@@ -55,7 +55,7 @@ exports.newSurroundingElectricBall = (requestOptions) => {
         homingDelay: 0,
         homingPower: 0,
         homingRange: 0,
-        splashDamageRadius: 36,
+        splashDamageRadius: 3 * 8,
         splashDamage: 30,
         weaveMag: 8,
         weaveScale: 6,
@@ -119,7 +119,7 @@ exports.newSurroundingElectricBall = (requestOptions) => {
 
             if (options.flyingLightningChange > 0 && b.data.flyingLightningCooldown <= 0) {
                 if (Mathf.chanceDelta(options.flyingLightningChange)) {
-                    for (var i = 0; i < options.lightning / 2; i++) {
+                    for (let i = 0; i < options.lightning / 2; i++) {
                         Lightning.create(b, options.lightningColor, options.flyingLightningDamage, b.x, b.y, Mathf.range(360), options.flyingLightningLength);
                     }
                     b.data.flyingLightningCooldown = options.flyingLightningCooldown;
@@ -131,9 +131,9 @@ exports.newSurroundingElectricBall = (requestOptions) => {
                 b.data.animationDisabled = shouldDisableAnimation();
                 const radius = 4;
                 const radiusRandom = 12;
-                for (var i = 0; i < 3; i++) {
-                    var angle = Mathf.range(360);
-                    var angle2 = Mathf.range(120) + 120;
+                for (let i = 0; i < 3; i++) {
+                    let angle = Mathf.range(360);
+                    let angle2 = Mathf.range(120) + 120;
                     Tmp.v1.trns(angle, radius + Mathf.range(radiusRandom));
                     Tmp.v2.trns(angle2, radius + Mathf.range(radiusRandom));
 
@@ -153,8 +153,8 @@ exports.newSurroundingElectricBall = (requestOptions) => {
         },
     }, 0.1, options.damage, lib.modName + '-surrounding-electric-ball');
 
-    for (var p of BULLET_PROPERTIES) {
-        var value = options[p];
+    for (let p of BULLET_PROPERTIES) {
+        let value = options[p];
         if (value !== undefined && value !== null) {
             v[p] = value;
         }

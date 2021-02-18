@@ -24,7 +24,7 @@ const bulletTypes = require('ds-common/bullet-types/index');
 const teleportColor = Color.valueOf("69dcee");
 const shootEffect = new Effect(16, 24, cons(e => {
     Draw.color(teleportColor);
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
     }
 
@@ -32,7 +32,7 @@ const shootEffect = new Effect(16, 24, cons(e => {
     Lines.circle(e.x, e.y, 24 * e.finpow());
 
     Draw.color();
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
     }
 }));
@@ -78,7 +78,7 @@ turret.ammo(Items.coal, (() => {
     bt.despawnEffect = Fx.explosion;
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
-    bt.splashDamageRadius = 30;
+    bt.splashDamageRadius = 18;
     bt.splashDamage = 30;
     // bt.fragBullets = 1;
     // bt.fragBullet = Bullets.fireball;
@@ -100,7 +100,7 @@ Items.sporePod, (() => {
     bt.despawnEffect = Fx.explosion;
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
-    bt.splashDamageRadius = 24;
+    bt.splashDamageRadius = 16;
     bt.splashDamage = 10;
     // bt.fragBullets = 1;
     // bt.fragBullet = Bullets.fireball;
@@ -122,7 +122,7 @@ Items.pyratite, (() => {
     bt.despawnEffect = Fx.blastExplosion;
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
-    bt.splashDamageRadius = 32;
+    bt.splashDamageRadius = 20;
     bt.splashDamage = 50;
     // bt.fragBullets = 2;
     // bt.fragBullet = Bullets.fireball;
@@ -144,7 +144,7 @@ Items.blastCompound, (() => {
     bt.despawnEffect = Fx.massiveExplosion;
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
-    bt.splashDamageRadius = 45;
+    bt.splashDamageRadius = 34;
     bt.splashDamage = 105;
     bt.status = StatusEffects.blasted;
     bt.speed = turret.range;
@@ -162,7 +162,7 @@ items.dimensionShard, (() => {
     bt.despawnEffect = items.fxDimensionShardExplosion;
     bt.hitSound = Sounds.explosion;
     bt.damage = 0;
-    bt.splashDamageRadius = 38;
+    bt.splashDamageRadius = 30;
     bt.splashDamage = 70;
     bt.speed = turret.range;
     bt.hitShake = 1.6;
@@ -205,7 +205,7 @@ lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
-            var type = this.peekAmmo();
+            let type = this.peekAmmo();
             this.shoot(type);
             this.reload -= this.block.reloadTime;
         }

@@ -20,8 +20,8 @@ const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
 const lastBuildInvalidate = 60 * 10;
-var globalLastBuildTime = 0;
-var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
+let globalLastBuildTime = 0;
+let hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
@@ -34,15 +34,15 @@ var hardPhaseSpaceBridge = extend(ItemBridge, 'hard-phase-space-bridge', {
 
         // check if a mass driver is selected while placing this driver
         if (!Vars.control.input.frag.config.isShown()) return;
-        var selected = Vars.control.input.frag.config.getSelectedTile();
+        let selected = Vars.control.input.frag.config.getSelectedTile();
         if (selected == null || (selected.block != this) || !(selected.within(x * tilesize, y * tilesize, range * tilesize))) return;
 
         // if so, draw a dotted line towards it while it is in range
-        var sin = Mathf.absin(Time.time, 6, 1);
+        let sin = Mathf.absin(Time.time, 6, 1);
         Tmp.v1.set(x * tilesize + this.offset, y * tilesize + this.offset).sub(selected.x, selected.y).limit((this.size / 2 + 1) * tilesize + sin + 0.5);
-        var x2 = x * tilesize - Tmp.v1.x, y2 = y * tilesize - Tmp.v1.y,
+        let x2 = x * tilesize - Tmp.v1.x, y2 = y * tilesize - Tmp.v1.y,
             x1 = selected.x + Tmp.v1.x, y1 = selected.y + Tmp.v1.y;
-        var segs = (selected.dst(x * tilesize, y * tilesize) / tilesize);
+        let segs = (selected.dst(x * tilesize, y * tilesize) / tilesize);
 
         Lines.stroke(2, Pal.gray);
         Lines.dashLine(x1, y1, x2, y2, segs);
@@ -107,17 +107,17 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
         globalLastBuildTime = Time.time;
     },
     drawConfigure() {
-        var entity = this;
-        var tile = this.tile;
-        var block = this.block;
-        var x = this.x;
-        var y = this.y;
+        let entity = this;
+        let tile = this.tile;
+        let block = this.block;
+        let x = this.x;
+        let y = this.y;
 
         Draw.color(Pal.accent);
         Lines.stroke(1);
         Lines.square(x, y, block.size * Vars.tilesize / 2 + 1);
 
-        var target;
+        let target;
         if (entity.link != -1 && (target = Vars.world.tile(entity.link)) != null && this.block.linkValid(tile, target, true)) {
             Draw.color(Pal.place);
             Lines.square(target.x * Vars.tilesize, target.y * Vars.tilesize, block.size * Vars.tilesize / 2 + 1 + (Mathf.absin(Time.time, 4, 1)));
@@ -133,19 +133,19 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
         // Link each
         const tile = this.tile;
         const tilesize = Vars.tilesize;
-        var entity = this;
+        let entity = this;
 
-        var other = Vars.world.tile(entity.link);
+        let other = Vars.world.tile(entity.link);
         if (!this.block.linkValid(tile, other)) return;
-        var otherBuild = other.build;
+        let otherBuild = other.build;
         if (otherBuild == null) { return; }
 
-        var opacity = Core.settings.getInt("bridgeopacity") / 100;
+        let opacity = Core.settings.getInt("bridgeopacity") / 100;
         if (Mathf.zero(opacity)) return;
 
         // draw it
 
-        var angle = Angles.angle(tile.worldx(), tile.worldy(), other.worldx(), other.worldy());
+        let angle = Angles.angle(tile.worldx(), tile.worldy(), other.worldx(), other.worldy());
         Draw.color(Color.white, Color.black, Mathf.absin(Time.time, 6, 0.07));
         Draw.alpha(Math.max(entity.uptime, 0.25) * opacity);
 
@@ -155,14 +155,14 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
         Lines.stroke(8);
         Lines.line(this.block.bridgeRegion, tile.worldx(), tile.worldy(), other.worldx(), other.worldy(), false);
 
-        var dist = Math.max(Math.abs(other.x - tile.x), Math.abs(other.y - tile.y));
+        let dist = Math.max(Math.abs(other.x - tile.x), Math.abs(other.y - tile.y));
 
-        var time = entity.time2 / 1.7;
-        var arrows = (dist) * tilesize / 4 - 2;
+        let time = entity.time2 / 1.7;
+        let arrows = (dist) * tilesize / 4 - 2;
 
         Draw.color();
 
-        for (var a = 0; a < arrows; a++) {
+        for (let a = 0; a < arrows; a++) {
             Draw.alpha(Mathf.absin(a / arrows - entity.time / 100, 0.1, 1) * entity.uptime * opacity);
             Draw.rect(this.block.arrowRegion,
                 tile.worldx() + Angles.trnsx(angle, (tilesize / 2 + a * 4 + time % 4)),
@@ -179,8 +179,8 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
         if (this.team != source.team) return false;
         const itemCapacity = this.block.itemCapacity;
 
-        var entity = this;
-        var other = Vars.world.tile(entity.link);
+        let entity = this;
+        let other = Vars.world.tile(entity.link);
 
         if (this.block.linkValid(tile, other)) {
             return this.items.total() < itemCapacity;
@@ -192,9 +192,9 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
     updateTile() {
         this.super$updateTile();
         // Try dump liquid if not be connected
-        var entity = this;
-        var tile = this.tile;
-        var other = Vars.world.tile(entity.link);
+        let entity = this;
+        let tile = this.tile;
+        let other = Vars.world.tile(entity.link);
         if (!this.block.linkValid(tile, other)) {
             this.dumpLiquid(entity.liquids.current());
         }
@@ -202,9 +202,9 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
     acceptLiquid(source, liquid) {
         if (this.team != source.team || !this.block.hasLiquids) return false;
 
-        var entity = this;
-        var tile = this.tile;
-        var other = Vars.world.tile(entity.link);
+        let entity = this;
+        let tile = this.tile;
+        let other = Vars.world.tile(entity.link);
 
         if (this.block.linkValid(tile, other)) {
             return true;
@@ -216,11 +216,11 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
             && (this.liquids.current() == liquid || this.liquids.get(this.liquids.current()) < 0.2);
     },
     updateTransport(other) {
-        var entity = this;
+        let entity = this;
 
         if (entity.uptime >= 0.5 && entity.timer.get(this.block.timerTransport, this.block.transportTime)) {
             // transport items
-            var item = entity.items.take();
+            let item = entity.items.take();
             if (item != null && other.acceptItem(this, item)) {
                 other.handleItem(this, item);
                 entity.cycleSpeed = Mathf.lerpDelta(entity.cycleSpeed, 4, 0.05);
@@ -242,9 +242,9 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
 
         next = next.getLiquidDestination(this, liquid);
         if (next.team == this.team && next.block.hasLiquids && this.liquids.get(liquid) > 0) {
-            var ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
-            var fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
-            var flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
+            let ofract = next.liquids.get(liquid) / next.block.liquidCapacity;
+            let fract = this.liquids.get(liquid) / this.block.liquidCapacity * this.block.liquidPressure;
+            let flow = Math.min(Mathf.clamp(fract - ofract) * this.block.liquidCapacity, this.liquids.get(liquid));
             flow = Math.min(flow, next.block.liquidCapacity - next.liquids.get(liquid));
 
             if (flow > 0 && ofract <= fract && next.acceptLiquid(this, liquid)) {
@@ -252,9 +252,9 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
                 this.liquids.remove(liquid, flow);
                 return flow;
             } else if (next.liquids.currentAmount() / next.block.liquidCapacity > 0.1 && fract > 0.1) {
-                var fx = (this.x + next.x) / 2.0;
-                var fy = (this.y + next.y) / 2.0;
-                var other = next.liquids.current();
+                let fx = (this.x + next.x) / 2.0;
+                let fy = (this.y + next.y) / 2.0;
+                let other = next.liquids.current();
                 // There was flammability logics, removed
                 if ((liquid.temperature > hotLine && other.temperature < coldLine) || (other.temperature > hotLine && liquid.temperature < coldLine)) {
                     this.liquids.remove(liquid, Math.min(this.liquids.get(liquid), hotLine * Time.delta));
@@ -266,7 +266,7 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
         }
     },
     checkDump(to){
-        var other = Vars.world.tile(this.link);
+        let other = Vars.world.tile(this.link);
         return (!this.block.linkValid(this.tile, other, false));
     }
 }));

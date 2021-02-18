@@ -19,7 +19,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const dsGlobal = require('ds-common/ds-global');
 
-var rotatorLightRegion;
+let rotatorLightRegion;
 const block = extend(Drill, 'hard-thorium-drill', {
     load() {
         this.super$load();
@@ -82,7 +82,7 @@ lib.setBuildingSimple(block, Drill.DrillBuild, block => ({
 
         if (this.items.total() < block.itemCapacity && this.dominantItems > 0 && this.consValid()) {
 
-            var speed = 1;
+            let speed = 1;
 
             if (this.cons.optionalValid()) {
                 speed = block.liquidBoostIntensity;
@@ -107,11 +107,11 @@ lib.setBuildingSimple(block, Drill.DrillBuild, block => ({
             return;
         }
 
-        var delay = block.drillTime + block.hardnessDrillMultiplier * this.dominantItem.hardness;
+        let delay = block.drillTime + block.hardnessDrillMultiplier * this.dominantItem.hardness;
 
         if (this.dominantItems > 0 && this.progress >= delay && this.items.total() < block.itemCapacity) {
             const offloadTimes = Math.floor(this.progress / delay);
-            for (var i = 0; i < offloadTimes; i++) {
+            for (let i = 0; i < offloadTimes; i++) {
                 this.offload(this.dominantItem);
             }
 
@@ -122,8 +122,8 @@ lib.setBuildingSimple(block, Drill.DrillBuild, block => ({
         }
     },
     draw() {
-        var s = 0.3
-        var ts = 0.6
+        let s = 0.3
+        let ts = 0.6
         Draw.rect(block.region, this.x, this.y)
         this.drawCracks()
         if (block.drawRim) {

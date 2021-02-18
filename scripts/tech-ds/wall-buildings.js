@@ -20,7 +20,7 @@ const items = require('ds-common/items');
 
 const dsGlobal = require('ds-common/ds-global');
 
-var shardWall = extend(Wall, 'shard-phase-wall', {});
+let shardWall = extend(Wall, 'shard-phase-wall', {});
 shardWall.size = 1;
 shardWall.health = Blocks.phaseWall.health * (9 / 8);
 shardWall.requirements = ItemStack.with(Items.phaseFabric, 4, items.dimensionShard, 2);
@@ -30,7 +30,7 @@ shardWall.buildCostMultiplier = 6.6;
 shardWall.flashHit = true;
 shardWall.chanceDeflect = Blocks.phaseWall.chanceDeflect * 1.2;
 
-var shardWallLarge = extend(Wall, 'shard-phase-wall-large', {});
+let shardWallLarge = extend(Wall, 'shard-phase-wall-large', {});
 shardWallLarge.size = 2;
 shardWallLarge.health = shardWall.health * 4;
 shardWallLarge.requirements = ItemStack.mult(shardWall.requirements, 4);
@@ -43,7 +43,7 @@ shardWallLarge.chanceDeflect = shardWall.chanceDeflect;
 exports.shardPhaseWall = shardWall;
 exports.shardPhaseWallLarge = shardWallLarge;
 
-var wall = (() => {
+let wall = (() => {
     const armor = 5;
     const block = extend(Wall, 'hard-thorium-alloy-wall', {
         isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
@@ -72,7 +72,7 @@ var wall = (() => {
     return block;
 })();
 
-var wallLarge = (() => {
+let wallLarge = (() => {
     const armor = 7;
     const block = extend(Wall, 'hard-thorium-alloy-wall-large', {
         isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },

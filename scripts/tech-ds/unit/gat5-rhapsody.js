@@ -33,8 +33,8 @@ const unitType = (() => {
     const laserShake = 14;
     const fxIonLaserCharge = new Effect(60 * 3, 100, cons(e => {
         const data = e.data;
-        var x = data.getX();
-        var y = data.getY();
+        let x = data.getX();
+        let y = data.getY();
         Draw.color(items.ionLiquid.color);
         Lines.stroke(e.fin() * 2);
         Lines.circle(x, y, 4 + e.fout() * 100);
@@ -91,16 +91,16 @@ const unitType = (() => {
                     },
                     active(skill, unit, data) {
                         const the = (() => {
-                            var weapon = unit.mounts[0].weapon;
+                            let weapon = unit.mounts[0].weapon;
                             return {
                                 getX() {
-                                    var mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
-                                    var shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                                    let mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
+                                    let shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
                                     return shootX;
                                 },
                                 getY() {
-                                    var mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
-                                    var shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                                    let mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
+                                    let shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
                                     return shootY;
                                 },
                             }
@@ -125,26 +125,26 @@ const unitType = (() => {
                     preUpdate(skill, unit, lastFrame) {
                         unit.vel.setZero();
                         skill.numValue3 = unit.rotation;
-                        // var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
+                        // let ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
                         // unit.lookAt(ang);
-                        for (var mount of unit.mounts) {
+                        for (let mount of unit.mounts) {
                             mount.reload = 100;
                         }
                     },
                     postUpdate(skill, unit, lastFrame) {
-                        var ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
+                        let ang = Tmp.v1.set(unit.x, unit.y).angleTo(skill.numValue1, skill.numValue2);
                         unit.rotation = skill.numValue3;
                         unit.lookAt(ang);
                         if (lastFrame) {
-                            var weapon = unit.mounts[0].weapon;
-                            var mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
-                            var mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
-                            var shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
-                            var shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
-                            var ang = Tmp.v1.set(shootX, shootY).angleTo(skill.numValue1, skill.numValue2);
+                            let weapon = unit.mounts[0].weapon;
+                            let mountX = unit.x + Angles.trnsx(unit.rotation - 90, weapon.x, weapon.y);
+                            let mountY = unit.y + Angles.trnsy(unit.rotation - 90, weapon.x, weapon.y);
+                            let shootX = mountX + Angles.trnsx(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                            let shootY = mountY + Angles.trnsy(unit.rotation - 90, weapon.shootX, weapon.shootY + skillY);
+                            let ang = Tmp.v1.set(shootX, shootY).angleTo(skill.numValue1, skill.numValue2);
                             laserBullet.create(unit, unit.team, shootX, shootY, ang);
                             Effect.shake(laserShake, laserShake, shootX, shootY);
-                            for (var mount of unit.mounts) {
+                            for (let mount of unit.mounts) {
                                 mount.reload = weapon.reload;
                             }
                             shootSound.at(shootX, shootY, 0.7);
@@ -235,17 +235,17 @@ const unitType = (() => {
     Events.on(UnitDestroyEvent, cons(event => {
         if (event.unit.type === m) {
             // Ion Liquid leak, and flame
-            var x = event.unit.x;
-            var y = event.unit.y;
-            for (var i = 0; i < puddles; i++) {
-                var tile = Vars.world.tileWorld(x + Mathf.range(puddleRange), y + Mathf.range(puddleRange));
+            let x = event.unit.x;
+            let y = event.unit.y;
+            for (let i = 0; i < puddles; i++) {
+                let tile = Vars.world.tileWorld(x + Mathf.range(puddleRange), y + Mathf.range(puddleRange));
                 Puddles.deposit(tile, puddleLiquid, puddleAmount);
                 if (i < 3) {
                     Fires.create(tile);
                 }
             }
             // Lightning hit everyone
-            for (var i = 0; i < lightning; i++) {
+            for (let i = 0; i < lightning; i++) {
                 Lightning.create(Team.derelict, items.ionLiquid.color, lightningDamage, x, y, Mathf.random(360), lightningLength + Mathf.random(lightningLengthRand));
             }
         }

@@ -63,31 +63,31 @@ interface FragCategory {
  * @param {FragConfig} 配置项
  * @author abomb4<abomb4@163.com>
  */
-var leftFrag = (fragConfig) => {
+let leftFrag = (fragConfig) => {
     // TODO validate fragConfig
     const iconWidth = 46;
     const padding = 4;
     const MARGIN_RIGHT = 314;
 
-    var currentCategory = 0;
-    var menuHoverBlock;
-    var selectedBlocks = new ObjectMap();
-    var scrollPositions = new ObjectFloatMap();
-    var blockTable;
-    var blockPane;
-    var toggler;
+    let currentCategory = 0;
+    let menuHoverBlock;
+    let selectedBlocks = new ObjectMap();
+    let scrollPositions = new ObjectFloatMap();
+    let blockTable;
+    let blockPane;
+    let toggler;
 
-    var hide = true;
+    let hide = true;
 
-    var fragment;
+    let fragment;
     /** 判断某个方块类型是不是属于左下角 */
     function containsContent(content) {
-        var found = false;
-        var cs = fragConfig.categories;
-        loop: for (var i = 0; i < cs.length; i++) {
-            var category = cs[i];
-            for (var j = 0; j < category.blocks.length; j++) {
-                var block = category.blocks[j];
+        let found = false;
+        let cs = fragConfig.categories;
+        loop: for (let i = 0; i < cs.length; i++) {
+            let category = cs[i];
+            for (let j = 0; j < category.blocks.length; j++) {
+                let block = category.blocks[j];
                 if (content == block) {
                     found = true;
                     break loop;
@@ -100,8 +100,8 @@ var leftFrag = (fragConfig) => {
     function rebuild() {
         if (fragment) {
             currentCategory = 0;
-            var index = toggler.getZIndex();
-            var group = toggler.parent;
+            let index = toggler.getZIndex();
+            let group = toggler.parent;
             toggler.remove();
             fragment.build(group);
             toggler.setZIndex(index);
@@ -123,7 +123,7 @@ var leftFrag = (fragConfig) => {
     }
     function getSelectedBlock(cat) {
         return selectedBlocks.get(cat, prov(() => {
-            var category = fragConfig.categories[cat]
+            let category = fragConfig.categories[cat]
             return category.blocks.find(v => unlocked(v));
         }));
     }
@@ -145,24 +145,24 @@ var leftFrag = (fragConfig) => {
                     })).width(50).height(50).bottom();
                     full.table(cons(frame => {
 
-                        var rebuildCategory = run(() => {
+                        let rebuildCategory = run(() => {
 
                             blockTable.clear();
                             blockTable.top().margin(5);
 
-                            var index = 0;
-                            var group = new ButtonGroup();
+                            let index = 0;
+                            let group = new ButtonGroup();
                             group.setMinCheckCount(0);
 
-                            var category = fragConfig.categories[currentCategory || 0];
-                            for (var j = 0; j < category.blocks.length; j++) {
-                                var block = ((sss) => category.blocks[sss])(j);
+                            let category = fragConfig.categories[currentCategory || 0];
+                            for (let j = 0; j < category.blocks.length; j++) {
+                                let block = ((sss) => category.blocks[sss])(j);
                                 if (!unlocked(block)) { continue; }
                                 if (index++ % fragConfig.columns == 0) {
                                     blockTable.row();
                                 }
 
-                                var button = ((block) =>
+                                let button = ((block) =>
                                     blockTable.button(new TextureRegionDrawable(block.icon(Cicon.medium)), Styles.selecti, run(() => {
                                         if (unlocked(block)) {
                                             if (Core.input.keyDown(Packages.arc.input.KeyCode.shiftLeft) && Fonts.getUnicode(block.name) != 0) {
@@ -180,8 +180,8 @@ var leftFrag = (fragConfig) => {
                                 button.resizeImage(Cicon.medium.size);
 
                                 button.update(((block, button) => run(() => {
-                                    var core = Vars.player.core();
-                                    var color = (Vars.state.rules.infiniteResources
+                                    let core = Vars.player.core();
+                                    let color = (Vars.state.rules.infiniteResources
                                         || (core != null && (core.items.has(block.requirements, Vars.state.rules.buildCostMultiplier) || Vars.state.rules.infiniteResources)))
                                         && Vars.player.isBuilder() ? Color.white : Color.gray;
 
@@ -203,7 +203,7 @@ var leftFrag = (fragConfig) => {
 
                             //add missing elements to even out table size
                             if (index < fragConfig.columns) {
-                                for (var k = 0; k < fragConfig.columns - index; k++) {
+                                for (let k = 0; k < fragConfig.columns - index; k++) {
                                     blockTable.add().size(iconWidth);
                                 }
                             }
@@ -224,7 +224,7 @@ var leftFrag = (fragConfig) => {
                             blockPane = blocksSelect.pane(cons(blocks => blockTable = blocks)).height(iconWidth * fragConfig.rows + padding)
                                 .update(cons(pane => {
                                     if (pane.hasScroll()) {
-                                        var result = Core.scene.hit(Core.input.mouseX(), Core.input.mouseY(), true);
+                                        let result = Core.scene.hit(Core.input.mouseX(), Core.input.mouseY(), true);
                                         if (result == null || !result.isDescendantOf(pane)) {
                                             Core.scene.setScrollFocus(null);
                                         }
@@ -238,14 +238,14 @@ var leftFrag = (fragConfig) => {
                                 table.row();
                                 table.left().margin(0).defaults().size(iconWidth).left();
 
-                                var group = new ButtonGroup();
-                                var index = 0;
-                                var cs = fragConfig.categories;
-                                for (var i = 0; i < cs.length; i++) {
+                                let group = new ButtonGroup();
+                                let index = 0;
+                                let cs = fragConfig.categories;
+                                for (let i = 0; i < cs.length; i++) {
                                     if (index++ % fragConfig.columns == 0) {
                                         table.row();
                                     }
-                                    var category = cs[i];
+                                    let category = cs[i];
                                     (cc => {
                                         table.button(category.icon(), Styles.clearToggleTransi, run(() => {
                                             currentCategory = cc;
@@ -258,7 +258,7 @@ var leftFrag = (fragConfig) => {
                                 }
                                 //add missing elements to even out table size
                                 if (index < fragConfig.columns) {
-                                    for (var k = 0; k < fragConfig.columns - index; k++) {
+                                    for (let k = 0; k < fragConfig.columns - index; k++) {
                                         table.add().size(iconWidth);
                                     }
                                 }
@@ -279,7 +279,7 @@ var leftFrag = (fragConfig) => {
 };
 
 Events.on(ClientLoadEvent, cons((e) => {
-    var frag = leftFrag({
+    let frag = leftFrag({
         rows: 4,
         columns: 6,
         categories: [

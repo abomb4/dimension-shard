@@ -23,7 +23,7 @@ const { flyingConstructor } = require('abomb4/skill-framework');
 const teleportColor = Color.valueOf("69dcee");
 const shootEffect = new Effect(16, 24, cons(e => {
     Draw.color(teleportColor);
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
     }
 
@@ -31,7 +31,7 @@ const shootEffect = new Effect(16, 24, cons(e => {
     Lines.circle(e.x, e.y, 24 * e.finpow());
 
     Draw.color();
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
     }
 }));
@@ -229,7 +229,7 @@ const unitType = (() => {
                 bt.despawnEffect = Fx.massiveExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 45;
+                bt.splashDamageRadius = 34;
                 bt.splashDamage = 105;
                 bt.status = StatusEffects.blasted;
                 bt.speed = 200;
@@ -265,7 +265,7 @@ const unitType = (() => {
                 bt.despawnEffect = items.fxDimensionShardExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 38;
+                bt.splashDamageRadius = 32;
                 bt.splashDamage = 70;
                 bt.speed = 160;
                 bt.hitShake = 1.6;
@@ -300,7 +300,7 @@ const unitType = (() => {
                 bt.despawnEffect = items.fxDimensionShardExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 38;
+                bt.splashDamageRadius = 28;
                 bt.splashDamage = 70;
                 bt.speed = 180;
                 bt.hitShake = 1.6;

@@ -106,9 +106,9 @@ exports.newIonBoltBulletType = (requestOptions) => {
     //     // select two point at circle, draw line between them
     //     const radius = 4;
     //     const radiusRandom = 12;
-    //     for (var i = 0; i < 3; i++) {
-    //         var angle = Mathf.range(360);
-    //         var angle2 = Mathf.range(120) + 120;
+    //     for (let i = 0; i < 3; i++) {
+    //         let angle = Mathf.range(360);
+    //         let angle2 = Mathf.range(120) + 120;
     //         tmp.trns(angle, radius + Mathf.range(radiusRandom));
     //         tmp2.trns(angle2, radius + Mathf.range(radiusRandom));
     //         Lines.line(e.data.getX() + tmp.x, e.data.getY() + tmp.y, e.data.getX() + tmp2.x, e.data.getY() + tmp2.y, false);
@@ -135,7 +135,7 @@ exports.newIonBoltBulletType = (requestOptions) => {
         hitEffect: Fx.massiveExplosion,
         smokeEffect: fireEffect,
         despawnEffect: fireEffect,
-        splashDamageRadius: 32,
+        splashDamageRadius: 30,
         splashDamage: 60,
         lightning: 2,
         lightningLength: 6,
@@ -163,8 +163,8 @@ exports.newIonBoltBulletType = (requestOptions) => {
     const v = new JavaAdapter(LaserBoltBulletType, Object.assign({
     }, mergedOptions.overrides), mergedOptions.speed, mergedOptions.damage);
 
-    for (var p of BULLET_PROPERTIES) {
-        var value = mergedOptions[p];
+    for (let p of BULLET_PROPERTIES) {
+        let value = mergedOptions[p];
         if (value !== undefined && value !== null) {
             v[p] = value;
         }

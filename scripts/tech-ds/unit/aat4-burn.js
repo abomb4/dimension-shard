@@ -87,17 +87,17 @@ const unitType = (() => {
     Events.on(UnitDestroyEvent, cons(event => {
         if (event.unit.type === m) {
             // Ion Liquid leak, and flame
-            var x = event.unit.x;
-            var y = event.unit.y;
-            for (var i = 0; i < puddles; i++) {
-                var tile = Vars.world.tileWorld(x + Mathf.range(puddleRange), y + Mathf.range(puddleRange));
+            let x = event.unit.x;
+            let y = event.unit.y;
+            for (let i = 0; i < puddles; i++) {
+                let tile = Vars.world.tileWorld(x + Mathf.range(puddleRange), y + Mathf.range(puddleRange));
                 Puddles.deposit(tile, puddleLiquid, puddleAmount);
                 if (i < 3) {
                     Fires.create(tile);
                 }
             }
             // Lightning hit everyone
-            for (var i = 0; i < lightning; i++) {
+            for (let i = 0; i < lightning; i++) {
                 Lightning.create(Team.derelict, items.ionLiquid.color, lightningDamage, x, y, Mathf.random(360), lightningLength + Mathf.random(lightningLengthRand));
             }
         }

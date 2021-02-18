@@ -21,9 +21,9 @@ const items = require('ds-common/items');
 const defineBlackHoleBullet = (() => {
 
     function percent(x, y, tx, ty, radius) {
-        var dst = Mathf.dst(x, y, tx, ty);
-        var falloff = 0.4;
-        var scaled = Mathf.lerp(1 - dst / radius, 1, falloff);
+        let dst = Mathf.dst(x, y, tx, ty);
+        let falloff = 0.4;
+        let scaled = Mathf.lerp(1 - dst / radius, 1, falloff);
         return scaled;
     }
 
@@ -58,8 +58,8 @@ const defineBlackHoleBullet = (() => {
                 }
             },
             draw(b) {
-                var fin = b.time / this.lifetime;
-                var fout = 1 - fin;
+                let fin = b.time / this.lifetime;
+                let fout = 1 - fin;
                 Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, fout * 0.8 + 0.2);
                 Draw.alpha(0.4 * fin + 0.6);
                 Lines.stroke(fin * 3);
@@ -71,16 +71,16 @@ const defineBlackHoleBullet = (() => {
             },
             update(b) {
                 if (b) {
-                    var x = b.x;
-                    var y = b.y;
-                    var team = b.team;
-                    var rect = new Rect();
+                    let x = b.x;
+                    let y = b.y;
+                    let team = b.team;
+                    let rect = new Rect();
                     rect.setSize(this.splashDamageRadius * 2).setCenter(x, y);
-                    var con = cons(unit => {
+                    let con = cons(unit => {
                         if (unit.team == team || !unit.within(x, y, this.splashDamageRadius)) {
                             return;
                         }
-                        var p = percent(x, y, unit.getX(), unit.getY(), this.splashDamageRadius);
+                        let p = percent(x, y, unit.getX(), unit.getY(), this.splashDamageRadius);
 
                         // drag
                         unit.impulse(Tmp.v3.set(unit).sub(x, y).nor().scl(this.knockback * p * 80 * Time.delta));
@@ -94,8 +94,8 @@ const defineBlackHoleBullet = (() => {
                     if (b.timer.get(1, delay)) {
                         const ss = 6;
                         const fullDamage = this.splashDamage / 60 * delay * Time.delta * b.damageMultiplier()
-                        for (var i = 1; i <= ss; i++) {
-                            var p = i / ss * 0.8 + 0.2;
+                        for (let i = 1; i <= ss; i++) {
+                            let p = i / ss * 0.8 + 0.2;
                             Damage.damage(b.team, x, y, this.splashDamageRadius * p, fullDamage * p, true, true);
                         }
                     }

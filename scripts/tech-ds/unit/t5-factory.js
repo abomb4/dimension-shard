@@ -70,10 +70,9 @@ block.upgrades.addAll(
 lib.setBuildingSimple(block, Reconstructor.ReconstructorBuild, block => ({
     displayConsumption(table) {
         table.left();
-        var i = 0;
-        for (var cons of block.consumes.all()) {
+        let i = 0;
+        for (let cons of block.consumes.all()) {
             if (cons.isOptional() && cons.isBoost()) continue;
-            print(i);
             cons.build(this, table);
             if (++i % 4 == 0) {
                 table.row();
