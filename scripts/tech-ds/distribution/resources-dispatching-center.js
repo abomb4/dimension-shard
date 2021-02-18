@@ -111,7 +111,7 @@ blockType.solid = true;
 blockType.hasItems = true;
 blockType.configurable = true;
 blockType.saveConfig = false;
-blockType.itemCapacity = 200;
+blockType.itemCapacity = 500;
 blockType.noUpdateDisabled = true;
 blockType.requirements = ItemStack.with(
     Items.copper, 4200,
@@ -148,31 +148,43 @@ blockType.configClear(tile => {
     tile.setLink(null);
 });
 
+const rdcGroup = new EntityGroup(Building, false, false);
 blockType.buildType = prov(() => {
 
+    const MAX_LOOP = 50;
+    const FRAME_DELAY = 5;
+    const timer = new Interval(6)
     var links = new Seq(java.lang.Integer);
+    var deadLinks = new Seq(java.lang.Integer);
     var warmup = 0;
     var rotateDeg = 0;
     var rotateSpeed = 0;
+    const looper = (() => {
+        let index = 0;
 
-    var fairLoopOffset = 0;
-    function updateFairLoopOffset(max) {
-        fairLoopOffset++;
-        if (fairLoopOffset >= max) {
-            fairLoopOffset = 0;
+        return {
+            next(max) {
+                if (index < 0) {
+                    index = max - 1;
+                }
+                var v = index;
+                index -= 1;
+                return v;
+            },
         }
-    }
-    function fairLoopIndex(i, max, offset) {
-        return (i + offset) % max;
-    }
+    })();
 
+    function linkValidTarget(the, target) {
+        return target && target.team == the.team && the.within(target, range);
+    }
 
     function linkValid(the, pos) {
         if (pos === undefined || pos === null || pos == -1) return false;
         var linkTarget = Vars.world.build(pos);
-        return linkTarget && linkTarget.team == the.team && the.within(linkTarget, range);
+        return linkValidTarget(the, linkTarget);
     }
 
+    const tmpWhatHave = [];
     return new JavaAdapter(StorageBlock.StorageBuild, {
         getLink() { return links; },
         setLink(v) { links = v; },
@@ -182,41 +194,93 @@ blockType.buildType = prov(() => {
                 links.add(int);
             }
         },
+        deadLink(v) {
+            // Move to dead link when block disappeared
+            if (Vars.net.client()) { return; }
+            var int = new java.lang.Integer(v);
+            if (links.contains(boolf(i => i == int))) {
+                this.configure(int);
+            }
+            if (deadLinks.size >= 50) {
+                deadLinks.removeRange(0, 25);
+            }
+        },
+        tryResumeDeadLink(v) {
+            if (Vars.net.client()) { return; }
+            var int = new java.lang.Integer(v);
+            if (!deadLinks.remove(boolf(i => i == int))) {
+                return;
+            }
+            var linkTarget = Vars.world.build(v);
+            if (linkValid(this, v)) {
+                this.configure(new java.lang.Integer(linkTarget.pos()));
+            }
+        },
+        sendItems(target, whatIHave) {
+            var s = false;
+            for (let i = whatIHave.length - 1; i >= 0; i--) {
+                let have = whatIHave[i];
+                let item = have.item;
+                let count = have.count;
+                let accept = Math.min(count, target.acceptStack(item, Math.min(count, FRAME_DELAY), this));
+                if (accept > 0) {
+                    s = true;
+                    target.handleStack(item, accept, this);
+                    this.items.remove(item, accept);
+                    have.count -= accept;
+                    if (have.count <= 0) {
+                        whatIHave.splice(i, 1);
+                    }
+                }
+            }
+            return s;
+        },
         acceptItem(source, item) {
             return this.items.get(item) < this.getMaximumAccepted(item);
         },
         updateTile() {
-            var itemSent = false;
-            if (this.consValid()) {
-                for (var iloop = 0; iloop < links.size; iloop++) {
-                    var i = fairLoopIndex(iloop, links.size, fairLoopOffset);
-                    var pos = links.get(i);
-                    if (linkValid(this, pos)) {
-                        var linkTarget = Vars.world.build(pos);
-                        links.set(i, new java.lang.Integer(linkTarget.pos()));
-                        for (var ii = 0; ii < Vars.content.items().size; ii++) {
-                            var item = Vars.content.item(ii);
-                            if (linkTarget.team == this.team && this.items.has(item) && linkTarget.acceptItem(this, item) && this.canDump(linkTarget, item)) {
-                                linkTarget.handleItem(this, item);
-                                this.items.remove(item, 1);
-                                itemSent = true;
+            tmpWhatHave.splice(0, tmpWhatHave.length);
+            if (timer.get(1, FRAME_DELAY)) {
+                var itemSent = false;
+                if (this.consValid()) {
+                    for (let i = 0; i < Vars.content.items().size; i++) {
+                        let item = Vars.content.items().get(i);
+                        let count = this.items.get(item);
+                        if (count > 0) {
+                            tmpWhatHave.push({item: item, count: count});
+                        }
+                    }
+                    let max = links.size;
+                    for (let i = 0; i < Math.min(MAX_LOOP, max); i++) {
+                        let index = looper.next(max);
+                        let pos = links.get(index);
+                        if (pos === undefined || pos === null || pos == -1) {
+                            links.remove(index);
+                            continue;
+                        }
+                        let linkTarget = Vars.world.build(pos);
+                        if (!linkValidTarget(this, linkTarget)) {
+                            this.configure(new java.lang.Integer(pos));
+                            max -= 1;
+                            if (max <= 0) {
                                 break;
                             }
+                            continue;
                         }
-                    } else {
-                        // it.remove();
+                        if (this.sendItems(linkTarget, tmpWhatHave)) {
+                            itemSent = true;
+                        }
                     }
+                    warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
+                    rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
+                } else {
+                    warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
+                    rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
                 }
-                warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
-                rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
-            } else {
-                warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
-                rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
+                if (warmup > 0) {
+                    rotateDeg += rotateSpeed;
+                }
             }
-            if (warmup > 0) {
-                rotateDeg += rotateSpeed;
-            }
-            updateFairLoopOffset(links.size);
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
@@ -300,6 +364,16 @@ blockType.buildType = prov(() => {
             }
             return output;
         },
+        add() {
+            if (this.added) { return; }
+            rdcGroup.add(this);
+            this.super$add();
+        },
+        remove() {
+            if (!this.added) { return; }
+            rdcGroup.remove(this);
+            this.super$remove();
+        },
         write(write) {
             this.super$write(write);
             write.s(links.size);
@@ -320,5 +394,11 @@ blockType.buildType = prov(() => {
         },
     }, blockType);
 });
+
+Events.on(BlockBuildEndEvent, cons(e => {
+    rdcGroup.each(cons(cen => {
+        cen.tryResumeDeadLink(cen.tile.pos());
+    }));
+}));
 
 exports.resourcesDispatchingCenter = blockType;
