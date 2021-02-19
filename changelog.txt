@@ -1,3 +1,7 @@
+0.25:
+Add a connection limit to the Space Unloader;
+Optimize the performance of the Space Unloader and Resource Dispatching Center
+
 0.24.1 (2021-02-19):
 Fix DC crash problem in v125
 
