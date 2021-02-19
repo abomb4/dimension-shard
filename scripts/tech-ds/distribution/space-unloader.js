@@ -21,6 +21,7 @@ const dsGlobal = require('ds-common/ds-global');
 
 const range = 300;
 const warmupSpeed = 0.05;
+const LINK_LIMIT = 32;
 
 // Must load region in 'load()'
 let topRegion;
@@ -48,13 +49,22 @@ const outEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(Block, "space-unloader", {
+const blockType = extendContent(StorageBlock, "space-unloader", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     load() {
         this.super$load();
         topRegion = lib.loadRegion("space-unloader-top");
         bottomRegion = lib.loadRegion("space-unloader-bottom");
         rotatorRegion = lib.loadRegion("space-unloader-rotator");
+    },
+    init() {
+        this.super$init();
+        this.acceptsItems = false;
+    },
+    setStats() {
+        this.super$setStats();
+        this.stats.add(Stat.powerConnections, LINK_LIMIT, StatUnit.none);
+        this.stats.add(Stat.range, range / Vars.tilesize, StatUnit.blocks);
     },
     setBars() {
         this.super$setBars();
@@ -63,6 +73,11 @@ const blockType = extendContent(Block, "space-unloader", {
             prov(() => Core.bundle.format("bar.capacity", UI.formatAmount(e.block.itemCapacity))),
             prov(() => Pal.items),
             floatp(() => e.items.total() / (e.block.itemCapacity * Vars.content.items().count(boolf(i => i.unlockedNow()))))
+        )));
+        this.bars.add("connections", lib.func((e) => new Bar(
+            prov(() => Core.bundle.format("bar.powerlines", e.getLinks().size, LINK_LIMIT)),
+            prov(() => Pal.items),
+            floatp(() => e.getLinks().size / LINK_LIMIT)
         )));
     },
     drawPlace(x, y, rotation, valid) {
@@ -110,7 +125,7 @@ blockType.solid = true;
 blockType.hasItems = true;
 blockType.configurable = true;
 blockType.saveConfig = false;
-blockType.itemCapacity = 20;
+blockType.itemCapacity = 100;
 blockType.noUpdateDisabled = true;
 blockType.requirements = ItemStack.with(
     Items.titanium, 130,
@@ -138,7 +153,7 @@ blockType.config(IntSeq, lib.cons2((tile, seq) => {
         }
     }
     tile.setItemTypeId(itemId);
-    tile.setLink(newLinks);
+    tile.setLinks(newLinks);
 }));
 blockType.config(java.lang.Integer, lib.cons2((tile, int) => {
     tile.setOneLink(int);
@@ -150,85 +165,156 @@ blockType.configClear(tile => {
     tile.setItemTypeId(null);
 });
 
+const theGroup = new EntityGroup(Building, false, false);
 blockType.buildType = prov(() => {
+
+    const MAX_LOOP = 8;
+    const FRAME_DELAY = 5;
+    const timer = new Interval(6)
 
     let itemType = null;
     let links = new Seq(java.lang.Integer);
+    let deadLinks = new Seq(java.lang.Integer);
     let slowdownDelay = 0;
     let warmup = 0;
     let rotateDeg = 0;
     let rotateSpeed = 0;
-    let fairLoopOffset = 0;
-    function updateFairLoopOffset(max) {
-        fairLoopOffset++;
-        if (fairLoopOffset >= max) {
-            fairLoopOffset = 0;
+
+    let consValid = false;
+
+    const looper = (() => {
+        let index = 0;
+
+        return {
+            next(max) {
+                if (index < 0) {
+                    index = max - 1;
+                }
+                let v = index;
+                index -= 1;
+                return v;
+            },
         }
-    }
-    function fairLoopIndex(i, max, offset) {
-        return (i + offset) % max;
+    })();
+
+    function linkValidTarget(the, target) {
+        return target && target.team == the.team && target.items != null && the.within(target, range);
     }
 
     function linkValid(the, pos) {
         if (pos === undefined || pos === null || pos == -1) return false;
         let linkTarget = Vars.world.build(pos);
-        return linkTarget && linkTarget.team == the.team && the.within(linkTarget, range);
+        return linkValidTarget(the, linkTarget);
     }
 
-    return extend(Building, {
-        getLink() { return links; },
+    return new JavaAdapter(StorageBlock.StorageBuild, {
+        getLinks() { return links; },
         getItemType() { return itemType; },
-        setLink(v) { links = v; },
+        setLinks(v) {
+            links = v;
+            for (let i = links.size - 1; i >= 0; i--) {
+                let link = links.get(i);
+                let linkTarget = Vars.world.build(link);
+                if (!linkValidTarget(this, linkTarget)) {
+                    links.remove(i);
+                } else {
+                    links.set(i, lib.int(linkTarget.pos()));
+                }
+            }
+            links.truncate(LINK_LIMIT);
+        },
         setOneLink(v) {
             let int = new java.lang.Integer(v);
-            if (!links.remove(boolf(i => i == int))) {
+            if (!links.remove(boolf(i => i == int)) && links.size < LINK_LIMIT) {
                 links.add(int);
             }
         },
-        setItemTypeId(v) { itemType = (!v && v !== 0 ? null : Vars.content.items().get(v)) },
+        deadLink(v) {
+            // Move to dead link when block disappeared
+            if (Vars.net.client()) { return; }
+            let int = new java.lang.Integer(v);
+            if (links.contains(boolf(i => i == int))) {
+                this.configure(int);
+            }
+            deadLinks.add(int);
+            if (deadLinks.size > LINK_LIMIT) {
+                deadLinks.remove(0);
+            }
+        },
+        tryResumeDeadLink(v) {
+            if (Vars.net.client()) { return; }
+            let int = new java.lang.Integer(v);
+            if (!deadLinks.remove(boolf(i => i == int))) {
+                return;
+            }
+            if (links.size >= LINK_LIMIT) {
+                return;
+            }
+            let linkTarget = Vars.world.build(int);
+            if (linkValid(this, int)) {
+                this.configure(new java.lang.Integer(linkTarget.pos()));
+            }
+        },
+        setItemTypeId(v) { itemType = (!v && v !== 0 || v < 0 ? null : Vars.content.items().get(v)) },
         updateTile() {
             let hasItem = false;
-            let consValid = this.consValid();
-            if (itemType != null && consValid) {
-                for (let iloop = 0; iloop < links.size; iloop++) {
-                    let i = fairLoopIndex(iloop, links.size, fairLoopOffset);
-                    let pos = links.get(i);
-                    if (linkValid(this, pos)) {
-                        let linkTarget = Vars.world.build(pos);
-                        links.set(i, new java.lang.Integer(linkTarget.pos()));
-
-                        if (linkTarget != null && linkTarget.items != null) {
-                            if (linkTarget.items.has(itemType) && this.items.get(itemType) < this.getMaximumAccepted(itemType)) {
-                                this.handleItem(this, itemType);
-                                linkTarget.removeStack(itemType, 1);
-                                linkTarget.itemTaken(itemType);
-                                hasItem = true;
-                            }
+            if (timer.get(1, FRAME_DELAY)) {
+                if (itemType != null && (consValid = this.consValid())) {
+                    let max = links.size;
+                    for (let i = 0; i < Math.min(MAX_LOOP, max); i++) {
+                        let index = looper.next(max);
+                        let pos = links.get(index);
+                        if (pos === undefined || pos === null || pos == -1) {
+                            // Delete
+                            this.configure(lib.int(pos));
+                            continue;
                         }
-                    } else {
-                        // it.remove();
+
+                        let linkTarget = Vars.world.build(pos);
+                        if (!linkValidTarget(this, linkTarget)) {
+                            // Clear this link
+                            this.deadLink(pos);
+                            max -= 1;
+                            if (max <= 0) {
+                                break;
+                            }
+                            continue;
+                        }
+
+                        let count = linkTarget.items.get(itemType);
+                        let accept = Math.min(count, this.acceptStack(itemType, Math.min(count, FRAME_DELAY), linkTarget));
+
+                        if (accept > 0) {
+                            this.handleStack(itemType, accept, linkTarget);
+                            linkTarget.removeStack(itemType, accept);
+                            for (let tmpi = accept; tmpi > 0; tmpi--) {
+                                linkTarget.itemTaken(itemType);
+                            }
+                            hasItem = true;
+                        }
                     }
                 }
-            }
 
-            if (consValid && hasItem) {
-                slowdownDelay = 60;
-            } else if (!consValid) {
-                slowdownDelay = 0;
+                if (consValid && hasItem) {
+                    slowdownDelay = 60;
+                } else if (!consValid) {
+                    slowdownDelay = 0;
+                }
+
+                if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 12) {
+                    Time.run(Mathf.random(10), run(() => {
+                        outEffect.at(this.x, this.y, 0);
+                    }));
+                }
+                for (let i = 0; i < FRAME_DELAY; i++) {
+                    this.dump();
+                }
             }
             warmup = Mathf.lerpDelta(warmup, consValid ? 1 : 0, warmupSpeed);
             rotateSpeed = Mathf.lerpDelta(rotateSpeed, slowdownDelay > 0 ? 1 : 0, warmupSpeed);
+            slowdownDelay = Math.max(0, slowdownDelay - 1);
             if (warmup > 0) {
                 rotateDeg += rotateSpeed;
-            }
-            slowdownDelay = Math.max(0, slowdownDelay - 1);
-            updateFairLoopOffset(links.size);
-            this.dump();
-
-            if (this.enabled && rotateSpeed > 0.5 && Mathf.random(60) > 48) {
-                Time.run(Mathf.random(10), run(() => {
-                    outEffect.at(this.x, this.y, 0);
-                }));
             }
         },
         display(table) {
@@ -321,6 +407,17 @@ blockType.buildType = prov(() => {
             }
             return seq;
         },
+        outputsItems() { return true; },
+        add() {
+            if (this.added) { return; }
+            theGroup.add(this);
+            this.super$add();
+        },
+        remove() {
+            if (!this.added) { return; }
+            theGroup.remove(this);
+            this.super$remove();
+        },
         version() {
             return 2;
         },
@@ -356,7 +453,15 @@ blockType.buildType = prov(() => {
                 }
             }
         },
-    });
+    }, blockType);
 });
+
+Events.on(BlockBuildEndEvent, cons(e => {
+    if (!e.reaking) {
+        theGroup.each(cons(cen => {
+            cen.tryResumeDeadLink(e.tile.pos());
+        }));
+    }
+}));
 
 exports.spaceUnloader = blockType;

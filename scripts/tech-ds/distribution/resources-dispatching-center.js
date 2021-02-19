@@ -159,6 +159,10 @@ blockType.buildType = prov(() => {
     let warmup = 0;
     let rotateDeg = 0;
     let rotateSpeed = 0;
+
+    let consValid = false;
+    let itemSent = false;
+
     const looper = (() => {
         let index = 0;
 
@@ -187,7 +191,18 @@ blockType.buildType = prov(() => {
     const tmpWhatHave = [];
     return new JavaAdapter(StorageBlock.StorageBuild, {
         getLink() { return links; },
-        setLink(v) { links = v; },
+        setLink(v) {
+            links = v;
+            for (let i = links.size - 1; i >= 0; i--) {
+                let link = links.get(i);
+                let linkTarget = Vars.world.build(link);
+                if (!linkValidTarget(this, linkTarget)) {
+                    links.remove(i);
+                } else {
+                    links.set(i, lib.int(linkTarget.pos()));
+                }
+            }
+        },
         setOneLink(v) {
             let int = new java.lang.Integer(v);
             if (!links.remove(boolf(i => i == int))) {
@@ -201,6 +216,7 @@ blockType.buildType = prov(() => {
             if (links.contains(boolf(i => i == int))) {
                 this.configure(int);
             }
+            deadLinks.add(int);
             if (deadLinks.size >= 50) {
                 deadLinks.removeRange(0, 25);
             }
@@ -211,8 +227,8 @@ blockType.buildType = prov(() => {
             if (!deadLinks.remove(boolf(i => i == int))) {
                 return;
             }
-            let linkTarget = Vars.world.build(v);
-            if (linkValid(this, v)) {
+            let linkTarget = Vars.world.build(int);
+            if (linkValid(this, int)) {
                 this.configure(new java.lang.Integer(linkTarget.pos()));
             }
         },
@@ -241,8 +257,10 @@ blockType.buildType = prov(() => {
         updateTile() {
             tmpWhatHave.splice(0, tmpWhatHave.length);
             if (timer.get(1, FRAME_DELAY)) {
-                let itemSent = false;
-                if (this.consValid()) {
+                itemSent = false;
+                consValid = this.consValid();
+                if (consValid) {
+                    // Build what I have
                     for (let i = 0; i < Vars.content.items().size; i++) {
                         let item = Vars.content.items().get(i);
                         let count = this.items.get(item);
@@ -250,17 +268,18 @@ blockType.buildType = prov(() => {
                             tmpWhatHave.push({item: item, count: count});
                         }
                     }
+                    // Loop connections
                     let max = links.size;
                     for (let i = 0; i < Math.min(MAX_LOOP, max); i++) {
                         let index = looper.next(max);
                         let pos = links.get(index);
                         if (pos === undefined || pos === null || pos == -1) {
-                            links.remove(index);
+                            this.configure(lib.int(pos));
                             continue;
                         }
                         let linkTarget = Vars.world.build(pos);
                         if (!linkValidTarget(this, linkTarget)) {
-                            this.configure(new java.lang.Integer(pos));
+                            this.deadLink(pos);
                             max -= 1;
                             if (max <= 0) {
                                 break;
@@ -271,15 +290,17 @@ blockType.buildType = prov(() => {
                             itemSent = true;
                         }
                     }
-                    warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
-                    rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
-                } else {
-                    warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
-                    rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
                 }
-                if (warmup > 0) {
-                    rotateDeg += rotateSpeed;
-                }
+            }
+            if (consValid) {
+                warmup = Mathf.lerpDelta(warmup, links.isEmpty() ? 0 : 1, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, itemSent ? 1 : 0, warmupSpeed);
+            } else {
+                warmup = Mathf.lerpDelta(warmup, 0, warmupSpeed);
+                rotateSpeed = Mathf.lerpDelta(rotateSpeed, 0, warmupSpeed);
+            }
+            if (warmup > 0) {
+                rotateDeg += rotateSpeed;
             }
         },
         drawConfigure() {
@@ -396,9 +417,11 @@ blockType.buildType = prov(() => {
 });
 
 Events.on(BlockBuildEndEvent, cons(e => {
-    rdcGroup.each(cons(cen => {
-        cen.tryResumeDeadLink(cen.tile.pos());
-    }));
+    if (!e.breaking) {
+        rdcGroup.each(cons(cen => {
+            cen.tryResumeDeadLink(e.tile.pos());
+        }));
+    }
 }));
 
 exports.resourcesDispatchingCenter = blockType;
