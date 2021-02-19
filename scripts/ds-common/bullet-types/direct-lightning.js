@@ -28,9 +28,6 @@ const createDirectLightning = (() => {
     var bhit = false;
     var lastSeed = 0;
 
-    const raycaster = func => new World.Raycaster({
-        accept: func
-    });
     return (hitter, team, color, damage, x, y, rotation, length) => {
 
         const originRotation = rotation;
@@ -54,7 +51,7 @@ const createDirectLightning = (() => {
                 bhit = false;
                 var from = lines.get(lines.size - 2);
                 var to = lines.get(lines.size - 1);
-                Vars.world.raycastEach(World.toTile(from.getX()), World.toTile(from.getY()), World.toTile(to.getX()), World.toTile(to.getY()), raycaster((wx, wy) => {
+                Vars.world.raycastEach(World.toTile(from.getX()), World.toTile(from.getY()), World.toTile(to.getX()), World.toTile(to.getY()), lib.raycaster((wx, wy) => {
 
                     var tile = Vars.world.tile(wx, wy);
                     if (tile != null && tile.block().insulated && tile.team() != team) {
