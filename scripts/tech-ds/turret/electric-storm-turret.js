@@ -27,7 +27,7 @@ const dsGlobal = require('ds-common/ds-global');
 const {
     newElectricStormBulletType
 } = require('ds-common/bullet-types/index');
-var i = 1;
+let i = 1;
 const turret = blockTypes.newNoRotatingTurret({
     name: 'electric-storm-turret',
     turretType: ItemTurret,
@@ -84,7 +84,7 @@ const turret = blockTypes.newNoRotatingTurret({
         // I think the default udpatShooting and updateCooling is wrong, so modify it.
         updateShooting() {
             if (this.reload >= this.block.reloadTime) {
-                var type = this.peekAmmo();
+                let type = this.peekAmmo();
                 this.shoot(type);
                 this.reload -= this.block.reloadTime;
             }
@@ -105,7 +105,7 @@ const turret = blockTypes.newNoRotatingTurret({
         bullet(type, angle) {
             const { x, y, targetPos, team } = this;
             const { tr, velocityInaccuracy, minRange } = this.block;
-            var lifeScl = type.scaleVelocity ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range(), minRange / type.range(), range / type.range()) : 1;
+            let lifeScl = type.scaleVelocity ? Mathf.clamp(Mathf.dst(x + tr.x, y + tr.y, targetPos.x, targetPos.y) / type.range(), minRange / type.range(), range / type.range()) : 1;
             // type.create(this, team, x + tr.x, y + tr.y, angle, -1, 1 + Mathf.range(velocityInaccuracy), lifeScl, {
             //     target: !this.isControlled() && this.target ? this.target : new Vec2(targetPos.getX(), targetPos.getY())
             // });

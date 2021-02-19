@@ -125,7 +125,7 @@ Blocks.spectre.ammoTypes.put(hardThoriumAlloy, (() => {
 // -=-=-=-=-=-=-=-=-=-=-=-= Space Crystal =-=-=-=-=-=-=-=-=-=-=-=-
 
 Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
-    var fxShoot = lib.newEffect(24, e => {
+    let fxShoot = lib.newEffect(24, e => {
         e.scaled(10, cons(b => {
             Draw.color(items.spaceCrystalColor, items.spaceCrystalColorLight, b.fin());
             Lines.stroke(b.fout() * 3 + 0.2);
@@ -134,19 +134,19 @@ Blocks.foreshadow.ammoTypes.put(spaceCrystal, (() => {
 
         Draw.color(items.spaceCrystalColor);
 
-        for (var i of Mathf.signs) {
+        for (let i of Mathf.signs) {
             Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
             Drawf.tri(e.x, e.y, 13 * e.fout(), 50, e.rotation + 20 * i);
         }
     });
-    var fxBlackTrail = new Effect(30, cons(e => {
-        for (var i = 0; i < 2; i++) {
+    let fxBlackTrail = new Effect(30, cons(e => {
+        for (let i = 0; i < 2; i++) {
             Draw.color(i == 0 ? items.spaceCrystalColor : items.spaceCrystalColorLight);
 
-            var m = i == 0 ? 1 : 0.5;
+            let m = i == 0 ? 1 : 0.5;
 
-            var rot = e.rotation + 180;
-            var w = 15 * e.fout() * m;
+            let rot = e.rotation + 180;
+            let w = 15 * e.fout() * m;
             Drawf.tri(e.x, e.y, w, (30 + Mathf.randomSeedRange(e.id, 15)) * m, rot);
             Drawf.tri(e.x, e.y, w, 10 * m, rot + 180);
         }

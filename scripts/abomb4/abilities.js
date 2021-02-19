@@ -20,16 +20,16 @@ const items = require('ds-common/items')
 
 exports.newDeflectForceFieldAbility = (() => {
 
-    var realRad;
-    var paramUnit;
-    var paramField;
-    var paramOptions;
+    let realRad;
+    let paramUnit;
+    let paramField;
+    let paramOptions;
 
     function deflect(paramUnit, chanceDeflect, bullet) {
         //deflect bullets if necessary
         if (chanceDeflect > 0) {
-            var { team } = paramUnit;
-            var { deflectAngle, deflectSound } = paramOptions;
+            let { team } = paramUnit;
+            let { deflectAngle, deflectSound } = paramOptions;
             //slow bullets are not deflected
             if (bullet.vel.len() <= 0.1 || !bullet.type.reflectable) return false;
 
@@ -88,11 +88,11 @@ exports.newDeflectForceFieldAbility = (() => {
             shieldColor: items.spaceCrystalColorLight,
         }, originOptions);
 
-        var radiusScale = 0;
-        var alpha = 0;
+        let radiusScale = 0;
+        let alpha = 0;
 
         function checkRadius(unit) {
-            var r = radiusScale * options.radius;
+            let r = radiusScale * options.radius;
             realRad = r;
             return r;
         }
@@ -120,7 +120,7 @@ exports.newDeflectForceFieldAbility = (() => {
                 }
             },
             draw(unit) {
-                var r = checkRadius(unit);
+                let r = checkRadius(unit);
                 if (unit.shield > 0) {
                     Draw.z(Layer.shields);
                     Draw.color(options.shieldColor, Color.white, Mathf.clamp(alpha));

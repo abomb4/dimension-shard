@@ -39,21 +39,21 @@ const unitType = (() => {
                     unit.mineTimer += unit.type.mineSpeed * (hyperUp - 1);
                 }
                 if (unit.isBuilding()) {
-                    var finalPlaceDst = Vars.state.rules.infiniteResources ? Infinity : Vars.buildingRange;
-                    var infinite = Vars.state.rules.infiniteResources || unit.team.rules().infiniteResources;
-                    var core = unit.core();
-                    var current = unit.buildPlan();
+                    let finalPlaceDst = Vars.state.rules.infiniteResources ? Infinity : Vars.buildingRange;
+                    let infinite = Vars.state.rules.infiniteResources || unit.team.rules().infiniteResources;
+                    let core = unit.core();
+                    let current = unit.buildPlan();
                     if (current == null) {
                         return;
                     }
-                    var tile = current.tile();
+                    let tile = current.tile();
                     if (!unit.within(tile, finalPlaceDst) || tile.build == null) {
                         return;
                     }
                     if ((core == null && !infinite) || !(tile.build.getClass() == ConstructBlock.ConstructBuild)) {
                         return;
                     }
-                    var entity = tile.build;
+                    let entity = tile.build;
                     if (current.breaking) {
                         entity.deconstruct(unit, core, 1.0 / entity.buildCost * Time.delta * unit.type.buildSpeed * (hyperUp - 1) * Vars.state.rules.buildSpeedMultiplier);
                     } else {

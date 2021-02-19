@@ -36,7 +36,7 @@ const hitEffect = new Effect(12, cons(e => {
     Lines.stroke(e.fout() * 1.5);
 
     Angles.randLenVectors(e.id, 8, e.finpow() * 17, e.rotation, 360, lib.floatc2((x, y) => {
-        var ang = Mathf.angle(x, y);
+        let ang = Mathf.angle(x, y);
         Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 4 + 1);
     }));
 }));
@@ -100,8 +100,8 @@ const turret = new JavaAdapter(PowerTurret, {
                 table.row();
                 table.table(cons(c => {
                     const len = Vars.content.liquids().size;
-                    for (var i = 0; i < len; i++) {
-                        var liquid = Vars.content.liquids().get(i);
+                    for (let i = 0; i < len; i++) {
+                        let liquid = Vars.content.liquids().get(i);
                         if (!block.consumes.liquidfilters.get(liquid.id)) {
                             continue;
                         }
@@ -110,7 +110,7 @@ const turret = new JavaAdapter(PowerTurret, {
                             c.add(liquid.localizedName).padRight(10).left().top();
                             c.table(Tex.underline, cons(bt => {
                                 bt.left().defaults().padRight(3).left();
-                                var result = (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * multiplier)
+                                let result = (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * multiplier)
                                 bt.add(Core.bundle.format("bullet.reload", Strings.autoFixed(result, 2)));
                             })).left().padTop(-9);
                             c.row();
@@ -195,7 +195,7 @@ const Call_DarkLightShot = (() => {
         };
     }
 
-    var inited = false;
+    let inited = false;
     function init() {
         if (inited) { return; }
         /** Client receives skill active packet, deal self */
@@ -230,7 +230,7 @@ turret.shootType = (() => {
     const tr2 = new Vec2();
     const bt = new JavaAdapter(ContinuousLaserBulletType, {
         update(b) {
-            var length = Damage.findLaserLength(b, this.length);
+            let length = Damage.findLaserLength(b, this.length);
             if (b.timer.get(1, 2)) {
                 // Drag them
                 // calculate them
@@ -247,7 +247,7 @@ turret.shootType = (() => {
                     rect.height *= -1;
                 }
 
-                var expand = dragRadius * 1.4;
+                let expand = dragRadius * 1.4;
 
                 rect.y -= expand;
                 rect.x -= expand;
@@ -260,23 +260,23 @@ turret.shootType = (() => {
                 }
 
                 function dragPowerPercent(dst, radius) {
-                    var scaled = Interp.sineOut.apply(1 - dst / radius);
+                    let scaled = Interp.sineOut.apply(1 - dst / radius);
                     return scaled;
                 }
                 Units.nearbyEnemies(b.team, rect, ((length, b) => cons(u => {
-                    var rotation = b.rotation();
-                    var xy = rotate(b.x, b.y, u.x, u.y, rotation);
-                    var x = xy[0];
-                    var y = xy[1];
-                    var absY = Math.abs(y);
+                    let rotation = b.rotation();
+                    let xy = rotate(b.x, b.y, u.x, u.y, rotation);
+                    let x = xy[0];
+                    let y = xy[1];
+                    let absY = Math.abs(y);
                     if (x < 0 || x > length || absY > dragRadius) {
                         return;
                     }
                     // drag to the line
-                    var power = dragPowerPercent(absY, dragRadius);
-                    var angle = y > 0 ? rotation - 90 : rotation + 90;
+                    let power = dragPowerPercent(absY, dragRadius);
+                    let angle = y > 0 ? rotation - 90 : rotation + 90;
                     Tmp.v3.trns(angle, 80).scl(dragPower * power);
-                    // var realPower = Tmp.v3.len() / u.mass();
+                    // let realPower = Tmp.v3.len() / u.mass();
                     // print('pre power: ' + Tmp.v3.len() + ', real power: ' + realPower);
                     // // If too close, stop it moving
                     // if (absY < 3 && realPower > u.type.speed) {
@@ -297,17 +297,17 @@ turret.shootType = (() => {
             }
 
             if (lightningSpacing > 0 && b.timer.get(3, 59)) {
-                var idx = 0;
-                var rot = b.rotation();
+                let idx = 0;
+                let rot = b.rotation();
                 // lightningSound.at(b.x + Angles.trnsx(rot, length / 2), b.y + Angles.trnsy(rot, length / 2));
-                for (var i = (lightningSpacing + Mathf.random(lightningSpacing)) / 2;
+                for (let i = (lightningSpacing + Mathf.random(lightningSpacing)) / 2;
                     i <= length; i += lightningSpacing) {
-                    var cx = b.x + Angles.trnsx(rot, i),
+                    let cx = b.x + Angles.trnsx(rot, i),
                         cy = b.y + Angles.trnsy(rot, i);
 
-                    var f = idx++;
+                    let f = idx++;
 
-                    for (var s of Mathf.signs) {
+                    for (let s of Mathf.signs) {
                         ((b, s, cx, cy, rot) => {
                             Time.run(f * lightningDelay, run(() => {
                                 if (b.isAdded() && b.type == this) {
@@ -379,10 +379,10 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
             }
         } else if (this.reload > 0 && !this.charging) {
             this.wasShooting = true;
-            var liquid = this.liquids.current();
-            var maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
+            let liquid = this.liquids.current();
+            let maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
 
-            var used = (this.cheating() ? maxUsed * Time.delta : Math.min(this.liquids.get(liquid), maxUsed * Time.delta)) * (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * this.block.coolantMultiplier);
+            let used = (this.cheating() ? maxUsed * Time.delta : Math.min(this.liquids.get(liquid), maxUsed * Time.delta)) * (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * this.block.coolantMultiplier);
             this.reload -= used;
             this.liquids.remove(liquid, used);
 
@@ -397,7 +397,7 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
         }
         if (this.reload <= 0 && (this.consValid() || this.cheating())) {
             if (Vars.net.client()) return;
-            var type = this.peekAmmo();
+            let type = this.peekAmmo();
             Call_DarkLightShot(this.tile.pos(), this.rotation);
             this.shoot(type);
             this.reload = this.block.reloadTime;

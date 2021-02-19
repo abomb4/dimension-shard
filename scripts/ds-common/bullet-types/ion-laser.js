@@ -91,15 +91,15 @@ exports.newIonLaserBulletType = (requestOptions) => {
         sideLength: 0,
         status: items.ionBurningEffect,
         statusDuration: 120,
-        colors: [ (() => {var c = ionLiquid.color.cpy(); c.a = 0.4; return c; })(), ionLiquid.color, Color.white ],
+        colors: [ (() => {let c = ionLiquid.color.cpy(); c.a = 0.4; return c; })(), ionLiquid.color, Color.white ],
         overrides: {},
     }, requestOptions);
 
     const v = new JavaAdapter(LaserBulletType, Object.assign({
     }, mergedOptions.overrides), mergedOptions.damage);
 
-    for (var p of LASER_BULLET_PROPERTIES) {
-        var value = mergedOptions[p];
+    for (let p of LASER_BULLET_PROPERTIES) {
+        let value = mergedOptions[p];
         if (value !== undefined && value !== null) {
             v[p] = value;
         }

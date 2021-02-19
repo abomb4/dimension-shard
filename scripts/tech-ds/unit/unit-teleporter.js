@@ -44,11 +44,11 @@ const inEffect = new Effect(38, cons(e => {
 
     Angles.randLenVectors(e.id, 1, radius * e.fout(), 0, 360, new Floatc2({
         get: (x, y) => {
-            var angle = Angles.angle(0, 0, x, y);
-            var trnsx = Angles.trnsx(angle, 2);
-            var trnsy = Angles.trnsy(angle, 2);
-            var trnsx2 = Angles.trnsx(angle, 4);
-            var trnsy2 = Angles.trnsy(angle, 4);
+            let angle = Angles.angle(0, 0, x, y);
+            let trnsx = Angles.trnsx(angle, 2);
+            let trnsy = Angles.trnsy(angle, 2);
+            let trnsx2 = Angles.trnsx(angle, 4);
+            let trnsy2 = Angles.trnsy(angle, 4);
             Fill.circle(
                 e.x + trnsx + x + trnsx2 * e.fout(),
                 e.y + trnsy + y + trnsy2 * e.fout(),
@@ -64,11 +64,11 @@ const outEffect = new Effect(38, cons(e => {
 
     Angles.randLenVectors(e.id, 1, radius * e.fin(), 0, 360, new Floatc2({
         get: (x, y) => {
-            var angle = Angles.angle(0, 0, x, y);
-            var trnsx = Angles.trnsx(angle, 2);
-            var trnsy = Angles.trnsy(angle, 2);
-            var trnsx2 = Angles.trnsx(angle, 4);
-            var trnsy2 = Angles.trnsy(angle, 4);
+            let angle = Angles.angle(0, 0, x, y);
+            let trnsx = Angles.trnsx(angle, 2);
+            let trnsy = Angles.trnsy(angle, 2);
+            let trnsx2 = Angles.trnsx(angle, 4);
+            let trnsy2 = Angles.trnsy(angle, 4);
             Fill.circle(
                 e.x + trnsx + x + trnsx2 * e.fin(),
                 e.y + trnsy + y + trnsy2 * e.fin(),
@@ -88,10 +88,10 @@ const UNBUILDABLE_RADIUS = 1;
 const TOO_MUCH_UNITS = 5 * 8;
 const TOO_MUCH_RADIUS = 5 * 8;
 
-var borderRegion
-var wrapRegion
-var middleRegion
-var innerRegion
+let borderRegion
+let wrapRegion
+let middleRegion
+let innerRegion
 const block = new JavaAdapter(Block, {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     load() {
@@ -115,15 +115,15 @@ const block = new JavaAdapter(Block, {
 
         // check if a mass driver is selected while placing this driver
         if (!Vars.control.input.frag.config.isShown()) return;
-        var selected = Vars.control.input.frag.config.getSelectedTile();
+        let selected = Vars.control.input.frag.config.getSelectedTile();
         if (selected == null || !(selected.dst(x * tilesize, y * tilesize) <= range * tilesize)) return;
 
         // if so, draw a dotted line towards it while it is in range
-        var sin = Mathf.absin(Time.time, 6, 1);
+        let sin = Mathf.absin(Time.time, 6, 1);
         Tmp.v1.set(x * tilesize, y * tilesize).sub(selected.x, selected.y).limit((this.size / 2 + 1) * tilesize + sin + 0.5);
-        var x2 = x * tilesize - Tmp.v1.x, y2 = y * tilesize - Tmp.v1.y,
+        let x2 = x * tilesize - Tmp.v1.x, y2 = y * tilesize - Tmp.v1.y,
             x1 = selected.x + Tmp.v1.x, y1 = selected.y + Tmp.v1.y;
-        var segs = (selected.dst(x * tilesize, y * tilesize) / tilesize);
+        let segs = (selected.dst(x * tilesize, y * tilesize) / tilesize);
 
         Lines.stroke(2, Pal.gray);
         Lines.dashLine(x1, y1, x2, y2, segs);
@@ -186,13 +186,13 @@ Events.run(Trigger.preDraw, run(() => {
     while (drawArray.pop()) {}
 }));
 lib.setBuilding(block, (block) => {
-    var target = -1;
+    let target = -1;
     // now 'connected' means connected by.
-    var connected = null;
-    var uptime = 0;
-    var rotateSpeed = 0;
-    var rotate = 0;
-    var lastColor = BLUE;
+    let connected = null;
+    let uptime = 0;
+    let rotateSpeed = 0;
+    let rotate = 0;
+    let lastColor = BLUE;
 
     return new JavaAdapter(Building, {
         draw() {
@@ -213,7 +213,7 @@ lib.setBuilding(block, (block) => {
             }
 
             // 连线
-            var opacity = Math.max(entity.getUptime(), 0.25) * Core.settings.getInt("bridgeopacity") / 100;
+            let opacity = Math.max(entity.getUptime(), 0.25) * Core.settings.getInt("bridgeopacity") / 100;
             if (Mathf.zero(opacity)) return;
 
             const other = getBuild(entity.getTarget());
@@ -221,13 +221,13 @@ lib.setBuilding(block, (block) => {
             // Draw line between
             if (linkValid(entity, other, true) && isTeleportActive(entity) && isTeleportActive(other)) {
                 Draw.z(Layer.power);
-                var angle = Angles.angle(entity.x, entity.y, other.x, other.y);
+                let angle = Angles.angle(entity.x, entity.y, other.x, other.y);
                 Lines.stroke(0.6);
                 // Lines.line(tile.x, tile.y, other.x, other.y);
-                var spreadLength = Mathf.absin(Time.time, 6, 1.6);
+                let spreadLength = Mathf.absin(Time.time, 6, 1.6);
                 spreadLength = 0.8 - spreadLength;
-                var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
-                var lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
+                let lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
+                let lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
 
                 Draw.color(ORANGE);
                 Draw.alpha(opacity * 0.5);
@@ -251,13 +251,13 @@ lib.setBuilding(block, (block) => {
 
             if (linkValid(connected, entity, true) && isTeleportActive(entity) && isTeleportActive(connected) && drawArray.indexOf(connected) < 0) {
                 Draw.z(Layer.power);
-                var angle = Angles.angle(connected.x, connected.y, entity.x, entity.y);
+                let angle = Angles.angle(connected.x, connected.y, entity.x, entity.y);
                 Lines.stroke(0.6);
                 // Lines.line(tile.x, tile.y, entity.x, entity.y);
-                var spreadLength = Mathf.absin(Time.time, 6, 1.6);
+                let spreadLength = Mathf.absin(Time.time, 6, 1.6);
                 spreadLength = 0.8 - spreadLength;
-                var lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
-                var lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
+                let lineOffsetX = Angles.trnsx(angle, block.size * 4 + 2);
+                let lineOffsetY = Angles.trnsy(angle, block.size * 4 + 2);
 
                 Draw.color(ORANGE);
                 Draw.alpha(opacity * 0.5);
@@ -282,15 +282,15 @@ lib.setBuilding(block, (block) => {
             Draw.reset();
         },
         drawConfigure() {
-            var entity = this;
+            let entity = this;
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
             Lines.square(this.x, this.y, block.size * Vars.tilesize / 2 + 1);
 
-            var target;
+            let target;
             if (entity.getTarget() != -1 && (target = getBuild(entity.getTarget())) != null && linkValid(entity, target, true)) {
-                var sin = Mathf.absin(Time.time, 6, 1);
+                let sin = Mathf.absin(Time.time, 6, 1);
 
                 Draw.color(Pal.place);
                 Lines.square(target.x, target.y, target.block.size * Vars.tilesize / 2 + 1 + (Mathf.absin(Time.time, 4, 1)));
@@ -302,13 +302,13 @@ lib.setBuilding(block, (block) => {
             Drawf.dashCircle(this.x, this.y, RANGE * Vars.tilesize, Pal.accent);
         },
         tryInvalidOriginTarget(other) {
-            var originOther = getBuild(other.getTarget());
+            let originOther = getBuild(other.getTarget());
             if (originOther != null && originOther.getConnected() != null) {
                 originOther.setConnected(null);
             }
         },
         onConfigureTileTapped(other) {
-            var entity = this;
+            let entity = this;
             if (this == other) {
                 this.tryInvalidOriginTarget(entity);
                 entity.configure(-1);
@@ -336,10 +336,10 @@ lib.setBuilding(block, (block) => {
         update() {
             this.super$update();
 
-            var entity = this;
-            var targetPos = entity.getTarget();
-            var target = getBuild(targetPos);
-            var shouldConsume = false;
+            let entity = this;
+            let targetPos = entity.getTarget();
+            let target = getBuild(targetPos);
+            let shouldConsume = false;
 
             if (linkValid(entity, target, false)) {
                 shouldConsume = true;
@@ -354,8 +354,8 @@ lib.setBuilding(block, (block) => {
 
                     // Try teleport units in range
                     // If too much units on target teleporter, abort.
-                    var isTooMuch = (() => {
-                        var counter = {
+                    let isTooMuch = (() => {
+                        let counter = {
                             count: 0,
                             inited: false,
                             add() {
@@ -381,8 +381,8 @@ lib.setBuilding(block, (block) => {
                                 getUnitSize() { return unit.hitSize }
                             });
 
-                            var outX = target.x + Mathf.range(block.size * Vars.tilesize / 2);
-                            var outY = target.y + Mathf.range(block.size * Vars.tilesize / 2);
+                            let outX = target.x + Mathf.range(block.size * Vars.tilesize / 2);
+                            let outY = target.y + Mathf.range(block.size * Vars.tilesize / 2);
                             unit.set(outX, outY);
                             if (unit.resetLegs !== undefined) {
                                 unit.resetLegs();

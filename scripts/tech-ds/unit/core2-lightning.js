@@ -30,7 +30,7 @@ const fxHitBulletSmall = new Effect(14, cons(e => {
     Lines.stroke(0.5 + e.fout());
 
     Angles.randLenVectors(e.id, 5, e.fin() * 15, lib.floatc2((x, y) => {
-        var ang = Mathf.angle(x, y);
+        let ang = Mathf.angle(x, y);
         Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 3 + 1);
     }));
 }));
@@ -56,21 +56,21 @@ const unitType = (() => {
                     unit.mineTimer += unit.type.mineSpeed * (hyperUp - 1);
                 }
                 if (unit.isBuilding()) {
-                    var finalPlaceDst = Vars.state.rules.infiniteResources ? Infinity : Vars.buildingRange;
-                    var infinite = Vars.state.rules.infiniteResources || unit.team.rules().infiniteResources;
-                    var core = unit.core();
-                    var current = unit.buildPlan();
+                    let finalPlaceDst = Vars.state.rules.infiniteResources ? Infinity : Vars.buildingRange;
+                    let infinite = Vars.state.rules.infiniteResources || unit.team.rules().infiniteResources;
+                    let core = unit.core();
+                    let current = unit.buildPlan();
                     if (current == null) {
                         return;
                     }
-                    var tile = current.tile();
+                    let tile = current.tile();
                     if (!unit.within(tile, finalPlaceDst) || tile.build == null) {
                         return;
                     }
                     if ((core == null && !infinite) || !(tile.build.getClass() == ConstructBlock.ConstructBuild)) {
                         return;
                     }
-                    var entity = tile.build;
+                    let entity = tile.build;
                     if (current.breaking) {
                         entity.deconstruct(unit, core, 1.0 / entity.buildCost * Time.delta * unit.type.buildSpeed * (hyperUp - 1) * Vars.state.rules.buildSpeedMultiplier);
                     } else {
@@ -105,12 +105,12 @@ const unitType = (() => {
                 // Lines.circle(e.x, e.y, 4 + e.finpow() * 65);
 
                 Draw.color(teleportColor);
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     Drawf.tri(e.x, e.y, 6, 50 * e.fout(), i * 90);
                 }
 
                 Draw.color();
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     Drawf.tri(e.x, e.y, 3, 20 * e.fout(), i * 90);
                 }
             }));
@@ -118,7 +118,7 @@ const unitType = (() => {
             const teleportLaserType = new JavaAdapter(LaserBulletType, {
                 init(b) { },
             }, damage2);
-            teleportLaserType.colors = [(() => { var c = teleportColor.cpy(); c.a = 0.4; return c; })(), teleportColor, Color.white];
+            teleportLaserType.colors = [(() => { let c = teleportColor.cpy(); c.a = 0.4; return c; })(), teleportColor, Color.white];
             teleportLaserType.hitEffect = Fx.hitLancer;
             teleportLaserType.despawnEffect = Fx.none;
             teleportLaserType.hitSize = 4;
@@ -132,16 +132,16 @@ const unitType = (() => {
                 const sideWidth = teleportLaserType.sideWidth;
                 const sideLength = teleportLaserType.sideLength;
                 const sideAngle = teleportLaserType.sideAngle;
-                var targetX = e.data.x;
-                var targetY = e.data.y;
+                let targetX = e.data.x;
+                let targetY = e.data.y;
                 Tmp.v1.set(targetX, targetY).sub(e.x, e.y);
-                var angle = Tmp.v1.angle();
-                var baseLen = Tmp.v1.len();
+                let angle = Tmp.v1.angle();
+                let baseLen = Tmp.v1.len();
 
-                var compound = 1;
-                var cwidth = teleportLaserType.width;
+                let compound = 1;
+                let cwidth = teleportLaserType.width;
                 Lines.lineAngle(e.x, e.y, angle, baseLen);
-                for (var color of teleportLaserType.colors) {
+                for (let color of teleportLaserType.colors) {
                     Draw.color(color);
                     Lines.stroke((cwidth *= lengthFalloff) * e.fout());
                     Lines.lineAngle(e.x, e.y, angle, baseLen, false);
@@ -149,7 +149,7 @@ const unitType = (() => {
                     Drawf.tri(e.x + Tmp.v1.x, e.y + Tmp.v1.y, Lines.getStroke() * 1.22, cwidth * 2 + width / 2, angle);
 
                     Fill.circle(e.x, e.y, 1 * cwidth * e.fout());
-                    for (var i of Mathf.signs) {
+                    for (let i of Mathf.signs) {
                         Drawf.tri(e.x, e.y, sideWidth * e.fout() * cwidth, sideLength * compound, angle + sideAngle * i);
                     }
 
@@ -190,16 +190,16 @@ const unitType = (() => {
                     directivity: true,
                     activeTime: -1,
                     active(skill, unit, data) {
-                        var x = unit.x;
-                        var y = unit.y;
+                        let x = unit.x;
+                        let y = unit.y;
                         teleportEffect.at(unit.x, unit.y);
                         teleportSound.at(unit.x, unit.y, Mathf.random(0.9, 1.1));
-                        var targetX = data.x;
-                        var targetY = data.y;
+                        let targetX = data.x;
+                        let targetY = data.y;
                         Tmp.v1.set(targetX, targetY).sub(unit.x, unit.y);
-                        var angle = Tmp.v1.angle();
+                        let angle = Tmp.v1.angle();
                         Tmp.v1.setLength(Math.min(skill.def.range, Tmp.v1.len()));
-                        var len = Tmp.v1.len();
+                        let len = Tmp.v1.len();
                         unit.x += Tmp.v1.x;
                         unit.y += Tmp.v1.y;
                         unit.snapInterpolation();

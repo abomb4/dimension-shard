@@ -23,9 +23,9 @@ const range = 80 * 8;
 const warmupSpeed = 0.05;
 
 // Must load region in 'load()'
-var topRegion;
-var bottomRegion;
-var rotatorRegion;
+let topRegion;
+let bottomRegion;
+let rotatorRegion;
 
 const ORANGE = Color.valueOf("#fea947");
 
@@ -34,11 +34,11 @@ const inEffect = lib.newEffect(38, e => {
 
     Angles.randLenVectors(e.id, 1, 8 * e.fout(), 0, 360, new Floatc2({
         get: (x, y) => {
-            var angle = Angles.angle(0, 0, x, y);
-            var trnsx = Angles.trnsx(angle, 2);
-            var trnsy = Angles.trnsy(angle, 2);
-            var trnsx2 = Angles.trnsx(angle, 4);
-            var trnsy2 = Angles.trnsy(angle, 4);
+            let angle = Angles.angle(0, 0, x, y);
+            let trnsx = Angles.trnsx(angle, 2);
+            let trnsy = Angles.trnsy(angle, 2);
+            let trnsx2 = Angles.trnsx(angle, 4);
+            let trnsy2 = Angles.trnsy(angle, 4);
             Fill.circle(
                 e.x + trnsx + x + trnsx2 * e.fout(),
                 e.y + trnsy + y + trnsy2 * e.fout(),
@@ -78,15 +78,15 @@ const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
         // Rotate relative points
         if (IntSeq.__javaObject__.isInstance(config)) {
             // ROTATE IT!
-            var newSeq = new IntSeq(config.size);
-            var linkX = null;
-            for (var i = 0; i < config.size; i++) {
-                var num = config.get(i);
+            let newSeq = new IntSeq(config.size);
+            let linkX = null;
+            for (let i = 0; i < config.size; i++) {
+                let num = config.get(i);
                 if (linkX == null) {
                     linkX = num;
                 } else {
                     // The source position is relative to right bottom, transform it.
-                    var point = new Point2(linkX * 2 - 1, num * 2 - 1);
+                    let point = new Point2(linkX * 2 - 1, num * 2 - 1);
 
                     transformer.get(point);
                     newSeq.add((point.x + 1) / 2);
@@ -126,14 +126,14 @@ blockType.requirements = ItemStack.with(
 blockType.consumes.power(100);
 blockType.config(IntSeq, lib.cons2((tile, sq) => {
     // This seems only used by coping block
-    var links = new Seq(java.lang.Integer);
-    var linkX = null;
-    for (var i = 0; i < sq.size; i++) {
-        var num = sq.get(i);
+    let links = new Seq(java.lang.Integer);
+    let linkX = null;
+    for (let i = 0; i < sq.size; i++) {
+        let num = sq.get(i);
         if (linkX == null) {
             linkX = num;
         } else {
-            var pos = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
+            let pos = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
             links.add(lib.int(pos));
             linkX = null;
         }
@@ -154,11 +154,11 @@ blockType.buildType = prov(() => {
     const MAX_LOOP = 50;
     const FRAME_DELAY = 5;
     const timer = new Interval(6)
-    var links = new Seq(java.lang.Integer);
-    var deadLinks = new Seq(java.lang.Integer);
-    var warmup = 0;
-    var rotateDeg = 0;
-    var rotateSpeed = 0;
+    let links = new Seq(java.lang.Integer);
+    let deadLinks = new Seq(java.lang.Integer);
+    let warmup = 0;
+    let rotateDeg = 0;
+    let rotateSpeed = 0;
     const looper = (() => {
         let index = 0;
 
@@ -167,7 +167,7 @@ blockType.buildType = prov(() => {
                 if (index < 0) {
                     index = max - 1;
                 }
-                var v = index;
+                let v = index;
                 index -= 1;
                 return v;
             },
@@ -180,7 +180,7 @@ blockType.buildType = prov(() => {
 
     function linkValid(the, pos) {
         if (pos === undefined || pos === null || pos == -1) return false;
-        var linkTarget = Vars.world.build(pos);
+        let linkTarget = Vars.world.build(pos);
         return linkValidTarget(the, linkTarget);
     }
 
@@ -189,7 +189,7 @@ blockType.buildType = prov(() => {
         getLink() { return links; },
         setLink(v) { links = v; },
         setOneLink(v) {
-            var int = new java.lang.Integer(v);
+            let int = new java.lang.Integer(v);
             if (!links.remove(boolf(i => i == int))) {
                 links.add(int);
             }
@@ -197,7 +197,7 @@ blockType.buildType = prov(() => {
         deadLink(v) {
             // Move to dead link when block disappeared
             if (Vars.net.client()) { return; }
-            var int = new java.lang.Integer(v);
+            let int = new java.lang.Integer(v);
             if (links.contains(boolf(i => i == int))) {
                 this.configure(int);
             }
@@ -207,17 +207,17 @@ blockType.buildType = prov(() => {
         },
         tryResumeDeadLink(v) {
             if (Vars.net.client()) { return; }
-            var int = new java.lang.Integer(v);
+            let int = new java.lang.Integer(v);
             if (!deadLinks.remove(boolf(i => i == int))) {
                 return;
             }
-            var linkTarget = Vars.world.build(v);
+            let linkTarget = Vars.world.build(v);
             if (linkValid(this, v)) {
                 this.configure(new java.lang.Integer(linkTarget.pos()));
             }
         },
         sendItems(target, whatIHave) {
-            var s = false;
+            let s = false;
             for (let i = whatIHave.length - 1; i >= 0; i--) {
                 let have = whatIHave[i];
                 let item = have.item;
@@ -241,7 +241,7 @@ blockType.buildType = prov(() => {
         updateTile() {
             tmpWhatHave.splice(0, tmpWhatHave.length);
             if (timer.get(1, FRAME_DELAY)) {
-                var itemSent = false;
+                let itemSent = false;
                 if (this.consValid()) {
                     for (let i = 0; i < Vars.content.items().size; i++) {
                         let item = Vars.content.items().get(i);
@@ -284,16 +284,16 @@ blockType.buildType = prov(() => {
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
-            var sin = Mathf.absin(Time.time, 6, 1);
+            let sin = Mathf.absin(Time.time, 6, 1);
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
             Drawf.circles(this.x, this.y, (this.tile.block().size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
 
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
                 if (linkValid(this, pos)) {
-                    var linkTarget = Vars.world.build(pos);
+                    let linkTarget = Vars.world.build(pos);
                     Drawf.square(linkTarget.x, linkTarget.y, linkTarget.block.size * tilesize / 2 + 1, Pal.place);
                 }
             }
@@ -323,11 +323,11 @@ blockType.buildType = prov(() => {
                 table.row();
                 table.left();
                 table.table(cons(l => {
-                    var map = new ObjectMap();
+                    let map = new ObjectMap();
                     l.update(run(() => {
                         l.clearChildren();
                         l.left();
-                        var seq = new Seq(Item);
+                        let seq = new Seq(Item);
                         this.items.each(new ItemModule.ItemConsumer({
                             accept(item, amount) {
                                 map.put(item, amount);
@@ -355,11 +355,11 @@ blockType.buildType = prov(() => {
             return true;
         },
         config() {
-            var output = new IntSeq(links.size * 2);
+            let output = new IntSeq(links.size * 2);
             // This seems called by coping block
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
-                var point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
+                let point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
                 output.add(point2.x, point2.y);
             }
             return output;
@@ -377,18 +377,18 @@ blockType.buildType = prov(() => {
         write(write) {
             this.super$write(write);
             write.s(links.size);
-            var it = links.iterator();
+            let it = links.iterator();
             while (it.hasNext()) {
-                var pos = it.next();
+                let pos = it.next();
                 write.i(pos);
             }
         },
         read(read, revision) {
             this.super$read(read, revision);
             links = new Seq(java.lang.Integer);
-            var linkSize = read.s();
-            for (var i = 0; i < linkSize; i++) {
-                var pos = read.i();
+            let linkSize = read.s();
+            for (let i = 0; i < linkSize; i++) {
+                let pos = read.i();
                 links.add(new java.lang.Integer(pos));
             }
         },

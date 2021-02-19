@@ -28,9 +28,9 @@ const {
     newIonBoltBulletType
 } = require('ds-common/bullet-types/index');
 
-var liquidRegion;
-var topRegion;
-var chargeRegions = []
+let liquidRegion;
+let topRegion;
+let chargeRegions = []
 
 const turret = new JavaAdapter(LiquidTurret, {
     load() {
@@ -106,7 +106,7 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
-            var type = this.peekAmmo();
+            let type = this.peekAmmo();
             this.shoot(type);
             this.reload -= this.block.reloadTime;
         }
@@ -149,7 +149,7 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
         Draw.rect(topRegion, this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
 
         const loadPercentLen = Math.max(0, (this.reload / this.block.reloadTime * 1.4 - 0.4)) * chargeRegions.length;
-        for (var i = 0; i < chargeRegions.length; i++) {
+        for (let i = 0; i < chargeRegions.length; i++) {
             Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0, 1)));
             Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
         }

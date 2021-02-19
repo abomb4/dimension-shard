@@ -24,7 +24,7 @@ const bulletTypes = require('ds-common/bullet-types/index');
 const teleportColor = Color.valueOf("69dcee");
 const shootEffect = new Effect(16, 24, cons(e => {
     Draw.color(teleportColor);
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
     }
 
@@ -32,7 +32,7 @@ const shootEffect = new Effect(16, 24, cons(e => {
     Lines.circle(e.x, e.y, 24 * e.finpow());
 
     Draw.color();
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
         Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
     }
 }));
@@ -205,7 +205,7 @@ lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
-            var type = this.peekAmmo();
+            let type = this.peekAmmo();
             this.shoot(type);
             this.reload -= this.block.reloadTime;
         }

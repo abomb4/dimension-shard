@@ -53,9 +53,9 @@ exports.newElectricStormBulletType = (requestOptions) => {
     //     // select two point at circle, draw line between them
     //     const radius = 4;
     //     const radiusRandom = 12;
-    //     for (var i = 0; i < 3; i++) {
-    //         var angle = Mathf.range(360);
-    //         var angle2 = Mathf.range(120) + 120;
+    //     for (let i = 0; i < 3; i++) {
+    //         let angle = Mathf.range(360);
+    //         let angle2 = Mathf.range(120) + 120;
     //         tmp.trns(angle, radius + Mathf.range(radiusRandom));
     //         tmp2.trns(angle2, radius + Mathf.range(radiusRandom));
     //         Lines.line(e.data.getX() + tmp.x, e.data.getY() + tmp.y, e.data.getX() + tmp2.x, e.data.getY() + tmp2.y, false);
@@ -118,7 +118,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         init(b) {
             if (!b) { return; }
             if (!b.data) { b.data = {}; }
-            var speedStart = mergedOptions.speedStart * (b.vel.len() / this.speed);
+            let speedStart = mergedOptions.speedStart * (b.vel.len() / this.speed);
             b.vel.trns(b.vel.angle(), speedStart);
             b.data.speed = speedStart;
             b.data.homingSpeedUp = 0;
@@ -127,7 +127,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         },
         update(b) {
             if (this.homingPower >= 0.0001 && b.time >= this.homingDelay) {
-                // var acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
+                // let acceleratePercent = (b.data.speed - mergedOptions.speedStart) / (mergedOptions.speedFull - mergedOptions.speedStart)
                 if (!b.data.target) {
                     b.data.target = Units.closestTarget(b.team, b.x, b.y, this.homingRange, boolf(e => (e.isGrounded() && this.collidesGround) || (e.isFlying() && this.collidesAir), boolf(t => this.collidesGround)));
                 }
@@ -148,7 +148,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
             }
 
             if (this.weaveMag > 0) {
-                var scl = Mathf.randomSeed(this.id, 0.9, 1.1);
+                let scl = Mathf.randomSeed(this.id, 0.9, 1.1);
                 b.vel.rotate(Mathf.sin(b.time + Mathf.PI * this.weaveScale / 2 * scl, this.weaveScale * scl, this.weaveMag) * Time.delta);
             }
 
@@ -160,7 +160,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
 
             if (mergedOptions.flyingLightningChange > 0 && b.data.flyingLightningCooldown <= 0) {
                 if (Mathf.chanceDelta(mergedOptions.flyingLightningChange)) {
-                    for (var i = 0; i < mergedOptions.lightning / 2; i++) {
+                    for (let i = 0; i < mergedOptions.lightning / 2; i++) {
                         Lightning.create(b, mergedOptions.lightningColor, mergedOptions.flyingLightningDamage, b.x, b.y, Mathf.range(360), mergedOptions.flyingLightningLength);
                     }
                     b.data.flyingLightningCooldown = mergedOptions.flyingLightningCooldown;
@@ -172,9 +172,9 @@ exports.newElectricStormBulletType = (requestOptions) => {
                 b.data.animationDisabled = shouldDisableAnimation();
                 const radius = 4;
                 const radiusRandom = 12;
-                for (var i = 0; i < 3; i++) {
-                    var angle = Mathf.range(360);
-                    var angle2 = Mathf.range(120) + 120;
+                for (let i = 0; i < 3; i++) {
+                    let angle = Mathf.range(360);
+                    let angle2 = Mathf.range(120) + 120;
                     tmp.trns(angle, radius + Mathf.range(radiusRandom));
                     tmp2.trns(angle2, radius + Mathf.range(radiusRandom));
 
@@ -191,8 +191,8 @@ exports.newElectricStormBulletType = (requestOptions) => {
         },
     }, mergedOptions.speed, mergedOptions.damage, lib.modName + '-electric-storm');
 
-    for (var p of BULLET_PROPERTIES) {
-        var value = mergedOptions[p];
+    for (let p of BULLET_PROPERTIES) {
+        let value = mergedOptions[p];
         if (value !== undefined && value !== null) {
             v[p] = value;
         }

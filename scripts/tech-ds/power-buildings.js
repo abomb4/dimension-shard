@@ -20,7 +20,7 @@ const items = require('ds-common/items');
 
 const dsGlobal = require('ds-common/ds-global');
 
-var dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
+let dimensionCrystalBattery = extend(Battery, 'dimension-crystal-battery', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -45,7 +45,7 @@ dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getP
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
 
 
-var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
+let timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {

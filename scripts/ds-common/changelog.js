@@ -21,23 +21,23 @@ const SETTING_KEY = lib.modName + "-changelog-version";
 const version = lib.mod.meta.version;
 // Core.settings.remove(SETTING_KEY)
 function getChangeLogTextArray() {
-    var text = lib.getMessage("msg", "changelogText");
+    let text = lib.getMessage("msg", "changelogText");
     print(text);
     print(text.split("\n"));
     return text.split("\n");
 }
 function getWelcomeTextArray() {
-    var text = lib.getMessage("msg", "welcomeText");
+    let text = lib.getMessage("msg", "welcomeText");
     return text.split("\n");
 }
 function showDialog(firstRun) {
-    var dontShowAgain = true;
+    let dontShowAgain = true;
 
-    var dialog = new BaseDialog(lib.getMessage("msg", "changelogTitle", version));
+    let dialog = new BaseDialog(lib.getMessage("msg", "changelogTitle", version));
 
     dialog.buttons.defaults().size(210, 64);
     dialog.buttons.add((() => {
-        var box = new CheckBox(lib.getMessage("msg", "dontShowAgain"));
+        let box = new CheckBox(lib.getMessage("msg", "dontShowAgain"));
         box.update(run(() => {
             box.setChecked(dontShowAgain);
         }));
@@ -57,7 +57,7 @@ function showDialog(firstRun) {
 
     dialog.cont.pane((() => {
 
-        var table = new Table();
+        let table = new Table();
         if (firstRun) {
             table.add(lib.getMessage("msg", "welcomeText"))
                 .left().growX().wrap().width(700).maxWidth(700).pad(4).labelAlign(Align.left);

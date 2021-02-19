@@ -21,7 +21,7 @@ const dsGlobal = require('ds-common/ds-global');
 
 const chanceDeflect = 10;
 const deflectAngle = 60;
-var deflectSound = Sounds.none;
+let deflectSound = Sounds.none;
 const shieldColor = items.spaceCrystalColorLight;
 
 function deflect(building, chanceDeflect, bullet) {
@@ -114,7 +114,7 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, block => ({
             buildup, phaseHeat, broken, team, x, y, warmup
         } = this;
 
-        var phaseValid = consumes.get(ConsumeType.item).valid(this);
+        let phaseValid = consumes.get(ConsumeType.item).valid(this);
 
         this.phaseHeat = Mathf.lerpDelta(this.phaseHeat, Mathf.num(phaseValid), 0.1);
 
@@ -131,8 +131,8 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, block => ({
         this.warmup = Mathf.lerpDelta(this.warmup, this.efficiency(), 0.1);
 
         if (this.buildup > 0) {
-            var scale = !this.broken ? cooldownNormal : cooldownBrokenBase;
-            var cons = consumes.get(ConsumeType.liquid);
+            let scale = !this.broken ? cooldownNormal : cooldownBrokenBase;
+            let cons = consumes.get(ConsumeType.liquid);
             if (cons.valid(this)) {
                 cons.update(this);
                 scale *= (cooldownLiquid * (1 + (this.liquids.current().heatCapacity - 0.4) * 0.9));
@@ -156,18 +156,18 @@ lib.setBuildingSimple(block, ForceProjector.ForceBuild, block => ({
             this.hit -= 1 / 5 * Time.delta;
         }
 
-        var realRadius = this.realRadius();
+        let realRadius = this.realRadius();
 
         if (realRadius > 0 && !this.broken) {
             Groups.bullet.intersect(this.x - realRadius, this.y - realRadius, realRadius * 2, realRadius * 2, shieldConsumer(this));
         }
     },
     drawShield() {
-        var x = this.x;
-        var y = this.y;
-        var hit = this.hit;
+        let x = this.x;
+        let y = this.y;
+        let hit = this.hit;
         if (!this.broken) {
-            var radius = this.realRadius();
+            let radius = this.realRadius();
             Draw.z(Layer.shields);
             Draw.color(shieldColor, Color.white, Mathf.clamp(hit));
             if (Core.settings.getBool("animatedshields")) {

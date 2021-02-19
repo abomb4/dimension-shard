@@ -23,9 +23,9 @@ const range = 300;
 const warmupSpeed = 0.05;
 
 // Must load region in 'load()'
-var topRegion;
-var bottomRegion;
-var rotatorRegion;
+let topRegion;
+let bottomRegion;
+let rotatorRegion;
 
 const BLUE = Color.valueOf("#0068fc");
 
@@ -34,11 +34,11 @@ const outEffect = lib.newEffect(38, e => {
 
     Angles.randLenVectors(e.id, 1, 8 * e.fin(), 0, 360, new Floatc2({
         get: (x, y) => {
-            var angle = Angles.angle(0, 0, x, y);
-            var trnsx = Angles.trnsx(angle, 2);
-            var trnsy = Angles.trnsy(angle, 2);
-            var trnsx2 = Angles.trnsx(angle, 4);
-            var trnsy2 = Angles.trnsy(angle, 4);
+            let angle = Angles.angle(0, 0, x, y);
+            let trnsx = Angles.trnsx(angle, 2);
+            let trnsy = Angles.trnsy(angle, 2);
+            let trnsx2 = Angles.trnsx(angle, 4);
+            let trnsy2 = Angles.trnsy(angle, 4);
             Fill.circle(
                 e.x + trnsx + x + trnsx2 * e.fin(),
                 e.y + trnsy + y + trnsy2 * e.fin(),
@@ -75,17 +75,17 @@ const blockType = extendContent(Block, "space-unloader", {
         // Rotate relative points
         if (IntSeq.__javaObject__.isInstance(config)) {
             // ROTATE IT!
-            var newSeq = new IntSeq(config.size);
+            let newSeq = new IntSeq(config.size);
             newSeq.add(config.get(0));
             newSeq.add(config.get(1));
-            var linkX = null;
-            for (var i = 2; i < config.size; i++) {
-                var num = config.get(i);
+            let linkX = null;
+            for (let i = 2; i < config.size; i++) {
+                let num = config.get(i);
                 if (linkX == null) {
                     linkX = num;
                 } else {
                     // The source position is relative to right bottom, transform it.
-                    var point = new Point2(linkX * 2 - 1, num * 2 - 1);
+                    let point = new Point2(linkX * 2 - 1, num * 2 - 1);
 
                     transformer.get(point);
                     newSeq.add((point.x + 1) / 2);
@@ -123,16 +123,16 @@ blockType.consumes.power(1.5);
 blockType.config(IntSeq, lib.cons2((tile, seq) => {
     // This seems only used by coping block
     // Deserialize from IntSeq
-    var itemId = seq.get(0)
-    var size = seq.get(1);
-    var linkX = null;
-    var newLinks = new Seq(true, size, java.lang.Integer);
-    for (var i = 2; i < seq.size; i++) {
-        var num = seq.get(i);
+    let itemId = seq.get(0)
+    let size = seq.get(1);
+    let linkX = null;
+    let newLinks = new Seq(true, size, java.lang.Integer);
+    for (let i = 2; i < seq.size; i++) {
+        let num = seq.get(i);
         if (linkX == null) {
             linkX = num;
         } else {
-            var point = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
+            let point = Point2.pack(linkX + tile.tileX(), num + tile.tileY());
             newLinks.add(lib.int(point));
             linkX = null;
         }
@@ -152,13 +152,13 @@ blockType.configClear(tile => {
 
 blockType.buildType = prov(() => {
 
-    var itemType = null;
-    var links = new Seq(java.lang.Integer);
-    var slowdownDelay = 0;
-    var warmup = 0;
-    var rotateDeg = 0;
-    var rotateSpeed = 0;
-    var fairLoopOffset = 0;
+    let itemType = null;
+    let links = new Seq(java.lang.Integer);
+    let slowdownDelay = 0;
+    let warmup = 0;
+    let rotateDeg = 0;
+    let rotateSpeed = 0;
+    let fairLoopOffset = 0;
     function updateFairLoopOffset(max) {
         fairLoopOffset++;
         if (fairLoopOffset >= max) {
@@ -171,7 +171,7 @@ blockType.buildType = prov(() => {
 
     function linkValid(the, pos) {
         if (pos === undefined || pos === null || pos == -1) return false;
-        var linkTarget = Vars.world.build(pos);
+        let linkTarget = Vars.world.build(pos);
         return linkTarget && linkTarget.team == the.team && the.within(linkTarget, range);
     }
 
@@ -180,21 +180,21 @@ blockType.buildType = prov(() => {
         getItemType() { return itemType; },
         setLink(v) { links = v; },
         setOneLink(v) {
-            var int = new java.lang.Integer(v);
+            let int = new java.lang.Integer(v);
             if (!links.remove(boolf(i => i == int))) {
                 links.add(int);
             }
         },
         setItemTypeId(v) { itemType = (!v && v !== 0 ? null : Vars.content.items().get(v)) },
         updateTile() {
-            var hasItem = false;
-            var consValid = this.consValid();
+            let hasItem = false;
+            let consValid = this.consValid();
             if (itemType != null && consValid) {
-                for (var iloop = 0; iloop < links.size; iloop++) {
-                    var i = fairLoopIndex(iloop, links.size, fairLoopOffset);
-                    var pos = links.get(i);
+                for (let iloop = 0; iloop < links.size; iloop++) {
+                    let i = fairLoopIndex(iloop, links.size, fairLoopOffset);
+                    let pos = links.get(i);
                     if (linkValid(this, pos)) {
-                        var linkTarget = Vars.world.build(pos);
+                        let linkTarget = Vars.world.build(pos);
                         links.set(i, new java.lang.Integer(linkTarget.pos()));
 
                         if (linkTarget != null && linkTarget.items != null) {
@@ -237,11 +237,11 @@ blockType.buildType = prov(() => {
                 table.row();
                 table.left();
                 table.table(cons(l => {
-                    var map = new ObjectMap();
+                    let map = new ObjectMap();
                     l.update(run(() => {
                         l.clearChildren();
                         l.left();
-                        var seq = new Seq(Item);
+                        let seq = new Seq(Item);
                         this.items.each(new ItemModule.ItemConsumer({
                             accept(item, amount) {
                                 map.put(item, amount);
@@ -276,16 +276,16 @@ blockType.buildType = prov(() => {
         },
         drawConfigure() {
             const tilesize = Vars.tilesize;
-            var sin = Mathf.absin(Time.time, 6, 1);
+            let sin = Mathf.absin(Time.time, 6, 1);
 
             Draw.color(Pal.accent);
             Lines.stroke(1);
             Drawf.circles(this.x, this.y, (this.tile.block().size / 2 + 1) * Vars.tilesize + sin - 2, Pal.accent);
 
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
                 if (linkValid(this, pos)) {
-                    var linkTarget = Vars.world.build(pos);
+                    let linkTarget = Vars.world.build(pos);
                     Drawf.square(linkTarget.x, linkTarget.y, linkTarget.block.size * tilesize / 2 + 1, Pal.place);
                 }
             }
@@ -311,12 +311,12 @@ blockType.buildType = prov(() => {
         },
         config() {
             // Serialize to IntSeq (I don't know how to serialize to byte[], maybe ByteArrayOutputStream?)
-            var seq = new IntSeq(links.size * 2 + 2);
+            let seq = new IntSeq(links.size * 2 + 2);
             seq.add(itemType == null ? -1 : itemType.id);
             seq.add(links.size);
-            for (var i = 0; i < links.size; i++) {
-                var pos = links.get(i);
-                var point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
+            for (let i = 0; i < links.size; i++) {
+                let pos = links.get(i);
+                let point2 = Point2.unpack(pos).sub(this.tile.x, this.tile.y);
                 seq.add(point2.x, point2.y);
             }
             return seq;
@@ -326,7 +326,7 @@ blockType.buildType = prov(() => {
         },
         canDump(to, item) {
             return !links.contains(boolf(pos => {
-                var linkTarget = Vars.world.build(pos);
+                let linkTarget = Vars.world.build(pos);
                 return to == linkTarget;
             }));
         },
@@ -334,24 +334,24 @@ blockType.buildType = prov(() => {
             this.super$write(write);
             write.s(itemType == null ? -1 : itemType.id);
             write.s(links.size);
-            var it = links.iterator();
+            let it = links.iterator();
             while (it.hasNext()) {
-                var pos = it.next();
+                let pos = it.next();
                 write.i(pos);
             }
         },
         read(read, revision) {
             this.super$read(read, revision);
-            var id = read.s();
+            let id = read.s();
             itemType = id == -1 ? null : Vars.content.items().get(id);
             links = new Seq(java.lang.Integer);
             if (revision == 1) {
-                var linkl = read.i();
+                let linkl = read.i();
                 links.add(new java.lang.Integer(linkl));
             } else {
-                var linkSize = read.s();
-                for (var i = 0; i < linkSize; i++) {
-                    var pos = read.i();
+                let linkSize = read.s();
+                for (let i = 0; i < linkSize; i++) {
+                    let pos = read.i();
                     links.add(new java.lang.Integer(pos));
                 }
             }

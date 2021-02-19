@@ -25,8 +25,8 @@ const createDirectLightning = (() => {
     const hit = new IntSet();
     const maxChain = 8;
     const hitRange = 30;
-    var bhit = false;
-    var lastSeed = 0;
+    let bhit = false;
+    let lastSeed = 0;
 
     return (hitter, team, color, damage, x, y, rotation, length) => {
 
@@ -38,12 +38,12 @@ const createDirectLightning = (() => {
         random.setSeed(seed);
         hit.clear();
 
-        var hitCreate = hitter == null || hitter.type.lightningType == null ? Bullets.damageLightning : hitter.type.lightningType;
-        var lines = new Seq();
-        var hitted = false;
+        let hitCreate = hitter == null || hitter.type.lightningType == null ? Bullets.damageLightning : hitter.type.lightningType;
+        let lines = new Seq();
+        let hitted = false;
         bhit = false;
 
-        for (var i = 0; i < length / 2; i++) {
+        for (let i = 0; i < length / 2; i++) {
             hitCreate.create(null, team, x, y, 0, damage, 1, 1, hitter);
             lines.add(new Vec2(x + Mathf.range(3), y + Mathf.range(3)));
 
@@ -53,7 +53,7 @@ const createDirectLightning = (() => {
                 var to = lines.get(lines.size - 1);
                 Vars.world.raycastEach(World.toTile(from.getX()), World.toTile(from.getY()), World.toTile(to.getX()), World.toTile(to.getY()), lib.raycaster((wx, wy) => {
 
-                    var tile = Vars.world.tile(wx, wy);
+                    let tile = Vars.world.tile(wx, wy);
                     if (tile != null && tile.block().insulated && tile.team() != team) {
                         bhit = true;
                         //snap it instead of removing
@@ -75,7 +75,7 @@ const createDirectLightning = (() => {
                 }));
             }
 
-            var furthest = Geometry.findFurthest(x, y, entities);
+            let furthest = Geometry.findFurthest(x, y, entities);
 
             if (furthest != null) {
                 hitted = true;
@@ -88,15 +88,15 @@ const createDirectLightning = (() => {
                 y += Angles.trnsy(rotation, hitRange / 2);
             } else {
                 // rotation in range
-                var randRotate = (() => {
+                let randRotate = (() => {
                     // left or right?
-                    var nowAngle = Tmp.v1.set(x - originX, y - originY).angle();
-                    var angleOffset = nowAngle - originRotation;
-                    var length = Tmp.v1.len();
+                    let nowAngle = Tmp.v1.set(x - originX, y - originY).angle();
+                    let angleOffset = nowAngle - originRotation;
+                    let length = Tmp.v1.len();
 
-                    var offsetLength = Mathf.sinDeg(angleOffset) * length;
-                    // var lengthPercent = Math.min(1, Math.abs(offsetLength) / hitRange) * offsetLength > 0 ? 1 : -1;
-                    var lengthPercent = offsetLength / hitRange;
+                    let offsetLength = Mathf.sinDeg(angleOffset) * length;
+                    // let lengthPercent = Math.min(1, Math.abs(offsetLength) / hitRange) * offsetLength > 0 ? 1 : -1;
+                    let lengthPercent = offsetLength / hitRange;
 
                     return random.range(10) - lengthPercent * 20;
                 })();

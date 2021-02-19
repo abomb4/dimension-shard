@@ -104,7 +104,7 @@ exports.newNoRotatingTurret = (requestOptions) => {
         throw 'Name not defined.';
     }
 
-    var buildingType;
+    let buildingType;
     switch (options.turretType) {
         case ItemTurret:
             buildingType = ItemTurret.ItemTurretBuild;
@@ -134,7 +134,7 @@ exports.newNoRotatingTurret = (requestOptions) => {
             // I think the default udpatShooting and updateCooling is wrong, so modify it.
             updateShooting() {
                 if (this.reload >= this.block.reloadTime) {
-                    var type = this.peekAmmo();
+                    let type = this.peekAmmo();
                     this.shoot(type);
                     this.reload -= this.block.reloadTime;
                 }
@@ -166,8 +166,8 @@ exports.newNoRotatingTurret = (requestOptions) => {
         }, overrides), block)
     });
 
-    for (var p of TURRET_PROPERTIES) {
-        var value = options[p];
+    for (let p of TURRET_PROPERTIES) {
+        let value = options[p];
         if (value !== undefined && value !== null) {
             block[p] = value;
         }
@@ -197,16 +197,16 @@ exports.newLiquidConverter = (requestOptions) => {
     const block = extend(LiquidConverter, options.name, Object.assign({
         init() {
             this.super$init();
-            var cl = this.consumes.get(ConsumeType.liquid);
+            let cl = this.consumes.get(ConsumeType.liquid);
             this.outputLiquid.amount = cl.amount * options.convertRatio;
         },
     }, options.blockOverrides));
 
     lib.setBuildingSimple(block, LiquidConverter.LiquidConverterBuild, block => Object.assign({
         updateTile() {
-            var cl = this.block.consumes.get(ConsumeType.liquid);
+            let cl = this.block.consumes.get(ConsumeType.liquid);
             if (this.cons.valid()) {
-                var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
+                let use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
                 this.liquids.remove(cl.liquid, Math.min(use, this.liquids.get(cl.liquid)));
                 this.progress += use / cl.amount;
                 this.liquids.add(this.block.outputLiquid.liquid, use * options.convertRatio);
@@ -221,8 +221,8 @@ exports.newLiquidConverter = (requestOptions) => {
 
     options.consumes(block.consumes);
 
-    for (var p of LIQUID_CONVERTER_PROPERTIES) {
-        var value = options[p];
+    for (let p of LIQUID_CONVERTER_PROPERTIES) {
+        let value = options[p];
         if (value !== undefined && value !== null) {
             block[p] = value;
         }

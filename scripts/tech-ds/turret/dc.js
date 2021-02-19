@@ -76,7 +76,7 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
         if (this.reload >= this.block.reloadTime) {
-            var type = this.peekAmmo();
+            let type = this.peekAmmo();
             this.shoot(type);
             this.reload -= this.block.reloadTime;
         }

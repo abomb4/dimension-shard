@@ -49,7 +49,7 @@ function generateWaves(difficulty, rand, attack) {
         crawler, atrax, spiroct, arkyid, toxopid,
         flare, horizon, zenith, mega, quad, antumbra, eclipse
     } = UnitTypes;
-    var species = [
+    let species = [
         [ dagger, mace, fortress, scepter, reign ],
         [ dagger, mace, fortress, beat, rhapsody ],
         [ nova, pulsar, quasar, vela, corvus ],
@@ -62,30 +62,30 @@ function generateWaves(difficulty, rand, attack) {
     //required progression:
     //- extra periodic patterns
 
-    var out = Seq.of(SpawnGroup);
+    let out = Seq.of(SpawnGroup);
 
     //max reasonable wave, after which everything gets boring
-    var cap = 150;
+    let cap = 150;
 
-    var shieldStart = 30, shieldsPerWave = 20 + difficulty*30;
-    var scaling = [1, 2, 3, 4, 5];
+    let shieldStart = 30, shieldsPerWave = 20 + difficulty*30;
+    let scaling = [1, 2, 3, 4, 5];
 
-    var createProgression = lib.intc(start => {
+    let createProgression = lib.intc(start => {
         //main sequence
-        var curSpecies = Structs.random(species);
-        var curTier = 0;
+        let curSpecies = Structs.random(species);
+        let curTier = 0;
 
-        for(var i = start; i < cap;){
-            var f = i;
-            var next = rand.random(8, 16) + Mathf.lerp(5, 0, difficulty) + curTier * 4;
+        for(let i = start; i < cap;){
+            let f = i;
+            let next = rand.random(8, 16) + Mathf.lerp(5, 0, difficulty) + curTier * 4;
 
-            var shieldAmount = Math.max((i - shieldStart) * shieldsPerWave, 0);
-            var space = start == 0 ? 1 : rand.random(1, 2);
-            var ctier = curTier;
+            let shieldAmount = Math.max((i - shieldStart) * shieldsPerWave, 0);
+            let space = start == 0 ? 1 : rand.random(1, 2);
+            let ctier = curTier;
 
             //main progression
             out.add((() => {
-                var g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
+                let g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
                 g.unitAmount = f == start ? 1 : 6 / scaling[ctier];
                 g.begin = f;
                 g.end = f + next >= cap ? never : f + next;
@@ -99,7 +99,7 @@ function generateWaves(difficulty, rand, attack) {
 
             //extra progression that tails out, blends in
             out.add((() => {
-                var g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
+                let g = new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)]);
                 g.unitAmount = 3 / scaling[ctier];
                 g.begin = f + next - 1;
                 g.end = f + next + rand.random(6, 10);
@@ -128,21 +128,21 @@ function generateWaves(difficulty, rand, attack) {
 
     createProgression.get(0);
 
-    var step = 5 + rand.random(5);
+    let step = 5 + rand.random(5);
 
     while(step <= cap){
         createProgression.get(step);
         step += lib.int(rand.random(15, 30) * Mathf.lerp(1, 0.5, difficulty));
     }
 
-    var bossWave = lib.int(rand.random(50, 70) * Mathf.lerp(1, 0.7, difficulty));
-    var bossSpacing = lib.int(rand.random(25, 40) * Mathf.lerp(1, 0.6, difficulty));
+    let bossWave = lib.int(rand.random(50, 70) * Mathf.lerp(1, 0.7, difficulty));
+    let bossSpacing = lib.int(rand.random(25, 40) * Mathf.lerp(1, 0.6, difficulty));
 
-    var bossTier = difficulty < 0.6 ? 3 : 4;
+    let bossTier = difficulty < 0.6 ? 3 : 4;
 
     //main boss progression
     out.add((() => {
-        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        let g = new SpawnGroup(Structs.random(species)[bossTier]);
         g.unitAmount = 1;
         g.begin = bossWave;
         g.spacing = bossSpacing;
@@ -156,7 +156,7 @@ function generateWaves(difficulty, rand, attack) {
 
     //alt boss progression
     out.add((() => {
-        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        let g = new SpawnGroup(Structs.random(species)[bossTier]);
         g.unitAmount = 1;
         g.begin = bossWave + rand.random(3, 5) * bossSpacing;
         g.spacing = bossSpacing;
@@ -168,11 +168,11 @@ function generateWaves(difficulty, rand, attack) {
         return g;
     })());
 
-    var finalBossStart = 120 + rand.random(30);
+    let finalBossStart = 120 + rand.random(30);
 
     //final boss waves
     out.add((() => {
-        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        let g = new SpawnGroup(Structs.random(species)[bossTier]);
         g.unitAmount = 1;
         g.begin = finalBossStart;
         g.spacing = bossSpacing/2;
@@ -186,7 +186,7 @@ function generateWaves(difficulty, rand, attack) {
 
     //final boss waves (alt)
     out.add((() => {
-        var g = new SpawnGroup(Structs.random(species)[bossTier]);
+        let g = new SpawnGroup(Structs.random(species)[bossTier]);
         g.unitAmount = 1;
         g.begin = finalBossStart + 15;
         g.spacing = bossSpacing/2;
@@ -200,12 +200,12 @@ function generateWaves(difficulty, rand, attack) {
 
     //add megas to heal the base.
     if(attack && difficulty >= 0.5){
-        var amount = Mathf.random(1, 3 + (difficulty*2));
+        let amount = Mathf.random(1, 3 + (difficulty*2));
 
-        for(var i = 0; i < amount; i++){
-            var wave = Mathf.random(3, 20);
+        for(let i = 0; i < amount; i++){
+            let wave = Mathf.random(3, 20);
             out.add((() => {
-                var g = new SpawnGroup(mega)
+                let g = new SpawnGroup(mega)
                 g.unitAmount = 1;
                 g.begin = wave;
                 g.end = wave;
@@ -216,7 +216,7 @@ function generateWaves(difficulty, rand, attack) {
     }
 
     //shift back waves on higher difficulty for a harder start
-    var shift = Math.max((difficulty * 14 - 5), 0);
+    let shift = Math.max((difficulty * 14 - 5), 0);
 
     out.each(cons(group => {
         group.begin -= shift;
@@ -229,7 +229,7 @@ const schematicsModifier = (() => {
     function createPart(schem) {
         const part = new BaseRegistry.BasePart(schem);
         Tmp.v1.setZero();
-        var drills = 0;
+        let drills = 0;
         schem.tiles.each(cons(tile => {
             if (tile.block.priority == TargetPriority.core && tile.block.unitType !== undefined) {
                 part.core = tile.block;
@@ -237,7 +237,7 @@ const schematicsModifier = (() => {
 
             //save the required resource based on item source - multiple sources are not allowed
             if (tile.block instanceof ItemSource) {
-                var config = tile.config;
+                let config = tile.config;
                 if (config != null) part.required = config;
             }
 
@@ -302,8 +302,8 @@ const schematicsModifier = (() => {
         // At thorium, Dark Light
         createPart(Schematics.readBase64("bXNjaAF4nGWQzU7DMBCEJ85vnYaIK6dKnDj4LeDGS7iJlUbkT7ar0rdnlhwqgWLttxPP7tpGi1YhW+zscPw4vVv/dfoch0tE3bvQ+XGL47oANZ7DOllvNru4yTAbHOpwJUxcb85TPPbx2o+zWwJLTbhY35tIbbp13rwLwfXGxwFvf00P3fl7iHYyZxuj83e0N0sa9x297eLq0bCBGdzivBX58q8VL2Km/SLnyYZoej9OE/QmhzXL2vP4Y3SzCevVdw7ACUigJSTIKv6AQgmliCNSQbPjCWmKDCmUhBwqJw5IBPWOBklBC1NBiVRyWkrmR6gCBfukFVUOiKqQ5gxKCip+iTw5g3TMwKVp4tIs4QS9z9P7PC3zDsyL32M34hHoHdwUR85RJX4AQWFd4g==")),
     ];
-    var added = false;
-    var removed = [];
+    let added = false;
+    let removed = [];
     return {
         pre() {
             if (!added) {
@@ -434,7 +434,7 @@ const wallModifier = (() => {
             previous.forEach(ar => ar[0].wall = ar[1]);
         },
         getWall(block) {
-            var v = wallMap[block];
+            let v = wallMap[block];
             if (v) {
                 return v;
             }
@@ -445,9 +445,9 @@ const wallModifier = (() => {
 // Copy SerpuloPlanetGenerator.java
 function dumpTiles(tiles) {
     if (!tiles) { return ""; }
-    var res = [];
+    let res = [];
     tiles.each(lib.intc2((x, y) => {
-        var tile = tiles.get(x, y)
+        let tile = tiles.get(x, y)
         if (tile && tile.block) {
             res.push({ x: x, y: y, block: tile.block().name })
         }
@@ -455,22 +455,22 @@ function dumpTiles(tiles) {
     return res.map(v => "x: " + v.x + ", y: " + v.y + ", block: " + v.block + "\n");
 }
 // (() => {
-//     var rand = new Rand();
-//     var l = 10;
+//     let rand = new Rand();
+//     let l = 10;
 //     print("Length: " + l);
-//     for (var i = 0; i < 100; i++) {
+//     for (let i = 0; i < 100; i++) {
 //         print("Rand: " + Math.floor(rand.random(lib.int(l))))
 //     }
 // })();
 const ass = func => new JavaAdapter(Astar.TileHueristic, { cost: func });
 function createWrekGenerator() {
-    var rid = new Packages.arc.util.noise.RidgedPerlin(1, 2);
-    var basegen = new BaseGenerator();
-    var scl = 5;
-    var waterOffset = 0.07;
-    var ints = new IntSeq();
-    var sector;
-    var noise = new Packages.arc.util.noise.Simplex();
+    let rid = new Packages.arc.util.noise.RidgedPerlin(1, 2);
+    let basegen = new BaseGenerator();
+    let scl = 5;
+    let waterOffset = 0.07;
+    let ints = new IntSeq();
+    let sector;
+    let noise = new Packages.arc.util.noise.Simplex();
 
     // TODO Add Dimension Shard Schematics to Vars.bases, and remove when generate progress done
 
@@ -488,7 +488,7 @@ function createWrekGenerator() {
     //  |
     //  v
     // 两极
-    var arr = [
+    let arr = [
         [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.darkPanel1, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.darksand, Blocks.sand, Blocks.darkPanel2, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.darkPanel3, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.basalt, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
@@ -505,19 +505,19 @@ function createWrekGenerator() {
         [Blocks.darksandWater, Blocks.metalFloorDamaged, Blocks.sporeMoss, Blocks.sporeMoss, Blocks.moss, Blocks.metalFloor2, Blocks.metalFloor3, Blocks.snow, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.ice, Blocks.metalFloor3, Blocks.space],
     ];
 
-    var dec = ObjectMap.of(
+    let dec = ObjectMap.of(
         Blocks.sporeMoss, Blocks.sporeCluster,
         Blocks.moss, Blocks.sporeCluster,
         Blocks.taintedWater, Blocks.water,
         Blocks.darksandTaintedWater, Blocks.darksandWater
     );
 
-    var tars = ObjectMap.of(
+    let tars = ObjectMap.of(
         Blocks.sporeMoss, Blocks.shale,
         Blocks.moss, Blocks.shale
     );
 
-    var water = 2 / arr[0].length;
+    let water = 2 / arr[0].length;
 
     function rawHeight(position) {
         position = Tmp.v33.set(position).scl(scl);
@@ -525,7 +525,7 @@ function createWrekGenerator() {
     }
     function genNoise(x, y, octaves, falloff, scl, mag) {
         mag = mag === undefined ? 1 : mag;
-        var v = sector.rect.project(x, y).scl(5);
+        let v = sector.rect.project(x, y).scl(5);
         return noise.octaveNoise3D(octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
     }
 
@@ -539,19 +539,19 @@ function createWrekGenerator() {
                 return;
             }
 
-            var tile = sector.tile;
+            let tile = sector.tile;
 
-            var any = false;
-            var poles = Math.abs(tile.v.y);
-            var noise = Packages.arc.util.noise.Noise.snoise3(tile.v.x, tile.v.y, tile.v.z, 0.001, 0.58);
+            let any = false;
+            let poles = Math.abs(tile.v.y);
+            let noise = Packages.arc.util.noise.Noise.snoise3(tile.v.x, tile.v.y, tile.v.z, 0.001, 0.58);
 
             if (noise + poles / 5.1 > 0.10 && poles > 0.14) {
                 any = true;
             }
 
             if (noise < 0.20) {
-                for (var other of tile.tiles) {
-                    var osec = sector.planet.getSector(other);
+                for (let other of tile.tiles) {
+                    let osec = sector.planet.getSector(other);
 
                     //no sectors near start sector!
                     if (
@@ -567,11 +567,11 @@ function createWrekGenerator() {
             sector.generateEnemyBase = any;
         },
         getHeight(position) {
-            var height = rawHeight(position);
+            let height = rawHeight(position);
             return Math.max(height, water);
         },
         getColor(position) {
-            var block = this.getBlock(position);
+            let block = this.getBlock(position);
             // replace salt with sand color
             if (block == Blocks.salt) {
                 return Blocks.sand.mapColor;
@@ -594,19 +594,19 @@ function createWrekGenerator() {
         },
         getBlock(position) {
             const noise = this.noise;
-            var height = rawHeight(position);
+            let height = rawHeight(position);
             Tmp.v31.set(position);
             position = Tmp.v33.set(position).scl(scl);
-            var rad = scl;
-            var temp = Mathf.clamp(Math.abs(position.y * 2) / (rad));
-            var tnoise = noise.octaveNoise3D(7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
+            let rad = scl;
+            let temp = Mathf.clamp(Math.abs(position.y * 2) / (rad));
+            let tnoise = noise.octaveNoise3D(7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
             temp = Mathf.lerp(temp, tnoise, 0.5);
             height *= 1.2;
             height = Mathf.clamp(height);
 
-            var tar = noise.octaveNoise3D(4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
+            let tar = noise.octaveNoise3D(4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
 
-            var res = arr[Mathf.clamp(lib.int(temp * arr.length), 0, arr[0].length - 1)][Mathf.clamp(lib.int(height * arr[0].length), 0, arr[0].length - 1)];
+            let res = arr[Mathf.clamp(lib.int(temp * arr.length), 0, arr[0].length - 1)][Mathf.clamp(lib.int(height * arr[0].length), 0, arr[0].length - 1)];
             if (tar > 0.5) {
                 return tars.get(res, res);
             } else {
@@ -627,10 +627,10 @@ function createWrekGenerator() {
                 this.sector = s;
                 this.rand.setSeed(s.id);
 
-                var gen = new TileGen();
+                let gen = new TileGen();
                 t.each(lib.intc2((x, y) => {
                     gen.reset();
-                    var position = sector.rect.project(x / t.width, y / t.height);
+                    let position = sector.rect.project(x / t.width, y / t.height);
 
                     this.genTile(position, gen);
                     t.set(x, y, new Tile(x, y, gen.floor, gen.overlay, gen.block));
@@ -646,7 +646,7 @@ function createWrekGenerator() {
             const height = this.height;
 
             const the = this;
-            var asdoifjaisodfjoiqwejiofjwqefjq = 0;
+            let asdoifjaisodfjoiqwejiofjwqefjq = 0;
             function Room(x, y, radius) {
                 this.id = asdoifjaisodfjoiqwejiofjwqefjq++;
                 this.connected = {};
@@ -658,13 +658,13 @@ function createWrekGenerator() {
                         return;
                     }
                     this.connected[to.id] = true;
-                    var nscl = rand.random(20, 60);
-                    var stroke = Math.floor(rand.random(8, 16));
+                    let nscl = rand.random(20, 60);
+                    let stroke = Math.floor(rand.random(8, 16));
                     the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 }
                 this.connected[this.id] = true;
                 return this;
-                // var r = {
+                // let r = {
                 //     connected: {},
                 //     x: Math.floor(x),
                 //     y: Math.floor(y),
@@ -674,8 +674,8 @@ function createWrekGenerator() {
                 //             return;
                 //         }
                 //         this.connected[to] = true;
-                //         var nscl = rand.random(20, 60);
-                //         var stroke = Math.floor(rand.random(6, 16));
+                //         let nscl = rand.random(20, 60);
+                //         let stroke = Math.floor(rand.random(6, 16));
                 //         print("pathfind x: "+x+", y: "+y+", to.x: "+to.x+", to.y: "+to.y+", stroke: " + stroke);
                 //         the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 //     }
@@ -686,40 +686,40 @@ function createWrekGenerator() {
 
             this.cells(4);
             this.distort(10, 12);
-            var constraint = 1.3;
-            var radius = width / 2 / Mathf.sqrt3;
-            var rooms = rand.random(2, 5);
-            var roomseq = [];
+            let constraint = 1.3;
+            let radius = width / 2 / Mathf.sqrt3;
+            let rooms = rand.random(2, 5);
+            let roomseq = [];
 
-            for (var i = 0; i < rooms; i++) {
+            for (let i = 0; i < rooms; i++) {
                 Tmp.v1.trns(rand.random(360 / rooms * i, 360 / rooms * (i + 1)), rand.random(radius / constraint));
-                var rx = (width / 2 + Tmp.v1.x);
-                var ry = (height / 2 + Tmp.v1.y);
-                var maxrad = radius - Tmp.v1.len();
-                var rrad = Math.min(rand.random(16, maxrad / 2), 32);
+                let rx = (width / 2 + Tmp.v1.x);
+                let ry = (height / 2 + Tmp.v1.y);
+                let maxrad = radius - Tmp.v1.len();
+                let rrad = Math.min(rand.random(16, maxrad / 2), 32);
                 roomseq.push(new Room(rx, ry, rrad));
             }
 
             // check positions on the map to place the player spawn. this needs to be in the corner of the map
-            var spawn;
-            var enemies = new Seq();
-            var enemySpawns = rand.random(1, Math.max((sector.threat * 5), 1));
-            var offset = rand.nextInt(360);
-            var length = width / 2.55 - rand.random(13, 23);
-            var angleStep = 5;
-            var waterCheckRad = 10;
+            let spawn;
+            let enemies = new Seq();
+            let enemySpawns = rand.random(1, Math.max((sector.threat * 5), 1));
+            let offset = rand.nextInt(360);
+            let length = width / 2.55 - rand.random(13, 23);
+            let angleStep = 5;
+            let waterCheckRad = 10;
 
-            for (var i = 0; i < 360; i += angleStep) {
-                var angle = offset + i;
-                var cx = Math.floor(width / 2 + Angles.trnsx(angle, length));
-                var cy = Math.floor(height / 2 + Angles.trnsy(angle, length));
+            for (let i = 0; i < 360; i += angleStep) {
+                let angle = offset + i;
+                let cx = Math.floor(width / 2 + Angles.trnsx(angle, length));
+                let cy = Math.floor(height / 2 + Angles.trnsy(angle, length));
 
-                var waterTiles = 0;
+                let waterTiles = 0;
 
                 //check for water presence
-                for (var rx = -waterCheckRad; rx <= waterCheckRad; rx++) {
-                    for (var ry = -waterCheckRad; ry <= waterCheckRad; ry++) {
-                        var tile = this.tiles.get(cx + rx, cy + ry);
+                for (let rx = -waterCheckRad; rx <= waterCheckRad; rx++) {
+                    for (let ry = -waterCheckRad; ry <= waterCheckRad; ry++) {
+                        let tile = this.tiles.get(cx + rx, cy + ry);
                         if (tile == null || tile.floor().liquidDrop != null) {
                             waterTiles++;
                         }
@@ -729,13 +729,13 @@ function createWrekGenerator() {
                 if (waterTiles <= 4 || (i + angleStep >= 360)) {
                     roomseq.push(spawn = new Room(cx, cy, rand.random(16, 32)));
 
-                    var previous = -85;
+                    let previous = -85;
                     const angleStep2 = 12;
-                    for (var j = 0; j < enemySpawns; j++) {
-                        var enemyOffset = previous + angleStep2 + rand.random(12);
+                    for (let j = 0; j < enemySpawns; j++) {
+                        let enemyOffset = previous + angleStep2 + rand.random(12);
                         previous = enemyOffset;
                         Tmp.v1.set(cx - width / 2, cy - height / 2).rotate(180 + enemyOffset).add(width / 2, height / 2);
-                        var espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(16, 32));
+                        let espawn = new Room(Tmp.v1.x, Tmp.v1.y, rand.random(16, 32));
                         roomseq.push(espawn);
                         enemies.add(espawn);
                     }
@@ -743,16 +743,16 @@ function createWrekGenerator() {
                     break;
                 }
             }
-            for (var room of roomseq) {
+            for (let room of roomseq) {
                 this.erase(room.x, room.y, room.radius);
             }
 
-            var connections = rand['random(int,int)'](Math.max(rooms - 1, 1), rooms + 3);
-            for (var i = 0; i < connections; i++) {
-                var ran1 = rand["random(int,int)"](0, roomseq.length - 1);
-                var ran2 = rand["random(int,int)"](0, roomseq.length - 1);
-                var r1 = roomseq[ran1];
-                var r2 = roomseq[ran2];
+            let connections = rand['random(int,int)'](Math.max(rooms - 1, 1), rooms + 3);
+            for (let i = 0; i < connections; i++) {
+                let ran1 = rand["random(int,int)"](0, roomseq.length - 1);
+                let ran2 = rand["random(int,int)"](0, roomseq.length - 1);
+                let r1 = roomseq[ran1];
+                let r2 = roomseq[ran2];
                 r1.connect(r2);
             }
 
@@ -766,11 +766,11 @@ function createWrekGenerator() {
             this.inverseFloodFill(this.tiles.getn(spawn.x, spawn.y));
             executeTimer.printDuration("this.inverseFloodFill(this.tiles.getn(spawn.x, spawn.y)): ");
 
-            var ores = Seq.with(Blocks.oreCopper, Blocks.oreLead);
-            var poles = Math.abs(sector.tile.v.y);
-            var nmag = 0.5;
-            var scl = 1;
-            var addscl = 1.3;
+            let ores = Seq.with(Blocks.oreCopper, Blocks.oreLead);
+            let poles = Math.abs(sector.tile.v.y);
+            let nmag = 0.5;
+            let scl = 1;
+            let addscl = 1.3;
 
             if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.25 * addscl) {
                 ores.add(Blocks.oreCoal);
@@ -792,8 +792,8 @@ function createWrekGenerator() {
                 ores.add(Blocks.oreScrap);
             }
 
-            var frequencies = new FloatSeq();
-            for (var i = 0; i < ores.size; i++) {
+            let frequencies = new FloatSeq();
+            for (let i = 0; i < ores.size; i++) {
                 frequencies.add(rand.random(-0.1, 0.01) - i * 0.01 + poles * 0.04);
             }
 
@@ -801,10 +801,10 @@ function createWrekGenerator() {
             this.pass(lib.intc2((x, y) => {
                 if (!this.floor.asFloor().hasSurface()) return;
 
-                var offsetX = x - 4, offsetY = y + 23;
-                for (var i = ores.size - 1; i >= 0; i--) {
-                    var entry = ores.get(i);
-                    var freq = frequencies.get(i);
+                let offsetX = x - 4, offsetY = y + 23;
+                for (let i = ores.size - 1; i >= 0; i--) {
+                    let entry = ores.get(i);
+                    let freq = frequencies.get(i);
                     if (Math.abs(0.5 - genNoise(offsetX, offsetY + i * 999, 2, 0.7, (40 + i * 2))) > 0.22 + i * 0.01 &&
                         Math.abs(0.5 - genNoise(offsetX, offsetY - i * 999, 1, 1, (30 + i * 4))) > 0.37 + freq) {
                         this.ore = entry;
@@ -871,9 +871,9 @@ function createWrekGenerator() {
                         this.floor = Blocks.basalt;
                     } else {
                         this.ore = Blocks.air;
-                        var all = true;
-                        for (var p of Geometry.d4) {
-                            var other = this.tiles.get(x + p.x, y + p.y);
+                        let all = true;
+                        for (let p of Geometry.d4) {
+                            let other = this.tiles.get(x + p.x, y + p.y);
                             if (other == null || (other.floor() != Blocks.hotrock && other.floor() != Blocks.magmarock)) {
                                 all = false;
                             }
@@ -883,7 +883,7 @@ function createWrekGenerator() {
                         }
                     }
                 } else if (this.floor != Blocks.basalt && this.floor != Blocks.ice && this.floor.asFloor().hasSurface()) {
-                    var n = genNoise(x + 782, y, 5, 0.75, 260, 1);
+                    let n = genNoise(x + 782, y, 5, 0.75, 260, 1);
                     if (n > 0.67 && !enemies.contains(boolf(e => Mathf.within(x, y, e.x, e.y, 8)))) {
                         if (n > 0.72) {
                             this.floor = n > 0.78 ? Blocks.taintedWater : (this.floor == Blocks.sand ? Blocks.sandWater : Blocks.darksandTaintedWater);
@@ -896,10 +896,10 @@ function createWrekGenerator() {
 
                 if (rand.chance(0.0075)) {
                     //random spore trees
-                    var any = false;
-                    var all = true;
-                    for (var p of Geometry.d4) {
-                        var other = this.tiles.get(x + p.x, y + p.y);
+                    let any = false;
+                    let all = true;
+                    for (let p of Geometry.d4) {
+                        let other = this.tiles.get(x + p.x, y + p.y);
                         if (other != null && other.block() == Blocks.air) {
                             any = true;
                         } else {
@@ -913,8 +913,8 @@ function createWrekGenerator() {
 
                 //random stuff
                 dec: {
-                    for (var i = 0; i < 4; i++) {
-                        var near = Vars.world.tile(x + Geometry.d4[i].x, y + Geometry.d4[i].y);
+                    for (let i = 0; i < 4; i++) {
+                        let near = Vars.world.tile(x + Geometry.d4[i].x, y + Geometry.d4[i].y);
                         if (near != null && near.block() != Blocks.air) {
                             break dec;
                         }
@@ -927,18 +927,18 @@ function createWrekGenerator() {
             }));
             executeTimer.printDuration("Main loop: ");
 
-            var difficulty = sector.threat;
+            let difficulty = sector.threat;
             ints.clear();
             ints.ensureCapacity(width * height / 4);
-            var ruinCount = rand.random(-2, 4);
+            let ruinCount = rand.random(-2, 4);
 
             if (ruinCount > 0) {
-                var padding = 25;
+                let padding = 25;
 
                 //create list of potential positions
-                for (var x = padding; x < width - padding; x++) {
-                    for (var y = padding; y < height - padding; y++) {
-                        var tile = this.tiles.getn(x, y);
+                for (let x = padding; x < width - padding; x++) {
+                    for (let y = padding; y < height - padding; y++) {
+                        let tile = this.tiles.getn(x, y);
                         if (!tile.solid() && (tile.drop() != null || tile.floor().liquidDrop != null)) {
                             ints.add(tile.pos());
                         }
@@ -947,22 +947,22 @@ function createWrekGenerator() {
 
                 ints.shuffle(rand);
 
-                var placed = 0;
-                var diffRange = 0.4;
+                let placed = 0;
+                let diffRange = 0.4;
                 //try each position
-                for (var i = 0; i < ints.size && placed < ruinCount; i++) {
-                    var val = ints.items[i];
-                    var x = Point2.x(val), y = Point2.y(val);
+                for (let i = 0; i < ints.size && placed < ruinCount; i++) {
+                    let val = ints.items[i];
+                    let x = Point2.x(val), y = Point2.y(val);
 
                     //do not overwrite player spawn
                     if (Mathf.within(x, y, spawn.x, spawn.y, 18)) {
                         continue;
                     }
 
-                    var range = difficulty + rand.random(diffRange);
+                    let range = difficulty + rand.random(diffRange);
 
-                    var tile = this.tiles.getn(x, y);
-                    var part = null;
+                    let tile = this.tiles.getn(x, y);
+                    let part = null;
                     if (tile.overlay().itemDrop != null) {
                         part = Vars.bases.forResource(tile.drop()).getFrac(range);
                     } else if (tile.floor().liquidDrop != null && rand.chance(0.05)) {
@@ -973,12 +973,12 @@ function createWrekGenerator() {
 
                     //actually place the part
                     if (part != null && BaseGenerator.tryPlace(part, x, y, Team.derelict, lib.intc2((cx, cy) => {
-                        var other = this.tiles.getn(cx, cy);
+                        let other = this.tiles.getn(cx, cy);
                         if (other.floor().hasSurface()) {
                             other.setOverlay(Blocks.oreScrap);
-                            for (var j = 1; j <= 2; j++) {
-                                for (var p of Geometry.d8) {
-                                    var t = this.tiles.get(cx + p.x * j, cy + p.y * j);
+                            for (let j = 1; j <= 2; j++) {
+                                for (let p of Geometry.d8) {
+                                    let t = this.tiles.get(cx + p.x * j, cy + p.y * j);
                                     if (t != null && t.floor().hasSurface() && rand.chance(j == 1 ? 0.4 : 0.2)) {
                                         t.setOverlay(Blocks.oreScrap);
                                     }
@@ -988,12 +988,12 @@ function createWrekGenerator() {
                     }))) {
                         placed++;
 
-                        var debrisRadius = Math.max(part.schematic.width, part.schematic.height) / 2 + 3;
+                        let debrisRadius = Math.max(part.schematic.width, part.schematic.height) / 2 + 3;
                         Geometry.circle(x, y, this.tiles.width, this.tiles.height, debrisRadius, lib.intc2((cx, cy) => {
-                            var dst = Mathf.dst(cx, cy, x, y);
-                            var removeChance = Mathf.lerp(0.05, 0.5, dst / debrisRadius);
+                            let dst = Mathf.dst(cx, cy, x, y);
+                            let removeChance = Mathf.lerp(0.05, 0.5, dst / debrisRadius);
 
-                            var other = this.tiles.getn(cx, cy);
+                            let other = this.tiles.getn(cx, cy);
                             if (other.build != null && other.isCenter()) {
                                 if (other.team() == Team.derelict && rand.chance(removeChance)) {
                                     other.remove();
@@ -1018,7 +1018,7 @@ function createWrekGenerator() {
                 Vars.state.rules.winWave = sector.info.winWave = 10 + 5 * Math.max(difficulty * 10, 1);
             }
 
-            var waveTimeDec = 0.4;
+            let waveTimeDec = 0.4;
 
             Vars.state.rules.waveSpacing = Mathf.lerp(60 * 65 * 2, 60 * 60 * 1, Math.max(difficulty - waveTimeDec, 0) / 0.8);
             Vars.state.rules.waves = sector.info.waves = true;

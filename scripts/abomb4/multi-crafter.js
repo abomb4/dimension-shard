@@ -81,8 +81,8 @@ exports.defineMultiCrafter = function (originConfig) {
         if (ratio < 0 || ratio > 1) {
             throw new Error('Ratio cannot lesser than 0 or greeter than 1')
         }
-        // var rt = 0;
-        // for (var i = 0; i < count; i++) {
+        // let rt = 0;
+        // for (let i = 0; i < count; i++) {
         //     rt += (1 - rt) * ratio;
         // }
         // return rt;
@@ -94,14 +94,14 @@ exports.defineMultiCrafter = function (originConfig) {
      * @param {{usage: number, consume: Boolf<Building>}[]} list Consume list
      */
     function defineMultipleConditionanConsumePower(list) {
-        var total = 0;
-        for (var consumeInfo of list) {
+        let total = 0;
+        for (let consumeInfo of list) {
             total += consumeInfo.usage;
         }
         return new JavaAdapter(ConsumePower, {
             requestedPower(entity) {
-                var total = 0;
-                for (var consumeInfo of list) {
+                let total = 0;
+                for (let consumeInfo of list) {
                     if (consumeInfo.consume.get(entity)) {
                         total += consumeInfo.usage;
                     }
@@ -114,11 +114,11 @@ exports.defineMultiCrafter = function (originConfig) {
     function func(getter) { return new Func({ get: getter }); }
     function cons2(fun) { return new Cons2({ get: (v1, v2) => fun(v1, v2) }); }
     function randomLoop(list, func) {
-        var randStart = Math.floor(Math.random() * (list.length - 1))
-        for (var i = randStart; i < list.length; i++) {
+        let randStart = Math.floor(Math.random() * (list.length - 1))
+        for (let i = randStart; i < list.length; i++) {
             (v => func(v))(list[i]);
         }
-        for (var i = 0; i < randStart; i++) {
+        for (let i = 0; i < randStart; i++) {
             (v => func(v))(list[i]);
         }
     }
@@ -150,8 +150,8 @@ exports.defineMultiCrafter = function (originConfig) {
         check(config.ambientSound, v => v && v.at, v => 'ambientSound must be a Sound instance, it was ' + v);
         check(config.plans, v => Array.isArray(v), v => 'plans must be an array, it was ' + v);
 
-        for (var i = 0; i < config.plans.length; i++) {
-            var plan = config.plans[i];
+        for (let i = 0; i < config.plans.length; i++) {
+            let plan = config.plans[i];
             check(plan.attribute, v => !v || v.env, v => 'plans[' + i + '].attribute must be null or Attribute, it was ' + v);
             check(plan.boostScale, v => !v || (typeof v === 'number' && v > 0), v => 'plans[' + i + '].boostScale must be number and greeter than 0, it was ' + v);
             check(plan.craftEffect, v => v && v.render, v => 'plans[' + i + '].craftEffect must be a Effect instance, it was ' + v);
@@ -171,8 +171,8 @@ exports.defineMultiCrafter = function (originConfig) {
                 plan.output.power = 0;
             }
             if (plan.consume.items) {
-                for (var j = 0; j < plan.consume.items.length; j++) {
-                    var itemInfo = plan.consume.items[j];
+                for (let j = 0; j < plan.consume.items.length; j++) {
+                    let itemInfo = plan.consume.items[j];
                     check(itemInfo.item, v => v != undefined && v.flammability != undefined,
                         v => 'plans[' + i + '].consume.items[' + j + '].item must be a Item instance, it was ' + v);
                     check(itemInfo.amount, v => typeof v === 'number' && v > 0,
@@ -180,8 +180,8 @@ exports.defineMultiCrafter = function (originConfig) {
                 }
             }
             if (plan.consume.liquids) {
-                for (var j = 0; j < plan.consume.liquids.length; j++) {
-                    var liquidInfo = plan.consume.liquids[j];
+                for (let j = 0; j < plan.consume.liquids.length; j++) {
+                    let liquidInfo = plan.consume.liquids[j];
                     check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
                         v => 'plans[' + i + '].consume.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
                     check(liquidInfo.amount, v => typeof v === 'number' && v > 0,
@@ -189,8 +189,8 @@ exports.defineMultiCrafter = function (originConfig) {
                 }
             }
             if (plan.output.items) {
-                for (var j = 0; j < plan.output.items.length; j++) {
-                    var itemInfo = plan.output.items[j];
+                for (let j = 0; j < plan.output.items.length; j++) {
+                    let itemInfo = plan.output.items[j];
                     check(itemInfo.item, v => v != undefined && v.flammability != undefined,
                         v => 'plans[' + i + '].output.items[' + j + '].item must be a Item instance, it was ' + v);
                     check(itemInfo.amount, v => typeof v === 'number' && v > 0,
@@ -198,8 +198,8 @@ exports.defineMultiCrafter = function (originConfig) {
                 }
             }
             if (plan.output.liquids) {
-                for (var j = 0; j < plan.output.liquids.length; j++) {
-                    var liquidInfo = plan.output.liquids[j];
+                for (let j = 0; j < plan.output.liquids.length; j++) {
+                    let liquidInfo = plan.output.liquids[j];
                     check(liquidInfo.liquid, v => v != undefined && v.temperature != undefined,
                         v => 'plans[' + i + '].output.liquids[' + j + '].liquid must be a Liquid instance, it was ' + v);
                     check(liquidInfo.amount, v => typeof v === 'number' && v > 0,
@@ -211,20 +211,20 @@ exports.defineMultiCrafter = function (originConfig) {
 
     const plans = [];
 
-    var idGen = 0;
-    var block;
+    let idGen = 0;
+    let block;
 
     const dumpItems = [];
     const dumpLiquids = [];
-    for (var i in config.plans) {
+    for (let i in config.plans) {
         const plan = config.plans[i];
-        for (var j in plan.output.items) {
+        for (let j in plan.output.items) {
             const item = plan.output.items[j].item;
             if (dumpItems.indexOf(item) < 0) {
                 dumpItems.push(item);
             }
         }
-        for (var j in plan.output.liquids) {
+        for (let j in plan.output.liquids) {
             const liquid = plan.output.liquids[j].liquid;
             if (dumpLiquids.indexOf(liquid) < 0) {
                 dumpLiquids.push(liquid);
@@ -233,15 +233,15 @@ exports.defineMultiCrafter = function (originConfig) {
     }
     const inputItems = [];
     const inputLiquids = [];
-    for (var i in config.plans) {
+    for (let i in config.plans) {
         const plan = config.plans[i];
-        for (var j in plan.consume.items) {
+        for (let j in plan.consume.items) {
             const item = plan.consume.items[j].item;
             if (inputItems.indexOf(item) < 0) {
                 inputItems.push(item);
             }
         }
-        for (var j in plan.consume.liquids) {
+        for (let j in plan.consume.liquids) {
             const liquid = plan.consume.liquids[j].liquid;
             if (inputLiquids.indexOf(liquid) < 0) {
                 inputLiquids.push(liquid);
@@ -259,7 +259,7 @@ exports.defineMultiCrafter = function (originConfig) {
         const boostScale = plan.boostScale;
         const attribute = plan.attribute;
 
-        var id = ++idGen;
+        let id = ++idGen;
 
         function getData(entity) {
             return entity.getData().planDatas[id];
@@ -278,9 +278,9 @@ exports.defineMultiCrafter = function (originConfig) {
             if (config.noParallelAffect) {
                 return 1;
             }
-            var running = 0;
-            for (var i of Object.keys(entity.getData().planDatas)) {
-                var data = entity.getData().planDatas[i];
+            let running = 0;
+            for (let i of Object.keys(entity.getData().planDatas)) {
+                let data = entity.getData().planDatas[i];
                 if (data && data.running) {
                     running += 1;
                 }
@@ -328,9 +328,9 @@ exports.defineMultiCrafter = function (originConfig) {
             }
             const items = entity.items;
 
-            var fail = false;
-            for (var consume of consumeItems) {
-                var have = (consume => (items.has(consume.item, consume.amount)))(consume);
+            let fail = false;
+            for (let consume of consumeItems) {
+                let have = (consume => (items.has(consume.item, consume.amount)))(consume);
                 if (!have) {
                     fail = true;
                     break;
@@ -345,9 +345,9 @@ exports.defineMultiCrafter = function (originConfig) {
                 return true;
             }
 
-            for (var consume of consumeLiquids) {
+            for (let consume of consumeLiquids) {
 
-                var fls = (consume => {
+                let fls = (consume => {
                     const liquid = consume.liquid;
                     const use = Math.min(consume.amount * getProgressAddition(entity, craftTime), entity.block.liquidCapacity);
                     if (entity.liquids == null || entity.liquids.get(liquid) < use) {
@@ -370,16 +370,16 @@ exports.defineMultiCrafter = function (originConfig) {
             }
             const items = entity.items;
 
-            var fail = false;
-            for (var consume of consumeItems) {
-                var have = (consume => (items.has(consume.item, consume.amount)))(consume);
+            let fail = false;
+            for (let consume of consumeItems) {
+                let have = (consume => (items.has(consume.item, consume.amount)))(consume);
                 if (!have) {
                     fail = true;
                     break;
                 }
             }
             if (!fail) {
-                for (var consume of consumeItems) {
+                for (let consume of consumeItems) {
                     (consume => {
                         let item = consume.item;
                         items.remove(item, consume.amount);
@@ -398,9 +398,9 @@ exports.defineMultiCrafter = function (originConfig) {
                 return true;
             }
 
-            for (var consume of consumeLiquids) {
+            for (let consume of consumeLiquids) {
 
-                var fls = (consume => {
+                let fls = (consume => {
                     const liquid = consume.liquid;
                     const use = Math.min(consume.amount * getProgressAddition(entity, craftTime), entity.block.liquidCapacity);
                     if (entity.liquids == null || entity.liquids.get(liquid) < use) {
@@ -411,7 +411,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 if (fls) { return false; }
             }
 
-            for (var consume of consumeLiquids) {
+            for (let consume of consumeLiquids) {
 
                 (consume => {
                     const liquid = consume.liquid;
@@ -430,11 +430,11 @@ exports.defineMultiCrafter = function (originConfig) {
             const outputLiquids = plan.output.liquids;
             const outputPower = plan.output.power;
             if (outputItems) {
-                for (var output of outputItems) {
+                for (let output of outputItems) {
                     (output => {
                         const item = output.item;
                         const amount = output.amount;
-                        for (var j = 0; j < amount; j++) {
+                        for (let j = 0; j < amount; j++) {
                             entity.offload(item);
                         }
                     })(output)
@@ -442,7 +442,7 @@ exports.defineMultiCrafter = function (originConfig) {
             }
 
             if (outputLiquids) {
-                for (var output of outputLiquids) {
+                for (let output of outputLiquids) {
                     (output => {
                         const liquid = output.liquid;
                         const amount = output.amount;
@@ -473,7 +473,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 const outputItems = plan.output.items;
                 const outputLiquids = plan.output.liquids;
                 if (outputItems) {
-                    for (var item of outputItems) {
+                    for (let item of outputItems) {
                         if (entity.items.get(item.item) >= entity.block.itemCapacity) {
                             data.running = false;
                             return false;
@@ -481,7 +481,7 @@ exports.defineMultiCrafter = function (originConfig) {
                     }
                 }
                 if (outputLiquids) {
-                    for (var liquid of outputLiquids) {
+                    for (let liquid of outputLiquids) {
                         if (entity.liquids.get(liquid.liquid) >= (entity.block.liquidCapacity - 0.001)) {
                             data.running = false;
                             return false;
@@ -518,7 +518,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 return powerProduceTime > 0 && plan.output.power ? plan.output.power * getPowerProgressEfficiency(entity) : 0;
             },
             init(entity) {
-                var data = {
+                let data = {
                     progress: 0,
                     running: false,
                     powerProduceTime: 0,
@@ -570,12 +570,12 @@ exports.defineMultiCrafter = function (originConfig) {
                         table.row();
                         table.add(lib.getMessage('stat', 'multiCrafterParallelEffect', [config.parallelEffectUp]));
                     }
-                    for (var plan of config.plans) {
+                    for (let plan of config.plans) {
                         ((plan) => {
                             table.row();
                             table.table(cons(table => {
-                                var first = true;
-                                if (plan.consume.items) for (var consume of plan.consume.items) {
+                                let first = true;
+                                if (plan.consume.items) for (let consume of plan.consume.items) {
                                     if (!first) { table.add(" + ").padRight(4).center().top(); }
                                     (consume => {
                                         const item = consume.item;
@@ -586,7 +586,7 @@ exports.defineMultiCrafter = function (originConfig) {
                                     })(consume)
                                     first = false;
                                 }
-                                if (plan.consume.liquids) for (var consume of plan.consume.liquids) {
+                                if (plan.consume.liquids) for (let consume of plan.consume.liquids) {
                                     if (!first) { table.add(" + ").padRight(4).center().top(); }
                                     (consume => {
                                         const liquid = consume.liquid;
@@ -605,7 +605,7 @@ exports.defineMultiCrafter = function (originConfig) {
                                 table.add(" --> ").padRight(4).left().top();
 
                                 first = true;
-                                if (plan.output.items) for (var consume of plan.output.items) {
+                                if (plan.output.items) for (let consume of plan.output.items) {
                                     if (!first) { table.add(" + ").padRight(4).center().top(); }
                                     (consume => {
                                         const item = consume.item;
@@ -616,7 +616,7 @@ exports.defineMultiCrafter = function (originConfig) {
                                     })(consume)
                                     first = false;
                                 }
-                                if (plan.output.liquids) for (var consume of plan.output.liquids) {
+                                if (plan.output.liquids) for (let consume of plan.output.liquids) {
                                     if (!first) { table.add(" + ").padRight(4).center().top(); }
                                     (consume => {
                                         const liquid = consume.liquid;
@@ -666,9 +666,9 @@ exports.defineMultiCrafter = function (originConfig) {
             this.bars.add("health", func(e => new Bar("stat.health", Pal.health, floatp(() => e.healthf())).blink(Color.white)));
 
             if (this.hasPower && this.consumes.hasPower()) {
-                var cons = this.consumes.getPower();
-                var buffered = cons.buffered;
-                var capacity = cons.capacity;
+                let cons = this.consumes.getPower();
+                let buffered = cons.buffered;
+                let capacity = cons.capacity;
 
                 this.bars.add("power", func(entity => new Bar(
                     prov(() => buffered ? Core.bundle.format("bar.poweramount", Float.isNaN(entity.power.status * capacity) ? "<ERROR>" : parseInt(entity.power.status * capacity)) : Core.bundle.get("bar.power")),
@@ -712,11 +712,11 @@ exports.defineMultiCrafter = function (originConfig) {
     const updateEffect = config.updateEffect || Fx.none;
 
     block.buildType = prov(() => {
-        var data = {
+        let data = {
             warmup: 0,
             planDatas: {},
         };
-        var updated = false;
+        let updated = false;
 
         const entity = new JavaAdapter(Building, {
             getData() { return data; },
@@ -739,11 +739,11 @@ exports.defineMultiCrafter = function (originConfig) {
             //         table.row();
             //         table.left();
             //         table.table(cons(l => {
-            //             var map = new ObjectMap();
+            //             let map = new ObjectMap();
             //             l.update(run(() => {
             //                 l.clearChildren();
             //                 l.left();
-            //                 var seq = new Seq(Item);
+            //                 let seq = new Seq(Item);
             //                 this.items.each(new ItemModule.ItemConsumer({
             //                     accept(item, amount) {
             //                         map.put(item, amount);
@@ -769,7 +769,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 return updated;
             },
             updateTile() {
-                var updated = false;
+                let updated = false;
                 if (this.consValid()) {
                     randomLoop(plans, plan => {
                         if (plan.update(this)) {
@@ -787,11 +787,11 @@ exports.defineMultiCrafter = function (originConfig) {
                         data.warmup = Mathf.lerp(data.warmup, 0, 0.02);
                     }
 
-                    for (var i in dumpItems) {
+                    for (let i in dumpItems) {
                         const item = dumpItems[i];
                         this.dump(item);
                     }
-                    for (var i in dumpLiquids) {
+                    for (let i in dumpLiquids) {
                         const liquid = dumpLiquids[i];
                         this.dumpLiquid(liquid);
                     }
@@ -803,12 +803,12 @@ exports.defineMultiCrafter = function (originConfig) {
             write(write) {
                 this.super$write(write);
                 write.f(data.warmup);
-                var len = 0;
-                for (var i in data.planDatas) {
+                let len = 0;
+                for (let i in data.planDatas) {
                     len++
                 }
                 write.s(len);
-                for (var id in data.planDatas) {
+                for (let id in data.planDatas) {
                     const d = data.planDatas[id];
                     write.s(id);
                     write.f(d.progress);
@@ -822,7 +822,7 @@ exports.defineMultiCrafter = function (originConfig) {
                 this.super$read(read, revision);
                 data.warmup = read.f();
                 const length = read.s();
-                for (var i = 0; i < length; i++) {
+                for (let i = 0; i < length; i++) {
                     const d = {};
                     const id = read.s();
                     d.progress = read.f();
