@@ -68,7 +68,11 @@ lib.addToResearch(shardPhaseWall, { parent: 'phase-wall-large', });
 lib.addToResearch(shardPhaseWallLarge, { parent: shardPhaseWall.name, });
 lib.addToResearch(dimensionTechnologyCore3, { parent: 'core-nucleus', });
 lib.addToResearch(dimensionTechnologyCore4, { parent: dimensionTechnologyCore3.name, });
-lib.addToResearch(coreConstructionPlatform, { parent: 'launch-pad' });
+lib.addToResearch(coreConstructionPlatform, { parent: 'launch-pad', objectives: Seq.with(
+    new Objectives.SectorComplete(SectorPresets.nuclearComplex),
+    new Objectives.SectorComplete(SectorPresets.desolateRift),
+    new Objectives.SectorComplete(SectorPresets.impact0078),
+) });
 
 // -=-=-=-=-=-=-=-=-=-=-=- After core -=-=-=-=-=-=-=-=-=-=-=-
 // factory line
@@ -81,6 +85,7 @@ lib.addToResearch(shardReceiver, {
         Items.surgeAlloy, 100 * 30,
     ),
     objectives: Seq.with(
+        new Objectives.SectorComplete(dimensionFall),
         new Objectives.SectorComplete(SectorPresets.nuclearComplex),
         new Objectives.SectorComplete(SectorPresets.overgrowth),
     )
