@@ -31,11 +31,11 @@ const wrek = new JavaAdapter(Planet, {
 }, "wrek", Planets.sun, 3, 1);
 wrek.generator = new SerpuloPlanetGenerator();
 wrek.atmosphereColor = Color.valueOf("213159");
-wrek.atmosphereRadIn = 0.04;
+wrek.atmosphereRadIn = 0.06;
 wrek.atmosphereRadOut = 0.1;
-wrek.startSector = 12;
+wrek.startSector = 151;
 
-const dimensionFall = new SectorPreset("dimensionFall", wrek, 12);
+const dimensionFall = new SectorPreset("dimensionFall", wrek, 151);
 dimensionFall.captureWave = 50;
 dimensionFall.difficulty = 8;
 
