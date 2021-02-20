@@ -35,11 +35,50 @@ wrek.atmosphereRadIn = 0.06;
 wrek.atmosphereRadOut = 0.1;
 wrek.startSector = 151;
 
-const dimensionFall = new SectorPreset("dimensionFall", wrek, 151);
+const dimensionFall = new SectorPreset("dimensionFall", wrek, 89);
 dimensionFall.captureWave = 50;
-dimensionFall.difficulty = 8;
-
+dimensionFall.difficulty = 6;
 exports.dimensionFall = dimensionFall;
+
+const hardStuff = new SectorPreset("hardStuff", wrek, 3);
+hardStuff.captureWave = 45;
+hardStuff.difficulty = 6;
+exports.hardStuff = hardStuff;
+
+const dimensionOutpost = new SectorPreset("dimensionOutpost", wrek, 62);
+dimensionOutpost.captureWave = 45;
+dimensionOutpost.difficulty = 7;
+exports.dimensionOutpost = dimensionOutpost;
+
+const timeRiver = new SectorPreset("timeRiver", wrek, 45);
+timeRiver.captureWave = 45;
+timeRiver.difficulty = 7;
+exports.timeRiver = timeRiver;
+
+const whiteFlame = new SectorPreset("whiteFlame", wrek, 120);
+whiteFlame.captureWave = 45;
+whiteFlame.difficulty = 7;
+exports.whiteFlame = whiteFlame;
+
+const dimensionShackles = new SectorPreset("dimensionShackles", wrek, 174);
+dimensionShackles.captureWave = 80;
+dimensionShackles.difficulty = 9;
+exports.dimensionShackles = dimensionShackles;
+
+const darkGuard = new SectorPreset("darkGuard", wrek, 132);
+darkGuard.captureWave = 80;
+darkGuard.difficulty = 10;
+exports.darkGuard = darkGuard;
+
+const thunderAndLightning = new SectorPreset("thunderAndLightning", wrek, 224);
+thunderAndLightning.captureWave = 80;
+thunderAndLightning.difficulty = 11;
+exports.thunderAndLightning = thunderAndLightning;
+
+const theBerserker = new SectorPreset("theBerserker", wrek, 264);
+theBerserker.captureWave = 80;
+theBerserker.difficulty = 12;
+exports.theBerserker = theBerserker;
 
 function generateWaves(difficulty, rand, attack) {
     const never = Packages.java.lang.Integer.MAX_VALUE;

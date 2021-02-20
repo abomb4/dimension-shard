@@ -56,7 +56,11 @@ const { t4Factory } = require('tech-ds/unit/t4-factory')
 const { t5Factory } = require('tech-ds/unit/t5-factory')
 const { unitTeleporter } = require('tech-ds/unit/unit-teleporter')
 
-const { dimensionFall } = require('ds-common/planets');
+const {
+    dimensionFall, hardStuff, timeRiver,
+    darkGuard, dimensionOutpost, dimensionShackles,
+    theBerserker, thunderAndLightning, whiteFlame
+} = require('ds-common/planets');
 const { rhapsody } = require('tech-ds/unit/gat5-rhapsody');
 const { coreConstructionPlatform } = require('tech-ds/effect/core-construction-platform');
 const { hardPhaseSpaceBridge } = require('tech-ds/distribution/hard-phase-space-bridge');
@@ -86,17 +90,15 @@ lib.addToResearch(shardReceiver, {
     ),
     objectives: Seq.with(
         new Objectives.SectorComplete(dimensionFall),
-        new Objectives.SectorComplete(SectorPresets.nuclearComplex),
-        new Objectives.SectorComplete(SectorPresets.overgrowth),
     )
 });
-lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore3.name, });
-lib.addToResearch(hardThoriumAlloySmelter, { parent: spaceCrystallizer.name, });
-lib.addToResearch(timeCondenser, { parent: hardThoriumAlloySmelter.name, });
-lib.addToResearch(timeCrystallizer, { parent: timeCondenser.name, });
-lib.addToResearch(radioisotopeWeaver, { parent: hardThoriumAlloySmelter.name, });
-lib.addToResearch(ionCollector, { parent: timeCondenser.name, });
-lib.addToResearch(dimensionAlloySmelter, { parent: ionCollector.name, });
+lib.addToResearch(spaceCrystallizer, { parent: dimensionTechnologyCore3.name, objectives: Seq.with(new Objectives.SectorComplete(dimensionFall)) });
+lib.addToResearch(hardThoriumAlloySmelter, { parent: spaceCrystallizer.name, objectives: Seq.with(new Objectives.SectorComplete(hardStuff)) });
+lib.addToResearch(timeCondenser, { parent: hardThoriumAlloySmelter.name, objectives: Seq.with(new Objectives.SectorComplete(timeRiver)) });
+lib.addToResearch(timeCrystallizer, { parent: timeCondenser.name, objectives: Seq.with(new Objectives.SectorComplete(hardStuff)) });
+lib.addToResearch(radioisotopeWeaver, { parent: hardThoriumAlloySmelter.name, objectives: Seq.with(new Objectives.SectorComplete(dimensionOutpost)) });
+lib.addToResearch(ionCollector, { parent: timeCondenser.name, objectives: Seq.with(new Objectives.SectorComplete(whiteFlame)) });
+lib.addToResearch(dimensionAlloySmelter, { parent: ionCollector.name, objectives: Seq.with(new Objectives.SectorComplete(dimensionShackles)) });
 
 // distribution line
 lib.addToResearch(hardPhaseSpaceBridge, { parent: phaseSpaceBridge.name, });
@@ -124,17 +126,17 @@ lib.addToResearch(hardThoriumDrill, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(bombTeleporter, { parent: dimensionTechnologyCore3.name, });
 lib.addToResearch(dc, { parent: bombTeleporter.name, });
 lib.addToResearch(ionBoltTurret, { parent: bombTeleporter.name, });
-lib.addToResearch(darkLight, { parent: ionBoltTurret.name, });
-lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, });
+lib.addToResearch(darkLight, { parent: ionBoltTurret.name, objectives: Seq.with(new Objectives.SectorComplete(darkGuard)) });
+lib.addToResearch(electricStormTurret, { parent: ionBoltTurret.name, objectives: Seq.with(new Objectives.SectorComplete(thunderAndLightning)) });
 
 // effect line
-lib.addToResearch(deflectForceProjector, { parent: dimensionTechnologyCore3.name, });
-lib.addToResearch(spaceVault, { parent: dimensionTechnologyCore3.name, });
+lib.addToResearch(deflectForceProjector, { parent: dimensionTechnologyCore3.name,objectives: Seq.with(new Objectives.SectorComplete(dimensionOutpost))  });
+lib.addToResearch(spaceVault, { parent: dimensionTechnologyCore3.name, objectives: Seq.with(new Objectives.SectorComplete(dimensionFall))  });
 lib.addToResearch(unitTeleporter, { parent: deflectForceProjector.name, });
 lib.addToResearch(timeOverdrive, { parent: deflectForceProjector.name, });
 
 // unit line
-lib.addToResearch(t4Factory, { parent: dimensionTechnologyCore3.name, });
+lib.addToResearch(t4Factory, { parent: dimensionTechnologyCore3.name, objectives: Seq.with(new Objectives.SectorComplete(whiteFlame)) });
 lib.addToResearch(t5Factory, { parent: t4Factory.name, });
 
 lib.addToResearch(formula, { parent: t4Factory.name, });
@@ -144,7 +146,11 @@ lib.addToResearch(burn, { parent: t4Factory.name, });
 lib.addToResearch(collapse, { parent: burn.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
 
 lib.addToResearch(beat, { parent: t4Factory.name, });
-lib.addToResearch(rhapsody, { parent: beat.name, objectives: Seq.with( new Objectives.Research(t5Factory) ) });
+lib.addToResearch(rhapsody, { parent: beat.name, objectives: Seq.with(
+    new Objectives.Research(t5Factory),
+    new Objectives.SectorComplete(darkGuard),
+    new Objectives.SectorComplete(thunderAndLightning),
+) });
 
 // zones
 lib.addToResearch(dimensionFall, {
@@ -152,5 +158,61 @@ lib.addToResearch(dimensionFall, {
     objectives: Seq.with(
         new Objectives.SectorComplete(SectorPresets.planetaryTerminal),
         lib.objectivePlanetaryTerminalActivated
+    )
+});
+
+lib.addToResearch(hardStuff, {
+    parent: dimensionFall.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(dimensionFall),
+    )
+});
+
+lib.addToResearch(dimensionOutpost, {
+    parent: hardStuff.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(hardStuff),
+    )
+});
+
+lib.addToResearch(timeRiver, {
+    parent: hardStuff.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(hardStuff),
+    )
+});
+
+lib.addToResearch(whiteFlame, {
+    parent: timeRiver.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(timeRiver),
+    )
+});
+
+lib.addToResearch(dimensionShackles, {
+    parent: whiteFlame.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(whiteFlame),
+    )
+});
+
+lib.addToResearch(darkGuard, {
+    parent: dimensionShackles.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(dimensionShackles),
+    )
+});
+
+lib.addToResearch(thunderAndLightning, {
+    parent: dimensionShackles.name,
+    objectives: Seq.with(
+        new Objectives.SectorComplete(dimensionShackles),
+    )
+});
+
+lib.addToResearch(theBerserker, {
+    parent: thunderAndLightning.name,
+    objectives: Seq.with(
+        new Objectives.Research(rhapsody),
     )
 });
