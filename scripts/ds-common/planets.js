@@ -45,8 +45,7 @@ hardStuff.captureWave = 45;
 hardStuff.difficulty = 6;
 exports.hardStuff = hardStuff;
 
-const dimensionOutpost = new SectorPreset("dimensionOutpost", wrek, 62);
-dimensionOutpost.captureWave = 45;
+const dimensionOutpost = new SectorPreset("dimensionOutpost", wrek, 160);
 dimensionOutpost.difficulty = 7;
 exports.dimensionOutpost = dimensionOutpost;
 
