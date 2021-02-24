@@ -50,7 +50,7 @@ dimensionOutpost.difficulty = 7;
 exports.dimensionOutpost = dimensionOutpost;
 
 const timeRiver = new SectorPreset("timeRiver", wrek, 45);
-timeRiver.captureWave = 45;
+timeRiver.captureWave = 50;
 timeRiver.difficulty = 7;
 exports.timeRiver = timeRiver;
 
