@@ -527,20 +527,20 @@ function createWrekGenerator() {
     //  v
     // 两极
     let arr = [
-        [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.darkPanel1, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.darksand, Blocks.sand, Blocks.darkPanel2, Blocks.sand, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.darkPanel3, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.basalt, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.deepwater, Blocks.water, Blocks.darksand, Blocks.mud, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.darkPanel2, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.darkPanel3, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.darksand, Blocks.darksand, Blocks.basalt, Blocks.craters, Blocks.dacite, Blocks.dacite, Blocks.space],
+        [Blocks.deepwater, Blocks.water, Blocks.darksand, Blocks.mud, Blocks.dirt, Blocks.sand, Blocks.darksand, Blocks.darkPanel2, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.water, Blocks.grass, Blocks.grass, Blocks.mud, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.sand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
         [Blocks.water, Blocks.water, Blocks.grass, Blocks.grass, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.darkPanel3, Blocks.darksand, Blocks.stone, Blocks.stone, Blocks.dacite, Blocks.dacite, Blocks.space],
-        [Blocks.water, Blocks.water, Blocks.sand, Blocks.mud, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.sand, Blocks.moss, Blocks.stone, Blocks.snow, Blocks.iceSnow, Blocks.dacite, Blocks.space],
+        [Blocks.water, Blocks.water, Blocks.sand, Blocks.grass, Blocks.grass, Blocks.grass, Blocks.mud, Blocks.sand, Blocks.moss, Blocks.stone, Blocks.snow, Blocks.iceSnow, Blocks.dacite, Blocks.space],
         [Blocks.deepwater, Blocks.sandWater, Blocks.sand, Blocks.dirt, Blocks.grass, Blocks.grass, Blocks.darkPanel4, Blocks.basalt, Blocks.basalt, Blocks.snow, Blocks.snow, Blocks.iceSnow, Blocks.dacite, Blocks.space],
-        [Blocks.magmarock, Blocks.hotrock, Blocks.sand, Blocks.sand, Blocks.darkPanel5, Blocks.moss, Blocks.basalt, Blocks.hotrock, Blocks.basalt, Blocks.ice, Blocks.snow, Blocks.ice, Blocks.ice, Blocks.space],
-        [Blocks.hotrock, Blocks.water, Blocks.darksand, Blocks.sand, Blocks.sand, Blocks.sand, Blocks.sporeMoss, Blocks.darkPanel6, Blocks.basalt, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.ice, Blocks.space],
-        [Blocks.sandWater, Blocks.sand, Blocks.metalFloor5, Blocks.darksand, Blocks.dirt, Blocks.moss, Blocks.dirt, Blocks.dirt, Blocks.metalFloor, Blocks.snow, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.space],
-        [Blocks.taintedWater, Blocks.darksandTaintedWater, Blocks.darksand, Blocks.darksand, Blocks.sand, Blocks.moss, Blocks.sporeMoss, Blocks.snow, Blocks.metalFloor3, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.space],
-        [Blocks.darksandTaintedWater, Blocks.darksandTaintedWater, Blocks.sporeMoss, Blocks.sporeMoss, Blocks.moss, Blocks.snow, Blocks.iceSnow, Blocks.metalFloor2, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.darkPanel1, Blocks.space],
-        [Blocks.darksandWater, Blocks.metalFloorDamaged, Blocks.sporeMoss, Blocks.sporeMoss, Blocks.moss, Blocks.metalFloor2, Blocks.metalFloor3, Blocks.snow, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.ice, Blocks.metalFloor3, Blocks.space],
+        [Blocks.magmarock, Blocks.hotrock, Blocks.sand, Blocks.dirt, Blocks.darkPanel5, Blocks.moss, Blocks.basalt, Blocks.hotrock, Blocks.basalt, Blocks.ice, Blocks.snow, Blocks.ice, Blocks.ice, Blocks.space],
+        [Blocks.hotrock, Blocks.water, Blocks.sand, Blocks.sand, Blocks.darksand, Blocks.darksand, Blocks.sporeMoss, Blocks.darkPanel6, Blocks.basalt, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.ice, Blocks.space],
+        [Blocks.metalFloor5, Blocks.darksandWater, Blocks.darksand, Blocks.dirt, Blocks.snow, Blocks.moss, Blocks.snow, Blocks.snow, Blocks.metalFloor, Blocks.snow, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.space],
+        [Blocks.taintedWater, Blocks.darksandTaintedWater, Blocks.snow, Blocks.ice, Blocks.iceSnow, Blocks.ice, Blocks.sporeMoss, Blocks.snow, Blocks.metalFloor3, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.space],
+        [Blocks.darksandTaintedWater, Blocks.darksand, Blocks.snow, Blocks.snow, Blocks.ice, Blocks.iceSnow, Blocks.sporeMoss, Blocks.snow, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.ice, Blocks.ice],
+        [Blocks.darksandWater, Blocks.darksand, Blocks.snow, Blocks.ice, Blocks.iceSnow, Blocks.snow, Blocks.darkPanel4, Blocks.snow, Blocks.ice, Blocks.metalFloor5, Blocks.ice, Blocks.ice, Blocks.ice],
     ];
 
     let dec = ObjectMap.of(
@@ -826,7 +826,8 @@ function createWrekGenerator() {
                 ores.add(dimensionShardOre);
             }
 
-            if (rand.chance(0.45)) {
+            // More scarp at Pole
+            if (rand.chance(0.35 + sector.tile.v.y * 0.65)) {
                 ores.add(Blocks.oreScrap);
             }
 
