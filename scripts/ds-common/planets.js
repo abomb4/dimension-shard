@@ -922,7 +922,7 @@ function createWrekGenerator() {
                     }
                 } else if (this.floor != Blocks.basalt && this.floor != Blocks.ice && this.floor.asFloor().hasSurface()) {
                     let n = genNoise(x + 782, y, 5, 0.75, 260, 1);
-                    if (n > 0.67 && !enemies.contains(boolf(e => Mathf.within(x, y, e.x, e.y, 8)))) {
+                    if (n > 0.67 && roomseq.findIndex(e => Mathf.within(x, y, e.x, e.y, 14)) < 0) {
                         if (n > 0.72) {
                             this.floor = n > 0.78 ? Blocks.taintedWater : (this.floor == Blocks.sand ? Blocks.sandWater : Blocks.darksandTaintedWater);
                         } else {
