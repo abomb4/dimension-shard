@@ -87,7 +87,7 @@ exports.newElectricStormBulletType = (requestOptions) => {
         homingDelay: 30,
         homingPower: 0.025,
         homingRange: 200,
-        splashDamageRadius: 6 * 8,
+        splashDamageRadius: 4 * 8,
         splashDamage: 70,
         weaveMag: 8,
         weaveScale: 6,

@@ -55,7 +55,7 @@ exports.newSurroundingElectricBall = (requestOptions) => {
         homingDelay: 0,
         homingPower: 0,
         homingRange: 0,
-        splashDamageRadius: 36,
+        splashDamageRadius: 3 * 8,
         splashDamage: 30,
         weaveMag: 8,
         weaveScale: 6,

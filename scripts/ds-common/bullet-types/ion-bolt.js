@@ -135,7 +135,7 @@ exports.newIonBoltBulletType = (requestOptions) => {
         hitEffect: Fx.massiveExplosion,
         smokeEffect: fireEffect,
         despawnEffect: fireEffect,
-        splashDamageRadius: 32,
+        splashDamageRadius: 30,
         splashDamage: 60,
         lightning: 2,
         lightningLength: 6,
