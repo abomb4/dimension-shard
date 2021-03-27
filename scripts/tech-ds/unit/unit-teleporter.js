@@ -183,7 +183,7 @@ function isTeleportActive(building) {
 
 const drawArray = [];
 Events.run(Trigger.preDraw, run(() => {
-    while (drawArray.pop()) {}
+    while (drawArray.pop()) { }
 }));
 lib.setBuilding(block, (block) => {
     let target = -1;
@@ -344,6 +344,7 @@ lib.setBuilding(block, (block) => {
             if (linkValid(entity, target, false)) {
                 shouldConsume = true;
                 target.setConnected(entity);
+                target.setLastColor(ORANGE);
                 if (isTeleportActive(entity) && isTeleportActive(target)) {
                     // Draw sender effect
                     if (Mathf.random(60) > 48) {
@@ -363,7 +364,7 @@ lib.setBuilding(block, (block) => {
                                 this.inited = true;
                             }
                         };
-                        return function() {
+                        return function () {
                             if (!counter.inited) {
                                 Units.nearby(entity.team, target.x, target.y, TOO_MUCH_RADIUS, cons((unit) => {
                                     if (!unit.isFlying()) {
@@ -426,6 +427,16 @@ lib.setBuilding(block, (block) => {
             }
         },
 
+        remove() {
+            if (this.added == false) return;
+            let targetPos = this.getTarget();
+            let target = getBuild(targetPos);
+            if (linkValid(this, target, false)) {
+                target.setConnected(null);
+            }
+
+            this.super$remove();
+        },
         // Save Load
         write(writer) {
             this.super$write(writer);
@@ -449,7 +460,7 @@ lib.setBuilding(block, (block) => {
         setConnected(v) { connected = v; },
         getConnected() { return connected; },
         setLastColor(v) { lastColor = v; },
-        getLastColor() { return lastColor; },
+        getLastColor() { return connected; },
     });
 });
 
