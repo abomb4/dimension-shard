@@ -427,6 +427,11 @@ blockType.buildType = prov(() => {
                 return to == linkTarget;
             }));
         },
+        acceptStack(item, amount, source) {
+            return this.linkedCore == null ?
+                this.super$acceptStack(item, amount, source) :
+                this.linkedCore.acceptStack(item, amount, source);
+        },
         write(write) {
             this.super$write(write);
             write.s(itemType == null ? -1 : itemType.id);
