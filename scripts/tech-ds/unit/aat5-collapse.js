@@ -229,7 +229,7 @@ const unitType = (() => {
                 bt.despawnEffect = Fx.massiveExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 45;
+                bt.splashDamageRadius = 34;
                 bt.splashDamage = 105;
                 bt.status = StatusEffects.blasted;
                 bt.speed = 200;
@@ -265,7 +265,7 @@ const unitType = (() => {
                 bt.despawnEffect = items.fxDimensionShardExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 38;
+                bt.splashDamageRadius = 32;
                 bt.splashDamage = 70;
                 bt.speed = 160;
                 bt.hitShake = 1.6;
@@ -300,7 +300,7 @@ const unitType = (() => {
                 bt.despawnEffect = items.fxDimensionShardExplosion;
                 bt.hitSound = Sounds.explosion;
                 bt.damage = 0;
-                bt.splashDamageRadius = 38;
+                bt.splashDamageRadius = 28;
                 bt.splashDamage = 70;
                 bt.speed = 180;
                 bt.hitShake = 1.6;

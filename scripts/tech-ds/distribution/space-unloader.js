@@ -86,6 +86,9 @@ const blockType = extendContent(StorageBlock, "space-unloader", {
             this.drawPlaceText(lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
         }
     },
+    outputsItems() {
+        return true;
+    },
     pointConfig(config, transformer) {
         // Rotate relative points
         if (IntSeq.__javaObject__.isInstance(config)) {
@@ -422,15 +425,24 @@ blockType.buildType = prov(() => {
             return 2;
         },
         canDump(to, item) {
-            return !links.contains(boolf(pos => {
+            return this.linkedCore == null && !links.contains(boolf(pos => {
                 let linkTarget = Vars.world.build(pos);
                 return to == linkTarget;
             }));
         },
+        acceptItem(source, item) {
+            return this.linkedCore != null;
+        },
         acceptStack(item, amount, source) {
-            return this.linkedCore == null ?
-                this.super$acceptStack(item, amount, source) :
-                this.linkedCore.acceptStack(item, amount, source);
+            if (this.linkedCore != null) {
+                return this.linkedCore.acceptStack(item, amount, source);
+            } else {
+                if (source == null || source.team == this.team) {
+                    return Math.min(this.getMaximumAccepted(item) - this.items.get(item), amount);
+                } else {
+                    return 0;
+                }
+            }
         },
         write(write) {
             this.super$write(write);

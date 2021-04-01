@@ -73,7 +73,6 @@ lib.setBuildingSimple(block, Reconstructor.ReconstructorBuild, block => ({
         let i = 0;
         for (let cons of block.consumes.all()) {
             if (cons.isOptional() && cons.isBoost()) continue;
-            print(i);
             cons.build(this, table);
             if (++i % 4 == 0) {
                 table.row();

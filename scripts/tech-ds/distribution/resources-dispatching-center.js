@@ -251,9 +251,6 @@ blockType.buildType = prov(() => {
             }
             return s;
         },
-        acceptItem(source, item) {
-            return this.items.get(item) < this.getMaximumAccepted(item);
-        },
         updateTile() {
             tmpWhatHave.splice(0, tmpWhatHave.length);
             if (timer.get(1, FRAME_DELAY)) {
@@ -384,6 +381,11 @@ blockType.buildType = prov(() => {
                 output.add(point2.x, point2.y);
             }
             return output;
+        },
+        acceptStack(item, amount, source) {
+            return this.linkedCore == null ?
+                this.super$acceptStack(item, amount, source) :
+                this.linkedCore.acceptStack(item, amount, source);
         },
         add() {
             if (this.added) { return; }
