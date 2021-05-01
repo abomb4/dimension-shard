@@ -120,7 +120,7 @@ const turret = new JavaAdapter(PowerTurret, {
                 table.row();
             },
         }));
-        this.stats.remove(Stat.damage);
+        this.stats.remove(Stat.ammo);
         this.stats.add(Stat.damage, this.shootType.damage * 60 / 5, StatUnit.perSecond);
         this.stats.add(Stat.cooldownTime, this.reloadTime / 60 + " + " + Strings.autoFixed(this.chargeTime / 60, 2) + " s", [null]);
         this.stats.add(Stat.lightningDamage, (lightningDamage), StatUnit.none);
