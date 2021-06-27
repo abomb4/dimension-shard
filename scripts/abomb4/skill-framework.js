@@ -381,7 +381,7 @@ function _define_constructor_(clazz, classId) {
     var construct = prov(() => {
         const aiCheckTimer = new Interval(1);
         /** @type {{[key: string]: SkillStatus}} */
-        const skillStatusMap = {
+        let skillStatusMap = {
         };
         var skillUnitId = undefined;
         /** @type {SkillStatus[]} */
@@ -418,7 +418,7 @@ function _define_constructor_(clazz, classId) {
                 skillUnitId = idGen++;
             }
         }
-        var u = new JavaAdapter(clazz, {
+        let u = new JavaAdapter(clazz, {
             getSkillUnitId() {
                 return skillUnitId;
             },
@@ -427,9 +427,8 @@ function _define_constructor_(clazz, classId) {
                 return statusList;
             },
             clearSkillData() {
-                for (var i in skillStatusMap) {
-                    delete skillStatusMap[i];
-                }
+                // Object.keys(skillStatusMap).forEach(key => delete skillStatusMap[key])
+                skillStatusMap = {}
                 while (statusList.pop() !== undefined) {}
             },
             add() {

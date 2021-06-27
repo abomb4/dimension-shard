@@ -154,7 +154,7 @@ turret.health = 6000;
 turret.shootSound = shootSound;
 turret.loopSound = loopSound;
 turret.loopSoundVolume = 1;
-turret.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 1)).update(false);
+turret.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 1)).update = false;
 turret.coolantMultiplier = 0.5;
 
 turret.requirements = ItemStack.with(

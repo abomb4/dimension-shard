@@ -101,7 +101,7 @@ Events.on(BlockBuildBeginEvent, cons(e => {
 }));
 
 lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
-
+    transportTimer: new Interval(1),
     playerPlaced(config) {
         this.super$playerPlaced(config);
         globalLastBuildTime = Time.time;
@@ -218,7 +218,7 @@ lib.setBuildingSimple(hardPhaseSpaceBridge, ItemBridge.ItemBridgeBuild, block =>
     updateTransport(other) {
         var entity = this;
 
-        if (entity.uptime >= 0.5 && entity.timer.get(this.block.timerTransport, this.block.transportTime)) {
+        if (entity.uptime >= 0.5 && this.transportTimer.get(0, this.block.transportTime)) {
             // transport items
             var item = entity.items.take();
             if (item != null && other.acceptItem(this, item)) {

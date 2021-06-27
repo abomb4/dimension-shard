@@ -148,11 +148,16 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
         Drawf.liquid(liquidRegion, this.x + tr2.x, this.y + tr2.y, this.liquids.total() / turret.liquidCapacity, this.liquids.current().color, this.rotation - 90);
         Draw.rect(topRegion, this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
 
+        Draw.blend(Blending.additive)
+        Draw.color(Color.white)
         const loadPercentLen = Math.max(0, (this.reload / this.block.reloadTime * 1.4 - 0.4)) * chargeRegions.length;
         for (var i = 0; i < chargeRegions.length; i++) {
             Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0, 1)));
-            Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+            Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90)
         }
+        Draw.blend()
+        Draw.color()
+        Draw.reset()
     },
 }));
 

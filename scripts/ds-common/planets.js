@@ -464,13 +464,11 @@ function dumpTiles(tiles) {
 // })();
 const ass = func => new JavaAdapter(Astar.TileHueristic, { cost: func });
 function createWrekGenerator() {
-    var rid = new Packages.arc.util.noise.RidgedPerlin(1, 2);
     var basegen = new BaseGenerator();
     var scl = 5;
     var waterOffset = 0.07;
     var ints = new IntSeq();
     var sector;
-    var noise = new Packages.arc.util.noise.Simplex();
 
     // TODO Add Dimension Shard Schematics to Vars.bases, and remove when generate progress done
 
@@ -521,12 +519,12 @@ function createWrekGenerator() {
 
     function rawHeight(position) {
         position = Tmp.v33.set(position).scl(scl);
-        return (Mathf.pow(noise.octaveNoise3D(7, 0.5, 1 / 3, position.x, position.y, position.z), 2.3) + waterOffset) / (1 + waterOffset);
+        return (Mathf.pow(Simplex.noise3d(0, 7, 0.5, 1 / 3, position.x, position.y, position.z), 2.3) + waterOffset) / (1 + waterOffset);
     }
     function genNoise(x, y, octaves, falloff, scl, mag) {
         mag = mag === undefined ? 1 : mag;
         var v = sector.rect.project(x, y).scl(5);
-        return noise.octaveNoise3D(octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
+        return Simplex.noise3d(0, octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
     }
 
     function getWall(block) {
@@ -584,11 +582,11 @@ function createWrekGenerator() {
             // tile.block = tile.floor.asFloor().wall;
             tile.block = getWall(tile.floor);
 
-            //if(noise.octaveNoise3D(5, 0.6, 8.0, position.x, position.y, position.z) > 0.65){
+            //if(Simplex.noise3d(0, 5, 0.6, 8.0, position.x, position.y, position.z) > 0.65){
             //tile.block = Blocks.air;
             //}
 
-            if (tile.block != Blocks.space && rid.getValue(position.x, position.y, position.z, 22) > 0.32) {
+            if (tile.block != Blocks.space && Ridged.noise3d(2, position.x, position.y, position.z, 22) > 0.32) {
                 tile.block = Blocks.air;
             }
         },
@@ -599,12 +597,12 @@ function createWrekGenerator() {
             position = Tmp.v33.set(position).scl(scl);
             var rad = scl;
             var temp = Mathf.clamp(Math.abs(position.y * 2) / (rad));
-            var tnoise = noise.octaveNoise3D(7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
+            var tnoise = Simplex.noise3d(0, 7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
             temp = Mathf.lerp(temp, tnoise, 0.5);
             height *= 1.2;
             height = Mathf.clamp(height);
 
-            var tar = noise.octaveNoise3D(4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
+            var tar = Simplex.noise3d(0, 4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
 
             var res = arr[Mathf.clamp(lib.int(temp * arr.length), 0, arr[0].length - 1)][Mathf.clamp(lib.int(height * arr[0].length), 0, arr[0].length - 1)];
             if (tar > 0.5) {
@@ -772,19 +770,19 @@ function createWrekGenerator() {
             var scl = 1;
             var addscl = 1.3;
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.25 * addscl) {
+            if (Simplex.noise3d(0, 2, 0.5, scl, sector.tile.v.x, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.25 * addscl) {
                 ores.add(Blocks.oreCoal);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 1, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.5 * addscl) {
+            if (Simplex.noise3d(0, 2, 0.5, scl, sector.tile.v.x + 1, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.5 * addscl) {
                 ores.add(Blocks.oreTitanium);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.65 * addscl) {
+            if (Simplex.noise3d(0, 2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.65 * addscl) {
                 ores.add(Blocks.oreThorium);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.74 * addscl) {
+            if (Simplex.noise3d(0, 2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.74 * addscl) {
                 ores.add(dimensionShardOre);
             }
 
