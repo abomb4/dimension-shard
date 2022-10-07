@@ -464,13 +464,11 @@ function dumpTiles(tiles) {
 // })();
 const ass = func => new JavaAdapter(Astar.TileHueristic, { cost: func });
 function createWrekGenerator() {
-    var rid = new Packages.arc.util.noise.RidgedPerlin(1, 2);
     var basegen = new BaseGenerator();
     var scl = 5;
     var waterOffset = 0.07;
     var ints = new IntSeq();
     var sector;
-    var noise = new Packages.arc.util.noise.Simplex();
 
     // TODO Add Dimension Shard Schematics to Vars.bases, and remove when generate progress done
 
@@ -519,14 +517,14 @@ function createWrekGenerator() {
 
     var water = 2 / arr[0].length;
 
-    function rawHeight(position) {
+    function rawHeight(seed, position) {
         position = Tmp.v33.set(position).scl(scl);
-        return (Mathf.pow(noise.octaveNoise3D(7, 0.5, 1 / 3, position.x, position.y, position.z), 2.3) + waterOffset) / (1 + waterOffset);
+        return (Mathf.pow(Simplex.noise3d(seed, 7, 0.5, 1 / 3, position.x, position.y, position.z), 2.3) + waterOffset) / (1 + waterOffset);
     }
-    function genNoise(x, y, octaves, falloff, scl, mag) {
+    function genNoise(seed, x, y, octaves, falloff, scl, mag) {
         mag = mag === undefined ? 1 : mag;
         var v = sector.rect.project(x, y).scl(5);
-        return noise.octaveNoise3D(octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
+        return Simplex.noise3d(seed, octaves, falloff, 1 / scl, v.x, v.y, v.z) * mag;
     }
 
     function getWall(block) {
@@ -567,7 +565,7 @@ function createWrekGenerator() {
             sector.generateEnemyBase = any;
         },
         getHeight(position) {
-            var height = rawHeight(position);
+            var height = rawHeight(this.seed, position);
             return Math.max(height, water);
         },
         getColor(position) {
@@ -584,27 +582,27 @@ function createWrekGenerator() {
             // tile.block = tile.floor.asFloor().wall;
             tile.block = getWall(tile.floor);
 
-            //if(noise.octaveNoise3D(5, 0.6, 8.0, position.x, position.y, position.z) > 0.65){
+            //if(Simplex.noise3d(this.seed, 5, 0.6, 8.0, position.x, position.y, position.z) > 0.65){
             //tile.block = Blocks.air;
             //}
 
-            if (tile.block != Blocks.space && rid.getValue(position.x, position.y, position.z, 22) > 0.32) {
+            if (tile.block != Blocks.space && Ridged.noise3d(this.seed + 1, position.x, position.y, position.z, 2, 22) > 0.32) {
                 tile.block = Blocks.air;
             }
         },
         getBlock(position) {
             const noise = this.noise;
-            var height = rawHeight(position);
+            var height = rawHeight(this.seed, position);
             Tmp.v31.set(position);
             position = Tmp.v33.set(position).scl(scl);
             var rad = scl;
             var temp = Mathf.clamp(Math.abs(position.y * 2) / (rad));
-            var tnoise = noise.octaveNoise3D(7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
+            var tnoise = Simplex.noise3d(this.seed, 7, 0.56, 1 / 3, position.x, position.y + 999, position.z);
             temp = Mathf.lerp(temp, tnoise, 0.5);
             height *= 1.2;
             height = Mathf.clamp(height);
 
-            var tar = noise.octaveNoise3D(4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
+            var tar = Simplex.noise3d(this.seed, 4, 0.55, 1 / 2, position.x, position.y + 999, position.z) * 0.3 + Tmp.v31.dst(0, 0, 1) * 0.2;
 
             var res = arr[Mathf.clamp(lib.int(temp * arr.length), 0, arr[0].length - 1)][Mathf.clamp(lib.int(height * arr[0].length), 0, arr[0].length - 1)];
             if (tar > 0.5) {
@@ -660,7 +658,7 @@ function createWrekGenerator() {
                     this.connected[to.id] = true;
                     var nscl = rand.random(20, 60);
                     var stroke = Math.floor(rand.random(8, 16));
-                    the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
+                    the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(this.seed, tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 }
                 this.connected[this.id] = true;
                 return this;
@@ -677,7 +675,7 @@ function createWrekGenerator() {
                 //         var nscl = rand.random(20, 60);
                 //         var stroke = Math.floor(rand.random(6, 16));
                 //         print("pathfind x: "+x+", y: "+y+", to.x: "+to.x+", to.y: "+to.y+", stroke: " + stroke);
-                //         the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
+                //         the.brush(the.pathfind(x, y, to.x, to.y, ass(tile => (tile.solid() ? 6 : 0) + genNoise(this.seed, tile.x, tile.y, 1, 1, 1 / nscl) * 60), Astar.manhattan), stroke);
                 //     }
                 // }
                 // r.connected[r] = true;
@@ -772,19 +770,19 @@ function createWrekGenerator() {
             var scl = 1;
             var addscl = 1.3;
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.25 * addscl) {
+            if (Simplex.noise3d(this.seed, 2, 0.5, scl, sector.tile.v.x, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.25 * addscl) {
                 ores.add(Blocks.oreCoal);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 1, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.5 * addscl) {
+            if (Simplex.noise3d(this.seed, 2, 0.5, scl, sector.tile.v.x + 1, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.5 * addscl) {
                 ores.add(Blocks.oreTitanium);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.65 * addscl) {
+            if (Simplex.noise3d(this.seed, 2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.65 * addscl) {
                 ores.add(Blocks.oreThorium);
             }
 
-            if (noise.octaveNoise3D(2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.74 * addscl) {
+            if (Simplex.noise3d(this.seed, 2, 0.5, scl, sector.tile.v.x + 2, sector.tile.v.y, sector.tile.v.z) * nmag + poles > 0.74 * addscl) {
                 ores.add(dimensionShardOre);
             }
 
@@ -805,8 +803,8 @@ function createWrekGenerator() {
                 for (var i = ores.size - 1; i >= 0; i--) {
                     var entry = ores.get(i);
                     var freq = frequencies.get(i);
-                    if (Math.abs(0.5 - genNoise(offsetX, offsetY + i * 999, 2, 0.7, (40 + i * 2))) > 0.22 + i * 0.01 &&
-                        Math.abs(0.5 - genNoise(offsetX, offsetY - i * 999, 1, 1, (30 + i * 4))) > 0.37 + freq) {
+                    if (Math.abs(0.5 - genNoise(this.seed, offsetX, offsetY + i * 999, 2, 0.7, (40 + i * 2))) > 0.22 + i * 0.01 &&
+                        Math.abs(0.5 - genNoise(this.seed, offsetX, offsetY - i * 999, 1, 1, (30 + i * 4))) > 0.37 + freq) {
                         this.ore = entry;
                         break;
                     }
@@ -829,22 +827,22 @@ function createWrekGenerator() {
             this.pass(lib.intc2((x, y) => {
 
                 // Walls to space
-                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
+                if (this.block != Blocks.air && Math.abs(0.5 - genNoise(this.seed, x, y, 4, 0.7, 50)) < 0.11 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                     this.floor = Blocks.space;
                     this.block = Blocks.space;
                 }
 
                 // random moss
                 if (this.floor == Blocks.sporeMoss) {
-                    if (Math.abs(0.5 - genNoise(x - 90, y, 4, 0.8, 65)) > 0.02) {
+                    if (Math.abs(0.5 - genNoise(this.seed, x - 90, y, 4, 0.8, 65)) > 0.02) {
                         this.floor = Blocks.moss;
                     }
                 }
 
                 // tar
                 if (this.floor == Blocks.darksand) {
-                    if (Math.abs(0.5 - genNoise(x - 40, y, 2, 0.7, 80)) > 0.25 &&
-                        Math.abs(0.5 - genNoise(x, y + sector.id * 10, 1, 1, 60)) > 0.41 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 15)) >= 0)) {
+                    if (Math.abs(0.5 - genNoise(this.seed, x - 40, y, 2, 0.7, 80)) > 0.25 &&
+                        Math.abs(0.5 - genNoise(this.seed, x, y + sector.id * 10, 1, 1, 60)) > 0.41 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 15)) >= 0)) {
                         this.floor = Blocks.tar;
                         this.ore = Blocks.air;
                     }
@@ -853,12 +851,12 @@ function createWrekGenerator() {
                 // space corruption
                 if (this.block == Blocks.air && this.floor != Blocks.space) {
                     if (isMetalFloor(this.floor)) {
-                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.7, 50)) > 0.20 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
+                        if (Math.abs(0.5 - genNoise(this.seed, x, y, 4, 0.7, 50)) > 0.20 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                             this.floor = randomBlock.random();
                             this.ore = this.floor != Blocks.space && rand.chance(0.25) ? dimensionShardOre : Blocks.air;
                         }
                     } else {
-                        if (Math.abs(0.5 - genNoise(x, y, 4, 0.6, 60)) > 0.24 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
+                        if (Math.abs(0.5 - genNoise(this.seed, x, y, 4, 0.6, 60)) > 0.24 && !(roomseq.findIndex(r => Mathf.within(x, y, r.x, r.y, 25)) >= 0)) {
                             this.floor = randomBlock.random();
                             this.ore = this.floor != Blocks.space && rand.chance(0.25) ? dimensionShardOre : Blocks.air;
                         }
@@ -867,7 +865,7 @@ function createWrekGenerator() {
 
                 //hotrock tweaks
                 if (this.floor == Blocks.hotrock) {
-                    if (Math.abs(0.5 - genNoise(x - 90, y, 4, 0.8, 80)) > 0.035) {
+                    if (Math.abs(0.5 - genNoise(this.seed, x - 90, y, 4, 0.8, 80)) > 0.035) {
                         this.floor = Blocks.basalt;
                     } else {
                         this.ore = Blocks.air;
@@ -883,7 +881,7 @@ function createWrekGenerator() {
                         }
                     }
                 } else if (this.floor != Blocks.basalt && this.floor != Blocks.ice && this.floor.asFloor().hasSurface()) {
-                    var n = genNoise(x + 782, y, 5, 0.75, 260, 1);
+                    var n = genNoise(this.seed, x + 782, y, 5, 0.75, 260, 1);
                     if (n > 0.67 && !enemies.contains(boolf(e => Mathf.within(x, y, e.x, e.y, 8)))) {
                         if (n > 0.72) {
                             this.floor = n > 0.78 ? Blocks.taintedWater : (this.floor == Blocks.sand ? Blocks.sandWater : Blocks.darksandTaintedWater);

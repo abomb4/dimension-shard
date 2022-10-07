@@ -49,7 +49,7 @@ block.speedBoost = 2.2;
 block.speedBoostPhase = 1.8;
 block.useTime = 180;
 block.hasBoost = true;
-block.consumes.power(15);
-block.consumes.liquid(items.timeFlow, 0.1).boost();
+block.consumePower(15);
+block.consumeLiquid(items.timeFlow, 0.1).boost();
 
 exports.timeOverdrive = block;

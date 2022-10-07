@@ -38,7 +38,7 @@ const TURRET_PROPERTIES = [
     'minRange', 'minfo', 'noUpdateDisabled', 'offset', 'outlineColor',
     'outlineIcon', 'outputFacing', 'outputsLiquid', 'outputsPayload', 'outputsPower',
     'placeableLiquid', 'placeableOn', 'priority', 'quickRotate', 'range',
-    'rebuildable', 'recoilAmount', 'region', 'reloadTime', 'requirements',
+    'rebuildable', 'recoilAmount', 'region', 'reload', 'requirements',
     'requiresWater', 'researchCostMultiplier', 'restitution', 'rotate', 'rotateSpeed',
     'saveConfig', 'saveData', 'shootCone', 'shootEffect', 'shootShake',
     'shootSound', 'shots', 'size', 'smokeEffect', 'solid',
@@ -88,7 +88,7 @@ exports.newNoRotatingTurret = (requestOptions) => {
         shootCone: 360,
         buildingOverrides: () => ({}),
         blockOverrides: {},
-        drawer: cons(building => Draw.rect(building.block.region, building.x, building.y)),
+        drawer: new DrawDefault(),
         heatDrawer: cons(building => {
             if (building.heat <= 0.00001) return;
 
@@ -133,16 +133,16 @@ exports.newNoRotatingTurret = (requestOptions) => {
             },
             // I think the default udpatShooting and updateCooling is wrong, so modify it.
             updateShooting() {
-                if (this.reload >= this.block.reloadTime) {
+                if (this.reload >= this.block.reload) {
                     var type = this.peekAmmo();
                     this.shoot(type);
-                    this.reload -= this.block.reloadTime;
+                    this.reload -= this.block.reload;
                 }
             },
             updateTile() {
                 this.super$updateTile();
                 // Do reload if has ammo.
-                if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+                if (this.hasAmmo() && this.reload < this.block.reload) {
                     this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
                 }
             },
@@ -194,32 +194,13 @@ exports.newLiquidConverter = (requestOptions) => {
         throw 'Name not defined.';
     }
 
-    const block = extend(LiquidConverter, options.name, Object.assign({
-        init() {
-            this.super$init();
-            var cl = this.consumes.get(ConsumeType.liquid);
-            this.outputLiquid.amount = cl.amount * options.convertRatio;
-        },
+    const block = extend(GenericCrafter, options.name, Object.assign({
     }, options.blockOverrides));
 
-    lib.setBuildingSimple(block, LiquidConverter.LiquidConverterBuild, block => Object.assign({
-        updateTile() {
-            var cl = this.block.consumes.get(ConsumeType.liquid);
-            if (this.cons.valid()) {
-                var use = Math.min(cl.amount * this.edelta(), this.block.liquidCapacity - this.liquids.get(this.block.outputLiquid.liquid));
-                this.liquids.remove(cl.liquid, Math.min(use, this.liquids.get(cl.liquid)));
-                this.progress += use / cl.amount;
-                this.liquids.add(this.block.outputLiquid.liquid, use * options.convertRatio);
-                if (this.progress >= this.block.craftTime) {
-                    this.consume();
-                    this.progress %= this.block.craftTime;
-                }
-            }
-            this.dumpLiquid(this.block.outputLiquid.liquid);
-        }
+    lib.setBuildingSimple(block, GenericCrafter.GenericCrafterBuild, block => Object.assign({
     }, options.buildingOverrides()));
 
-    options.consumes(block.consumes);
+    options.consumes(block);
 
     for (var p of LIQUID_CONVERTER_PROPERTIES) {
         var value = options[p];

@@ -40,12 +40,13 @@ dimensionCrystalBattery.requirements = ItemStack.with(
 );
 dimensionCrystalBattery.category = Category.power;
 dimensionCrystalBattery.health = 180;
-dimensionCrystalBattery.consumes.powerBuffered(Blocks.batteryLarge.consumes.getPower().capacity * 3);
+const batteryLargeSize = 50000
+dimensionCrystalBattery.consumePowerBuffered(batteryLargeSize * 3);
 
 exports.dimensionCrystalBattery = dimensionCrystalBattery;
 
 
-var timeCompressedRtg = extend(DecayGenerator, 'time-compressed-rtg', {
+var timeCompressedRtg = extend(ConsumeGenerator, 'time-compressed-rtg', {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {

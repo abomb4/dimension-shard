@@ -89,8 +89,8 @@ block.shieldHealth = 700;
 block.cooldownNormal = 1.5;
 block.cooldownLiquid = 1.2;
 block.cooldownBrokenBase = 0.35;
-block.consumes.item(items.spaceCrystal).boost();
-block.consumes.power(12);
+block.consumeItem(items.spaceCrystal).boost();
+block.consumePower(12);
 
 const shieldConsumer = (paramEntity) => cons(trait => {
     if (trait.team != paramEntity.team

@@ -24,7 +24,7 @@ const unitType = (() => {
     const range1 = 22 * Vars.tilesize;
     const cooldown2 = 60 * 12;
     const range2 = 26 * Vars.tilesize;
-    const m = extendContent(UnitType, 'equa', {
+    const m = extend(UnitType, 'equa', {
         load() {
             this.super$load();
             this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [

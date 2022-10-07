@@ -58,7 +58,7 @@ Blocks.cyclone.ammoTypes.put(dimensionShard, (() => {
     const v = new FlakBulletType(4.2, 15);
     v.lifetime = 60;
     v.ammoMultiplier = 2;
-    v.shootEffect = Bullets.fragExplosive.shootEffect;
+    v.shootEffect = Fx.shootBig;
     v.width = 8;
     v.height = 10;
     v.hitEffect = fxDimensionShardExplosion;
@@ -91,30 +91,31 @@ Blocks.ripple.ammoTypes.put(dimensionShard, (() => {
 })());
 
 // -=-=-=-=-=-=-=-=-=-=-=-= Hard Thorium Alloy =-=-=-=-=-=-=-=-=-=-=-=-
-
+const salvoThoriumAmmo = Blocks.salvo.ammoTypes.get(Items.thorium)
 Blocks.salvo.ammoTypes.put(hardThoriumAlloy, (() => {
     const v = new BasicBulletType(4, 44);
-    v.lifetime = Bullets.standardThorium.lifetime;
+    v.lifetime = salvoThoriumAmmo.lifetime;
     v.ammoMultiplier = 4;
-    v.width = Bullets.standardThorium.width;
-    v.height = Bullets.standardThorium.height * 1.4;
-    v.frontColor = Bullets.standardThorium.frontColor.cpy().lerp(items.hardThoriumAlloyColor, 0.5);
-    v.backColor = Bullets.standardThorium.backColor.cpy().lerp(items.hardThoriumAlloyColorLight, 0.5);
+    v.width = salvoThoriumAmmo.width;
+    v.height = salvoThoriumAmmo.height * 1.4;
+    v.frontColor = salvoThoriumAmmo.frontColor.cpy().lerp(items.hardThoriumAlloyColor, 0.5);
+    v.backColor = salvoThoriumAmmo.backColor.cpy().lerp(items.hardThoriumAlloyColorLight, 0.5);
     v.pierceCap = 2;
     v.pierceBuilding = true;
     // v.status = StatusEffects.blasted;
     return v;
 })());
 
+const spectreThoriumAmmo = Blocks.spectre.ammoTypes.get(Items.thorium)
 Blocks.spectre.ammoTypes.put(hardThoriumAlloy, (() => {
     const v = new BasicBulletType(8, 125);
-    v.lifetime = Bullets.standardThoriumBig.lifetime;
-    v.knockback = Bullets.standardThoriumBig.knockback;
-    v.shootEffect = Bullets.standardThoriumBig.shootEffect;
-    v.width = Bullets.standardThoriumBig.width;
-    v.height = Bullets.standardThoriumBig.height * 1.4;
-    v.frontColor = Bullets.standardThoriumBig.frontColor.cpy().lerp(items.hardThoriumAlloyColor, 0.5);
-    v.backColor = Bullets.standardThoriumBig.backColor.cpy().lerp(items.hardThoriumAlloyColorLight, 0.5);
+    v.lifetime = spectreThoriumAmmo.lifetime;
+    v.knockback = spectreThoriumAmmo.knockback;
+    v.shootEffect = spectreThoriumAmmo.shootEffect;
+    v.width = spectreThoriumAmmo.width;
+    v.height = spectreThoriumAmmo.height * 1.4;
+    v.frontColor = spectreThoriumAmmo.frontColor.cpy().lerp(items.hardThoriumAlloyColor, 0.5);
+    v.backColor = spectreThoriumAmmo.backColor.cpy().lerp(items.hardThoriumAlloyColorLight, 0.5);
     v.ammoMultiplier = 2;
     v.pierceCap = 4;
     v.pierceBuilding = true;

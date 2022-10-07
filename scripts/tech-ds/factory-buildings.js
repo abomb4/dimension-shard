@@ -26,7 +26,7 @@ const {
 const dsGlobal = require('ds-common/ds-global');
 
 // -=-=-=-=-=-=-=-=-=-=-=- Shard Receiver -=-=-=-=-=-=-=-=-=-=-=-
-const shardReceiver = extend(GenericSmelter, "shard-receiver", {
+const shardReceiver = extend(GenericCrafter, "shard-receiver", {
 });
 shardReceiver.size = 4;
 // shardReceiver.health = 600;
@@ -47,12 +47,12 @@ shardReceiver.hasPower = true;
 shardReceiver.flameColor = dimensionShard.color;
 shardReceiver.itemCapacity = 10;
 shardReceiver.boostScale = 2;
-shardReceiver.consumes.power(7);
+shardReceiver.consumePower(7);
 
 exports.shardReceiver = shardReceiver;
 
 // -=-=-=-=-=-=-=-=-=-=-=- Space Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
-const spaceCrystallizer = extend(AttributeSmelter, "space-crystallizer", {
+const spaceCrystallizer = extend(AttributeCrafter, "space-crystallizer", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -92,18 +92,18 @@ spaceCrystallizer.flameColor = Color.valueOf("00000000");
 spaceCrystallizer.itemCapacity = 20;
 spaceCrystallizer.boostScale = 0.15;
 
-spaceCrystallizer.consumes.items(ItemStack.with(
+spaceCrystallizer.consumeItems(ItemStack.with(
     dimensionShard, 3,
     Items.silicon, 1,
     Items.phaseFabric, 1
 ));
-spaceCrystallizer.consumes.power(2);
+spaceCrystallizer.consumePower(2);
 
 exports.spaceCrystallizer = spaceCrystallizer;
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Hard Thorium Alloy Slelter -=-=-=-=-=-=-=-=-=-=-=-
-const hardThoriumAlloySmelter = extend(GenericSmelter, "hard-thorium-alloy-smelter", {
+const hardThoriumAlloySmelter = extend(GenericCrafter, "hard-thorium-alloy-smelter", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -132,12 +132,12 @@ hardThoriumAlloySmelter.hasLiquids = false;
 hardThoriumAlloySmelter.flameColor = hardThoriumAlloy.color;
 hardThoriumAlloySmelter.itemCapacity = 20;
 
-hardThoriumAlloySmelter.consumes.items(ItemStack.with(
+hardThoriumAlloySmelter.consumeItems(ItemStack.with(
     spaceCrystal, 1,
     Items.graphite, 3,
     Items.thorium, 5
 ));
-hardThoriumAlloySmelter.consumes.power(3);
+hardThoriumAlloySmelter.consumePower(3);
 
 exports.hardThoriumAlloySmelter = hardThoriumAlloySmelter;
 
@@ -158,13 +158,13 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
     outputLiquid: new LiquidStack(timeFlow, 0.2),
     craftTime: 100,
     hasPower: true,
-    consumes: consumes => {
-        consumes.items(ItemStack.with(
+    consumes: b => {
+        b.consumeItems(ItemStack.with(
             dimensionShard, 4,
             Items.phaseFabric, 2,
         ));
-        consumes.liquid(Liquids.cryofluid, 0.1);
-        consumes.power(3);
+        b.consumeLiquid(Liquids.cryofluid, 0.1);
+        b.consumePower(3);
     },
     blockOverrides: {
         isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
@@ -208,7 +208,7 @@ exports.timeCondenser = blockTypes.newLiquidConverter({
 
 
 // -=-=-=-=-=-=-=-=-=-=-=- Time Crystallizer -=-=-=-=-=-=-=-=-=-=-=-
-const timeCrystallizer = extend(AttributeSmelter, "time-crystallizer", {
+const timeCrystallizer = extend(AttributeCrafter, "time-crystallizer", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -238,12 +238,12 @@ timeCrystallizer.flameColor = Color.valueOf("00000000");
 timeCrystallizer.itemCapacity = 20;
 timeCrystallizer.boostScale = 0.2;
 
-timeCrystallizer.consumes.items(ItemStack.with(
+timeCrystallizer.consumeItems(ItemStack.with(
     Items.plastanium, 2
 ));
-timeCrystallizer.consumes.power(2.5);
-timeCrystallizer.consumes.liquid(timeFlow, 0.1);
-lib.setBuildingSimple(timeCrystallizer, AttributeSmelter.AttributeSmelterBuild, () => {
+timeCrystallizer.consumePower(2.5);
+timeCrystallizer.consumeLiquid(timeFlow, 0.1);
+lib.setBuildingSimple(timeCrystallizer, AttributeCrafter.AttributeCrafterBuild, () => {
 
     const heatColor = timeCrystal.color.cpy().lerp(Color.white, 0.5);
     const heatRegion = lib.loadRegion("time-crystallizer-heat");
@@ -300,11 +300,11 @@ radioisotopeWeaver.itemCapacity = 50;
 radioisotopeWeaver.ambientSound = Sounds.techloop;
 radioisotopeWeaver.ambientSoundVolume = 0.02;
 
-radioisotopeWeaver.consumes.items(ItemStack.with(
+radioisotopeWeaver.consumeItems(ItemStack.with(
     dimensionShard, 6,
     Items.sand, 18
 ));
-radioisotopeWeaver.consumes.power(10);
+radioisotopeWeaver.consumePower(10);
 radioisotopeWeaver.drawer = (() => {
     var regionHeat1;
     var regionHeat2;
@@ -385,12 +385,12 @@ exports.ionCollector = blockTypes.newLiquidConverter({
     outputLiquid: new LiquidStack(ionLiquid, 0.2),
     craftTime: 90,
     hasPower: true,
-    consumes: consumes => {
-        consumes.items(ItemStack.with(
+    consumes: b => {
+        b.consumeItems(ItemStack.with(
             Items.surgeAlloy, 1,
         ));
-        consumes.liquid(timeFlow, 0.1);
-        consumes.power(7);
+        b.consumeLiquid(timeFlow, 0.1);
+        b.consumePower(7);
     },
     blockOverrides: {
         isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
@@ -431,7 +431,7 @@ exports.ionCollector = blockTypes.newLiquidConverter({
 });
 
 // -=-=-=-=-=-=-=-=-=-=-=- Dimension Alloy Smelter -=-=-=-=-=-=-=-=-=-=-=-
-const dimensionAlloySmelter = extend(GenericSmelter, "dimension-alloy-smelter", {
+const dimensionAlloySmelter = extend(GenericCrafter, "dimension-alloy-smelter", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         if (!dsGlobal.techDsAvailable()) {
@@ -460,11 +460,11 @@ dimensionAlloySmelter.hasPower = true;
 dimensionAlloySmelter.flameColor = dimensionAlloy.color;
 dimensionAlloySmelter.itemCapacity = 20;
 
-dimensionAlloySmelter.consumes.items(ItemStack.with(
+dimensionAlloySmelter.consumeItems(ItemStack.with(
     spaceCrystal, 4,
     timeCrystal, 3,
     Items.surgeAlloy, 2
 ));
-dimensionAlloySmelter.consumes.liquid(ionLiquid, 0.1);
-dimensionAlloySmelter.consumes.power(8);
+dimensionAlloySmelter.consumeLiquid(ionLiquid, 0.1);
+dimensionAlloySmelter.consumePower(8);
 exports.dimensionAlloySmelter = dimensionAlloySmelter;

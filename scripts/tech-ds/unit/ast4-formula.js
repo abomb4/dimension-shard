@@ -22,7 +22,7 @@ const { newSurroundingElectricBall } = require('ds-common/bullet-types/index');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
-    const m = extendContent(UnitType, 'formula', {
+    const m = extend(UnitType, 'formula', {
         getSkillDefinitions() {
             return [
             ];
@@ -49,17 +49,16 @@ const unitType = (() => {
     m.hitSize = 32;
     m.lowAltitude = true;
     m.payloadCapacity = (3 * 3) * Vars.tilePayload;
-    m.ammoType = AmmoTypes.powerHigh;
+    m.ammoType = new PowerAmmoType(1500);
 
     const fxCharge = Fx.greenLaserChargeSmall;
     m.weapons.add(
         (() => {
             const w = new Weapon();
             w.shake = 4;
-            w.shots = 8;
-            w.spacing = 360 / w.shots;
-            w.shotDelay = 0;
-            w.firstShotDelay = fxCharge.lifetime - 1;
+            w.shoot = new ShootSpread(8, 360 / 8)
+            w.shoot.shotDelay = 0;
+            w.shoot.firstShotDelay = fxCharge.lifetime - 1;
             w.inaccuracy = 0;
             w.shootY = 0;
             w.shootY = 0;

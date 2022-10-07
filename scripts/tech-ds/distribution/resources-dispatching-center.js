@@ -48,7 +48,7 @@ const inEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
+const blockType = extend(StorageBlock, "resources-dispatching-center", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     drawPlace(x, y, rotation, valid) {
         Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
@@ -65,7 +65,7 @@ const blockType = extendContent(StorageBlock, "resources-dispatching-center", {
     setBars() {
         this.super$setBars();
 
-        this.bars.add("capacity", lib.func((e) => new Bar(
+        this.addBar("capacity", lib.func((e) => new Bar(
             prov(() => Core.bundle.format("bar.capacity", UI.formatAmount(e.block.itemCapacity))),
             prov(() => Pal.items),
             floatp(() => e.items.total() / (e.block.itemCapacity * Vars.content.items().count(boolf(i => i.unlockedNow()))))
@@ -123,7 +123,7 @@ blockType.requirements = ItemStack.with(
     items.hardThoriumAlloy, 1200,
     items.dimensionAlloy, 200
 );
-blockType.consumes.power(100);
+blockType.consumePower(100);
 blockType.config(IntSeq, lib.cons2((tile, sq) => {
     // This seems only used by coping block
     var links = new Seq(java.lang.Integer);

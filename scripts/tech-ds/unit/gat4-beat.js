@@ -22,7 +22,7 @@ const { newIonBoltBulletType } = require('ds-common/bullet-types/index');
 const { mechConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
-    const m = extendContent(UnitType, 'beat', {
+    const m = extend(UnitType, 'beat', {
         getSkillDefinitions() {
             return [
             ];
@@ -45,13 +45,15 @@ const unitType = (() => {
     m.mechStepShake = 0.15;
     m.singleTarget = true;
 
+    const salvoThoriumAmmo = Blocks.salvo.ammoTypes.get(Items.thorium)
+
     m.weapons.add(
         (() => {
             const w = new Weapon(lib.modName + "-beat-weapon");
             w.top = false;
             w.shake = 3;
-            w.shots = 8;
-            w.shotDelay = 0.5;
+            w.shoot.shots = 8;
+            w.shoot.shotDelay = 0.5;
             w.inaccuracy = 0;
             w.shootY = 9;
             w.x = 17;
@@ -66,10 +68,10 @@ const unitType = (() => {
                 const v2 = new BasicBulletType(7, 29);
                 v2.lifetime = 28;
                 v2.ammoMultiplier = 4;
-                v2.width = Bullets.standardThorium.width;
-                v2.height = Bullets.standardThorium.height * 2;
-                v2.frontColor = Bullets.standardThorium.frontColor;
-                v2.backColor = Bullets.standardThorium.backColor;
+                v2.width = salvoThoriumAmmo.width;
+                v2.height = salvoThoriumAmmo.height * 2;
+                v2.frontColor = salvoThoriumAmmo.frontColor;
+                v2.backColor = salvoThoriumAmmo.backColor;
                 v2.pierceBuilding = false;
                 // v.status = StatusEffects.blasted;
                 return v2;

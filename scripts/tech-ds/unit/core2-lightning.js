@@ -263,9 +263,8 @@ const unitType = (() => {
             w.reload = 24;
             w.x = 0;
             w.y = 2;
-            w.shots = 3;
-            w.spacing = 1;
-            w.shotDelay = 4;
+            w.shoot = new ShootSpread(3, 1)
+            w.shoot.shotDelay = 4;
             w.inaccuracy = 0.1;
             w.ejectEffect = Fx.casing1;
             w.mirror = false;

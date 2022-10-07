@@ -114,8 +114,8 @@ const block = new JavaAdapter(Block, {
         Drawf.dashCircle(x * tilesize, y * tilesize, range * tilesize, Pal.accent);
 
         // check if a mass driver is selected while placing this driver
-        if (!Vars.control.input.frag.config.isShown()) return;
-        var selected = Vars.control.input.frag.config.getSelectedTile();
+        if (!Vars.control.input.config.isShown()) return;
+        var selected = Vars.control.input.config.getSelectedTile();
         if (selected == null || !(selected.dst(x * tilesize, y * tilesize) <= range * tilesize)) return;
 
         // if so, draw a dotted line towards it while it is in range
@@ -153,7 +153,7 @@ block.unloadable = true;
 block.breakable = true;
 block.solid = false;
 block.expanded = true;
-block.consumes.power(4.5);
+block.consumePower(4.5);
 
 function getBuild(pos) {
     const tile = Vars.world.tile(pos);

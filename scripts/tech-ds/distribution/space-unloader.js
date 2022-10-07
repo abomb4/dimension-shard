@@ -48,7 +48,7 @@ const outEffect = lib.newEffect(38, e => {
     }));
 });
 
-const blockType = extendContent(Block, "space-unloader", {
+const blockType = extend(Block, "space-unloader", {
     isPlaceable() { return dsGlobal.techDsAvailable() && this.super$isPlaceable(); },
     load() {
         this.super$load();
@@ -59,7 +59,7 @@ const blockType = extendContent(Block, "space-unloader", {
     setBars() {
         this.super$setBars();
 
-        this.bars.add("capacity", lib.func((e) => new Bar(
+        this.addBar("capacity", lib.func((e) => new Bar(
             prov(() => Core.bundle.format("bar.capacity", UI.formatAmount(e.block.itemCapacity))),
             prov(() => Pal.items),
             floatp(() => e.items.total() / (e.block.itemCapacity * Vars.content.items().count(boolf(i => i.unlockedNow()))))
@@ -119,7 +119,7 @@ blockType.requirements = ItemStack.with(
     items.spaceCrystal, 80,
     items.hardThoriumAlloy, 40
 );
-blockType.consumes.power(1.5);
+blockType.consumePower(1.5);
 blockType.config(IntSeq, lib.cons2((tile, seq) => {
     // This seems only used by coping block
     // Deserialize from IntSeq

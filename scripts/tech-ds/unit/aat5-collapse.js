@@ -50,7 +50,7 @@ const unitType = (() => {
         return initRange + (maxRange - initRange) * percent;
     }
 
-    const m = extendContent(UnitType, 'collapse', {
+    const m = extend(UnitType, 'collapse', {
         load() {
             this.super$load();
             this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [

@@ -663,14 +663,14 @@ exports.defineMultiCrafter = function (originConfig) {
             }));
         },
         setBars() {
-            this.bars.add("health", func(e => new Bar("stat.health", Pal.health, floatp(() => e.healthf())).blink(Color.white)));
+            this.addBar("health", func(e => new Bar("stat.health", Pal.health, floatp(() => e.healthf())).blink(Color.white)));
 
             if (this.hasPower && this.consumes.hasPower()) {
                 var cons = this.consumes.getPower();
                 var buffered = cons.buffered;
                 var capacity = cons.capacity;
 
-                this.bars.add("power", func(entity => new Bar(
+                this.addBar("power", func(entity => new Bar(
                     prov(() => buffered ? Core.bundle.format("bar.poweramount", Float.isNaN(entity.power.status * capacity) ? "<ERROR>" : parseInt(entity.power.status * capacity)) : Core.bundle.get("bar.power")),
                     prov(() => Pal.powerBar),
                     floatp(() => Mathf.zero(cons.requestedPower(entity)) && entity.power.graph.getPowerProduced() + entity.power.graph.getBatteryStored() > 0 ? 1 : entity.power.status)
@@ -681,7 +681,7 @@ exports.defineMultiCrafter = function (originConfig) {
             if (liquids && liquids.size > 0) {
                 liquids.forEach(liquid => {
                     ((liquid) => {
-                        this.bars.add(liquid.name, func((e) => new Bar(
+                        this.addBar(liquid.name, func((e) => new Bar(
                             // prov(() => liquid.localizedName + ": " + UI.formatAmount(e.liquids.get(liquid)) + ' / ' + UI.formatAmount(e.block.liquidapacity)),
                             // prov(() => Color.acid),
                             liquid.localizedName,

@@ -28,8 +28,8 @@ var phaseSpaceBridge = extend(ItemBridge, 'phase-space-bridge', {
         Drawf.dashCircle(x * tilesize, y * tilesize, range * tilesize, Pal.accent);
 
         // check if a mass driver is selected while placing this driver
-        if (!Vars.control.input.frag.config.isShown()) return;
-        var selected = Vars.control.input.frag.config.getSelectedTile();
+        if (!Vars.control.input.config.isShown()) return;
+        var selected = Vars.control.input.config.getSelectedTile();
         if (selected == null || (selected.block != this) || !(selected.within(x * tilesize, y * tilesize, range * tilesize))) return;
 
         // if so, draw a dotted line towards it while it is in range
@@ -86,7 +86,7 @@ phaseSpaceBridge.requirements = ItemStack.with(
     Items.phaseFabric, 15,
     items.dimensionShard, 20
 );
-phaseSpaceBridge.consumes.power(0.5);
+phaseSpaceBridge.consumePower(0.5);
 
 Events.on(BlockBuildBeginEvent, cons(e => {
     if (Vars.player != null && Vars.player.unit() == e.unit && e.tile.block() != phaseSpaceBridge) {
@@ -173,15 +173,13 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
         if (this.team != source.team) return false;
         const itemCapacity = this.block.itemCapacity;
 
-        var entity = this;
-        var other = Vars.world.tile(entity.link);
+        var other = Vars.world.tile(this.link);
 
         if (this.block.linkValid(tile, other)) {
             return this.items.total() < itemCapacity;
         } else {
             return source.block == this.block && source.link == tile.pos() && this.items.total() < itemCapacity;
         }
-
     },
     updateTile() {
         this.super$updateTile();
@@ -210,18 +208,19 @@ lib.setBuildingSimple(phaseSpaceBridge, ItemBridge.ItemBridgeBuild, block => ({
             && (this.liquids.current() == liquid || this.liquids.get(this.liquids.current()) < 0.2);
     },
     updateTransport(other) {
-        var entity = this;
-
-        if (entity.uptime >= 0.5 && entity.timer.get(this.block.timerTransport, this.block.transportTime)) {
+        this.transportCounter += this.edelta();
+        while (this.transportCounter >= this.block.transportTime) {
             // transport items
-            var item = entity.items.take();
+            var item = this.items.take();
+
             if (item != null && other.acceptItem(this, item)) {
                 other.handleItem(this, item);
-                entity.cycleSpeed = Mathf.lerpDelta(entity.cycleSpeed, 4, 0.05);
-            } else {
-                entity.cycleSpeed = Mathf.lerpDelta(entity.cycleSpeed, 1, 0.01);
-                if (item != null) entity.items.add(item, 1);
+            } else if (item != null)  {
+                this.items.add(item, 1);
+                this.items.undoFlow(item);
             }
+
+            this.transportCounter -= this.block.transportTime;
 
             // transport liquid
             this.moveLiquid(other, this.liquids.current());

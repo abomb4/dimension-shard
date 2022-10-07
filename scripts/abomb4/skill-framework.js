@@ -207,7 +207,7 @@ const skillFrag = (() => {
     const unfinish = new Color(0, 0, 0, 0.3);
     const finish = new Color(0, 0, 0, 0.8);
     const disabledColor = new Color(1, 1, 1, 0.4);
-    fragment = new JavaAdapter(Fragment, {
+    fragment = {
         build(parent) {
             parent.fill(cons(full => {
                 toggler = full;
@@ -282,7 +282,7 @@ const skillFrag = (() => {
                 }
             }));
         },
-    });
+    };
     Events.on(ClientLoadEvent, cons(event => {
         fragment.build(Vars.ui.hudGroup);
     }));

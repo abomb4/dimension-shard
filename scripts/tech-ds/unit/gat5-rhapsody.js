@@ -50,7 +50,7 @@ const unitType = (() => {
         Fill.circle(x, y, e.fin() * 10);
     }));
 
-    const m = extendContent(UnitType, 'rhapsody', {
+    const m = extend(UnitType, 'rhapsody', {
         load() {
             this.super$load();
             this.description = Core.bundle.format(this.getContentType() + "." + this.name + ".description", [
@@ -190,8 +190,8 @@ const unitType = (() => {
             const w = new Weapon(lib.modName + "-rhapsody-weapon");
             w.mirror = false;
             w.shake = 2;
-            w.shots = 3;
-            w.shotDelay = 6;
+            w.shoot.shots = 3;
+            w.shoot.shotDelay = 6;
             w.inaccuracy = 0;
             w.shootX = 0;
             w.shootY = 29;

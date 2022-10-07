@@ -33,6 +33,8 @@ var topRegion;
 var chargeRegions = []
 
 const turret = new JavaAdapter(LiquidTurret, {
+    tr: new Vec2(),
+    tr2: new Vec2(),
     load() {
         this.super$load()
         liquidRegion = lib.loadRegion('ion-bolt-turret-liquid')
@@ -62,12 +64,12 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.health = 3000;
 turret.size = 4;
-turret.reloadTime = 60 - 1;
+turret.reload = 60 - 1;
 turret.range = 220;
 turret.inaccuracy = 2;
-turret.shots = 3;
+turret.shoot.shots = 3;
+turret.shoot.shotDelay = 6;
 turret.rotateSpeed = 8;
-turret.burstSpacing = 6;
 turret.xRand = 0;
 turret.shootSound = lib.loadSound('ion-shot');
 turret.loopSound = Sounds.none;
@@ -81,10 +83,10 @@ turret.requirements = ItemStack.with(
     items.hardThoriumAlloy, 500
 );
 turret.ammo(ionLiquid, newIonBoltBulletType({
-    ammoMultiplier: 1,
+    ammoMultiplier: 2,
     damage: 50,
 }));
-// turret.consumes.powerCond(50, boolf(b => b.isActive()));
+// turret.consumePowerCond(50, boolf(b => b.isActive()));
 
 const lightningBulletType = new JavaAdapter(LightningBulletType, {
     init(b) {
@@ -104,32 +106,32 @@ const lightningBulletShootSound = Sounds.spark;
 
 lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
-    updateShooting() {
-        if (this.reload >= this.block.reloadTime) {
-            var type = this.peekAmmo();
-            this.shoot(type);
-            this.reload -= this.block.reloadTime;
-        }
-    },
-    bullet(type, angle) {
-        this.super$bullet(type, angle);
-        const tr = turret.myGetTr();
-        Tmp.v1.trns(tr.angle() + 60, 15)
-        Tmp.v2.trns(tr.angle() - 60, 15)
+    // updateShooting() {
+    //     if (this.reload >= this.block.reload) {
+    //         var type = this.peekAmmo();
+    //         this.shoot(type);
+    //         this.reload -= this.block.reload;
+    //     }
+    // },
+    bullet(type, xOffset, yOffset, angleOffset, mover) {
+        this.super$bullet(type, xOffset, yOffset, angleOffset, mover);
+        const angle = this.rotation + angleOffset;
+        Tmp.v1.trns(angle + 60, 15)
+        Tmp.v2.trns(angle - 60, 15)
         const x1 = this.x + Tmp.v1.x
         const y1 = this.y + Tmp.v1.y;
         const x2 = this.x + Tmp.v2.x
         const y2 = this.y + Tmp.v2.y;
         lightningBulletType.create(this, this.team, x1, y1, angle)
         lightningBulletType.create(this, this.team, x2, y2, angle)
-        lightningBulletTypeShootEffect.at(x1, y1, tr.angle())
-        lightningBulletTypeShootEffect.at(x2, y2, tr.angle())
+        lightningBulletTypeShootEffect.at(x1, y1, angle)
+        lightningBulletTypeShootEffect.at(x2, y2, angle)
         lightningBulletShootSound.at(this.x, this.y);
     },
     updateTile() {
         this.super$updateTile();
         // Do reload if has ammo.
-        if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+        if (this.hasAmmo() && this.reload < this.block.reload) {
             this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
         }
     },
@@ -143,16 +145,16 @@ lib.setBuildingSimple(turret, LiquidTurret.LiquidTurretBuild, block => ({
     },
     draw() {
         this.super$draw();
-        const tr2 = turret.myGetTr2();
+        // const tr2 = turret.myGetTr2();
 
-        Drawf.liquid(liquidRegion, this.x + tr2.x, this.y + tr2.y, this.liquids.total() / turret.liquidCapacity, this.liquids.current().color, this.rotation - 90);
-        Draw.rect(topRegion, this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+        // Drawf.liquid(liquidRegion, this.x + tr2.x, this.y + tr2.y, this.liquids.total() / turret.liquidCapacity, this.liquids.current().color, this.rotation - 90);
+        // Draw.rect(topRegion, this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
 
-        const loadPercentLen = Math.max(0, (this.reload / this.block.reloadTime * 1.4 - 0.4)) * chargeRegions.length;
-        for (var i = 0; i < chargeRegions.length; i++) {
-            Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0, 1)));
-            Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
-        }
+        // const loadPercentLen = Math.max(0, (this.reload / this.block.reload * 1.4 - 0.4)) * chargeRegions.length;
+        // for (var i = 0; i < chargeRegions.length; i++) {
+        //     Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0, 1)));
+        //     Draw.rect(chargeRegions[i], this.x + tr2.x, this.y + tr2.y, this.rotation - 90);
+        // }
     },
 }));
 

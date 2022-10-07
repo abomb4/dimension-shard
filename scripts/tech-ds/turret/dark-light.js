@@ -87,7 +87,7 @@ const turret = new JavaAdapter(PowerTurret, {
         this.baseRegion = lib.loadRegion('dark-light-base');
     },
     init() {
-        this.consumes.powerCond(this.powerUse, boolf(entity => entity.getBullet() != null || entity.target != null));
+        this.consumePowerCond(this.powerUse, boolf(entity => entity.getBullet() != null || entity.target != null));
         this.super$init();
     },
     setStats() {
@@ -102,7 +102,7 @@ const turret = new JavaAdapter(PowerTurret, {
                     const len = Vars.content.liquids().size;
                     for (var i = 0; i < len; i++) {
                         var liquid = Vars.content.liquids().get(i);
-                        if (!block.consumes.liquidfilters.get(liquid.id)) {
+                        if (!block.consumeLiquidfilters.get(liquid.id)) {
                             continue;
                         }
                         ((liquid, c) => {
@@ -122,7 +122,7 @@ const turret = new JavaAdapter(PowerTurret, {
         }));
         this.stats.remove(Stat.ammo);
         this.stats.add(Stat.damage, this.shootType.damage * 60 / 5, StatUnit.perSecond);
-        this.stats.add(Stat.cooldownTime, this.reloadTime / 60 + " + " + Strings.autoFixed(this.chargeTime / 60, 2) + " s", [null]);
+        this.stats.add(Stat.cooldownTime, this.reload / 60 + " + " + Strings.autoFixed(this.chargeTime / 60, 2) + " s", [null]);
         this.stats.add(Stat.lightningDamage, (lightningDamage), StatUnit.none);
     },
     getTr() { return this.tr; },
@@ -140,7 +140,7 @@ turret.chargeMaxDelay = 0;
 turret.chargeEffects = 0;
 turret.chargeSound = chargeSound;
 turret.recoilAmount = 2;
-turret.reloadTime = 60 * 7.5;
+turret.reload = 60 * 7.5;
 turret.cooldown = 0.04;
 turret.powerUse = 90;
 turret.shootShake = 3;
@@ -154,7 +154,7 @@ turret.health = 6000;
 turret.shootSound = shootSound;
 turret.loopSound = loopSound;
 turret.loopSoundVolume = 1;
-turret.consumes.add(new ConsumeLiquidFilter(boolf(liquid => liquid.temperature <= 0.5 && liquid.flammability < 0.1), 1)).update(false);
+turret.consumeCoolant(0.5);
 turret.coolantMultiplier = 0.5;
 
 turret.requirements = ItemStack.with(
@@ -345,9 +345,9 @@ turret.shootType = (() => {
     bt.colors[3] = laserColor4;
     bt.hitColor = bt.colors[2];
     bt.lightColor = bt.colors[2];
-    bt.lenscales[1] = 1.1;
-    bt.lenscales[2] = 1.12;
-    bt.lenscales[3] = 1.16;
+    // bt.lenscales[1] = 1.1;
+    // bt.lenscales[2] = 1.12;
+    // bt.lenscales[3] = 1.16;
     return bt;
 })();
 
@@ -360,30 +360,31 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     serverShooting(rotation) {
         this.rotation = rotation;
         this.shoot(this.peekAmmo());
-        this.reload = this.block.reloadTime;
+        this.reloadCounter = this.block.reload;
     },
     updateCooling() { },
     updateTile() {
         this.super$updateTile();
         if (this.bulletLife > 0 && this._bullet != null) {
             this.wasShooting = true;
-            this.block.getTr().trns(this.rotation, this.block.shootLength, 0);
+            const bulletX = this.x + Angles.trnsx(this.rotation - 90, this.block.shootX, this.block.shootY)
+            const bulletY = this.y + Angles.trnsy(this.rotation - 90, this.block.shootX, this.block.shootY)
             this._bullet.rotation(this.rotation);
-            this._bullet.set(this.x + this.block.getTr().x, this.y + this.block.getTr().y);
+            this._bullet.set(bulletX, bulletY);
             this._bullet.time = 0;
             this.heat = 1;
             this.recoil = this.block.recoilAmount;
-            this.bulletLife -= Time.delta / Math.max(this.efficiency(), 0.00001);
+            this.bulletLife -= Time.delta / Math.max(this.efficiency, 0.00001);
             if (this.bulletLife <= 0) {
                 this._bullet = null;
             }
-        } else if (this.reload > 0 && !this.charging) {
+        } else if (this.reloadCounter > 0 && !this.charging) {
             this.wasShooting = true;
             var liquid = this.liquids.current();
             var maxUsed = this.block.consumes.get(ConsumeType.liquid).amount;
 
             var used = (this.cheating() ? maxUsed * Time.delta : Math.min(this.liquids.get(liquid), maxUsed * Time.delta)) * (1 + (liquid.heatCapacity - Liquids.water.heatCapacity) * this.block.coolantMultiplier);
-            this.reload -= used;
+            this.reloadCounter -= used;
             this.liquids.remove(liquid, used);
 
             if (Mathf.chance(0.06 * used)) {
@@ -395,27 +396,28 @@ lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
         if (this.bulletLife > 0 && this._bullet != null) {
             return;
         }
-        if (this.reload <= 0 && (this.consValid() || this.cheating())) {
+        if (this.reloadCounter >= this.block.reload && !this.charging() && this.shootWarmup >= this.block.minWarmup) {
             if (Vars.net.client()) return;
             var type = this.peekAmmo();
             Call_DarkLightShot(this.tile.pos(), this.rotation);
             this.shoot(type);
-            this.reload = this.block.reloadTime;
+            this.reloadCounter = this.block.reload;
         }
     },
     turnToTarget(targetRot) {
-        this.rotation = Angles.moveToward(this.rotation, targetRot, this.efficiency() * this.block.rotateSpeed * this.delta() * (this.bulletLife > 0 ? firingMoveFract : 1));
+        this.rotation = Angles.moveToward(this.rotation, targetRot, this.efficiency * this.block.rotateSpeed * this.delta() * (this.bulletLife > 0 ? firingMoveFract : 1));
     },
     bullet(type, angle) {
-        const tr = this.block.getTr();
-        this._bullet = type.create(this.tile.build, this.team, this.x + tr.x, this.y + tr.y, angle);
+        const bulletX = this.x + Angles.trnsx(this.rotation - 90, this.block.shootX, this.block.shootY)
+        const bulletY = this.y + Angles.trnsy(this.rotation - 90, this.block.shootX, this.block.shootY)
+        this._bullet = type.create(this.tile.build, this.team, bulletX, bulletY, angle);
         this.bulletLife = shootDuration;
     },
     shouldActiveSound() {
         return this.bulletLife > 0 && this._bullet != null;
     },
     shouldTurn() {
-        return !this.charging && !this.shouldActiveSound();
+        return !this.charging() && !this.shouldActiveSound();
     },
 }));
 

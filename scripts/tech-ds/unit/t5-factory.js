@@ -49,14 +49,14 @@ block.requirements = ItemStack.with(
 block.category = Category.units;
 block.constructTime = 60 * 60 * 4;
 
-block.consumes.power(25);
-block.consumes.items(ItemStack.with(
+block.consumePower(25);
+block.consumeItems(ItemStack.with(
     items.hardThoriumAlloy, 900,
     items.spaceCrystal, 900,
     items.timeCrystal, 500,
     items.dimensionAlloy, 200,
 ));
-block.consumes.liquid(items.ionLiquid, 1);
+block.consumeLiquid(items.ionLiquid, 1);
 
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.quad, equa),

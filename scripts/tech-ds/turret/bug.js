@@ -25,7 +25,7 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.health = 1800;
 turret.size = 3;
-turret.reloadTime = 90;
+turret.reload = 90;
 turret.range = 220;
 turret.rotateSpeed = 15;
 turret.inaccuracy = 2;
@@ -113,6 +113,6 @@ Items.sporePod, (() => {
 })()
 );
 
-turret.consumes.powerCond(1, boolf(b => b.isActive()));
+turret.consumePowerCond(1, boolf(b => b.isActive()));
 
 exports.bug = turret;

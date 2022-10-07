@@ -53,7 +53,7 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.health = 1800;
 turret.size = 3;
-turret.reloadTime = 45 - 1;
+turret.reload = 45 - 1;
 turret.range = 220;
 turret.rotateSpeed = 15;
 turret.inaccuracy = 2;
@@ -199,21 +199,21 @@ items.spaceCrystal, (() => {
 })(),
 );
 
-turret.consumes.powerCond(1, boolf(b => b.isActive()));
+turret.consumePowerCond(1, boolf(b => b.isActive()));
 
 lib.setBuildingSimple(turret, ItemTurret.ItemTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
-        if (this.reload >= this.block.reloadTime) {
+        if (this.reload >= this.block.reload) {
             var type = this.peekAmmo();
             this.shoot(type);
-            this.reload -= this.block.reloadTime;
+            this.reload -= this.block.reload;
         }
     },
     updateTile() {
         this.super$updateTile();
         // Do reload if has ammo.
-        if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+        if (this.hasAmmo() && this.reload < this.block.reload) {
             this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
         }
     },

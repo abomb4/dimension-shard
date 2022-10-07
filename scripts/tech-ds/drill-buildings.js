@@ -64,8 +64,8 @@ block.warmupSpeed = 0.01;
 block.heatColor = Color.valueOf("9a48ff");
 block.hardnessDrillMultiplier = 25;
 block.liquidBoostIntensity = 3;
-block.consumes.power(8);
-block.consumes.liquid(Liquids.water, 2).boost();
+block.consumePower(8);
+block.consumeLiquid(Liquids.water, 2).boost();
 
 const lightColor = Color.valueOf("9a48ff")
 lib.setBuildingSimple(block, Drill.DrillBuild, block => ({

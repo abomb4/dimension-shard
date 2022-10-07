@@ -36,7 +36,7 @@ const turret = blockTypes.newNoRotatingTurret({
     liquidCapacity: 120,
     health: 5200,
     size: 5,
-    reloadTime: 150 - 1,
+    reload: 150 - 1,
     range: 384,
     inaccuracy: 6,
     spread: 45,
@@ -83,16 +83,16 @@ const turret = blockTypes.newNoRotatingTurret({
         drawRotateAccel: 0,
         // I think the default udpatShooting and updateCooling is wrong, so modify it.
         updateShooting() {
-            if (this.reload >= this.block.reloadTime) {
+            if (this.reload >= this.block.reload) {
                 var type = this.peekAmmo();
                 this.shoot(type);
-                this.reload -= this.block.reloadTime;
+                this.reload -= this.block.reload;
             }
         },
         updateTile() {
             this.super$updateTile();
             // Do reload if has ammo.
-            if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+            if (this.hasAmmo() && this.reload < this.block.reload) {
                 this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
             }
             if (this.hasAmmo() && this.cons.valid()) {
@@ -158,6 +158,6 @@ turret.ammo(dimensionAlloy, newElectricStormBulletType({
     ammoMultiplier: 2,
 }));
 
-turret.consumes.powerCond(75, boolf(b => b.isActive()));
+turret.consumePowerCond(75, boolf(b => b.isActive()));
 
 exports.electricStormTurret = turret;

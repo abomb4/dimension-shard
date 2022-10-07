@@ -159,12 +159,12 @@ const block = new JavaAdapter(StorageBlock, {
     },
     setBars() {
         this.super$setBars();
-        this.bars.add("items", func(entity => new Bar(
+        this.addBar("items", func(entity => new Bar(
             prov(() => Core.bundle.format("bar.items", entity.items.total())),
             prov(() => Pal.items),
             floatp(() => entity.items.total() / entity.getMaxItemCapacity())
         )));
-        this.bars.add("launchCount", func(entity => new Bar(
+        this.addBar("launchCount", func(entity => new Bar(
             prov(() => lib.getMessage("bar", "coreConstructionPlatformLaunchTimes", [
                 entity.getLaunchTimes(),
                 entity.getIsMain() ? entity.getRequirementInfo().launchCount : '-'
@@ -194,7 +194,7 @@ block.requirements = ItemStack.with(
     Items.thorium, 320,
 );
 
-block.consumes.powerCond(25, boolf(b => b.getReadyLaunch()));
+block.consumePowerCond(25, boolf(b => b.getReadyLaunch()));
 
 var platformGroup = {};
 var mainBuilding = {};

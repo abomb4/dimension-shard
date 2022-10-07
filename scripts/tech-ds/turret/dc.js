@@ -39,7 +39,7 @@ turret.buildVisibility = BuildVisibility.shown;
 turret.category = Category.turret;
 turret.health = 1700;
 turret.size = 3;
-turret.reloadTime = 50 - 1;
+turret.reload = 50 - 1;
 turret.range = 165;
 turret.inaccuracy = 0;
 turret.shots = 4;
@@ -75,16 +75,16 @@ turret.powerUse = 10;
 lib.setBuildingSimple(turret, PowerTurret.PowerTurretBuild, block => ({
     // I think the default udpatShooting and updateCooling is wrong, so modify it.
     updateShooting() {
-        if (this.reload >= this.block.reloadTime) {
+        if (this.reload >= this.block.reload) {
             var type = this.peekAmmo();
             this.shoot(type);
-            this.reload -= this.block.reloadTime;
+            this.reload -= this.block.reload;
         }
     },
     updateTile() {
         this.super$updateTile();
         // Do reload if has ammo.
-        if (this.hasAmmo() && this.reload < this.block.reloadTime) {
+        if (this.hasAmmo() && this.reload < this.block.reload) {
             this.reload += this.delta() * this.peekAmmo().reloadMultiplier * this.baseReloadSpeed();
         }
     },

@@ -36,7 +36,7 @@ exports.loadSound = (() => {
     return (path) => {
         const c = cache[path];
         if (c === undefined) {
-            return cache[path] = Vars.mods.scripts.loadSound(path);
+            return cache[path] = Vars.tree.loadSound(path);
         }
         return c;
     }

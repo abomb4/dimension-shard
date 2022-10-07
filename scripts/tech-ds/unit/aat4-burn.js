@@ -22,7 +22,7 @@ const { standardIonBolt1 } = require('ds-common/bullet-types/index');
 const { flyingConstructor } = require('abomb4/skill-framework');
 
 const unitType = (() => {
-    const m = extendContent(UnitType, 'burn', {
+    const m = extend(UnitType, 'burn', {
         getSkillDefinitions() {
             return [
             ];
@@ -61,8 +61,8 @@ const unitType = (() => {
             const w = new Weapon(lib.modName + "-burn-ion-cannon");
             w.shake = 4;
             w.shootY = 9;
-            w.shots = 3;
-            w.shotDelay = 4;
+            w.shoot.shots = 3;
+            w.shoot.shotDelay = 4;
             w.x = 15;
             w.y = 6;
             w.rotateSpeed = 4;

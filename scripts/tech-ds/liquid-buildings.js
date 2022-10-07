@@ -209,7 +209,7 @@ var spacePump = extend(Pump, 'space-pump', {
 spacePump.buildVisibility = BuildVisibility.shown;
 spacePump.size = 3;
 spacePump.health = 500;
-spacePump.liquidCapacity = Blocks.thermalPump.liquidCapacity * 2;
+spacePump.liquidCapacity = Blocks.impulsePump.liquidCapacity * 2;
 spacePump.requirements = ItemStack.with(
     Items.copper, 100,
     Items.metaglass, 120,
@@ -218,7 +218,7 @@ spacePump.requirements = ItemStack.with(
     items.hardThoriumAlloy, 50
 );
 spacePump.category = Category.liquid;
-spacePump.pumpAmount = 0.3;
-spacePump.consumes.power(2.8);
+spacePump.pumpAmount = 0.32;
+spacePump.consumePower(2.8);
 spacePump.hasPower = true;
 exports.spacePump = spacePump;

@@ -46,14 +46,14 @@ block.requirements = ItemStack.with(
 block.category = Category.units;
 block.constructTime = 60 * 60 * 1.5;
 
-block.consumes.power(13);
-block.consumes.items(ItemStack.with(
+block.consumePower(13);
+block.consumeItems(ItemStack.with(
     Items.silicon, 900,
     items.hardThoriumAlloy, 700,
     items.spaceCrystal, 420,
     items.timeCrystal, 330
 ));
-block.consumes.liquid(items.ionLiquid, 0.5);
+block.consumeLiquid(items.ionLiquid, 0.5);
 
 block.upgrades.addAll(
     lib.createUnitPlan(UnitTypes.mega, formula),
