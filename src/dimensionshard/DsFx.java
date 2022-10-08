@@ -88,4 +88,48 @@ public final class DsFx {
             Fill.circle(data.p2x, data.p2y, Lines.getStroke() / 2);
         }
     });
+
+    /** ‘黑洞’ */
+    public static final Effect fxBlackHoleExplode = new Effect(8, 80, e -> {
+        e.scaled(7, (i -> {
+            Lines.stroke(3 * i.fout());
+            Lines.circle(e.x, e.y, 3 + i.fin() * 60);
+        }));
+
+        Draw.color(DsItems.spaceCrystalColor);
+
+        Angles.randLenVectors(e.id, 6, 2 + 19 * e.finpow(), (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5F);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+        });
+
+        Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, DsItems.spaceCrystalColorLight, e.fin());
+        Lines.stroke(1.5F * e.fout());
+
+        Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), (x, y) -> {
+            Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
+        });
+    });
+
+    /** 伤害型‘黑洞’ */
+    public static final Effect fxBlackHoleExplodeDamaged = new Effect(14, 160, e -> {
+        e.scaled(7, (i -> {
+            Lines.stroke(3 * i.fout());
+            Lines.circle(e.x, e.y, 3 + i.fin() * 60);
+        }));
+
+        Draw.color(DsItems.spaceCrystalColor);
+
+        Angles.randLenVectors(e.id, 6, 2 + 119 * e.finpow(), (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5F);
+            Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
+        });
+
+        Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, DsItems.spaceCrystalColorLight, e.fin());
+        Lines.stroke(1.5F * e.fout());
+
+        Angles.randLenVectors(e.id + 1, 8, 1 + 146 * e.finpow(), (x, y) -> {
+            Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
+        });
+    });
 }

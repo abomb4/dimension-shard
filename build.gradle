@@ -5,6 +5,10 @@ version '1.0'
 targetCompatibility = 8
 sourceCompatibility = JavaVersion.VERSION_17
 
+// fuck gbk
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 sourceSets.main.java.srcDirs = ["src"]
 
 repositories {

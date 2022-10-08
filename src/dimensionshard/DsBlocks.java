@@ -1,19 +1,31 @@
 package dimensionshard;
 
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Lines;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
 import dimensionshard.world.blocks.ArmoredWall;
+import dimensionshard.world.blocks.ElectricStormTurret;
 import dimensionshard.world.blocks.HardPhaseSpaceBridge;
 import dimensionshard.world.blocks.IonBoltTurret;
 import dimensionshard.world.blocks.PhaseSpaceBridge;
 import mindustry.content.Blocks;
+import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
+import mindustry.entities.Effect;
+import mindustry.entities.bullet.PointBulletType;
 import mindustry.gen.Building;
+import mindustry.gen.Bullet;
+import mindustry.gen.Sounds;
+import mindustry.graphics.Drawf;
 import mindustry.type.Category;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
-import mindustry.world.Block;
 import mindustry.world.blocks.defense.Wall;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.liquid.ArmoredConduit;
 import mindustry.world.blocks.liquid.LiquidRouter;
 import mindustry.world.blocks.production.Pump;
@@ -27,33 +39,211 @@ import mindustry.world.meta.BuildVisibility;
 @SuppressWarnings({"UnqualifiedMethodAccess", "UnqualifiedFieldAccess"})
 public final class DsBlocks {
 
-    // @formatter:off
+    // region Dimension Shard technology
 
-    public static Block
-        // region Dimension Shard technology
+    // turrets
+    public static IonBoltTurret ionBoltTurret;
+    public static Turret bombTeleporter;
+    public static ElectricStormTurret electricStormTurret;
 
-        // turrets
-        ionBoltTurret,
+    // distributions
+    public static PhaseSpaceBridge phaseSpaceBridge;
+    public static HardPhaseSpaceBridge hardPhaseSpaceBridge;
 
-        // distributions
-        phaseSpaceBridge, hardPhaseSpaceBridge,
+    // liquids
+    public static ArmoredConduit hardThoriumConduit;
+    public static LiquidRouter hardThoriumLiquidRouter;
+    public static LiquidRouter spaceLiquidTank;
+    public static Pump spacePump;
 
-        // liquids
-        hardThoriumConduit, hardThoriumLiquidRouter, spaceLiquidTank, spacePump,
+    // Defence
+    public static Wall shardWall;
+    public static Wall shardWallLarge;
+    public static ArmoredWall hardThoriumAlloyWall;
+    public static ArmoredWall hardThoriumAlloyWallLarge;
 
-        // Defence
-        shardWall, shardWallLarge, hardThoriumAlloyWall, hardThoriumAlloyWallLarge
-
-        // endregion Dimension Shard technology
+    // endregion Dimension Shard technology
     ;
-
-    // @formatter:on
 
     public static void load() {
         // region Dimension Shard technology
 
         // region Turrets
         ionBoltTurret = new IonBoltTurret("ion-bolt-turret");
+
+        bombTeleporter = new ItemTurret("bomb-teleporter") {
+            final Color teleportColor = Color.valueOf("69dcee");
+            final Effect fxTeleporterShoot = new Effect(16, 24, e -> {
+                Draw.color(teleportColor);
+                for (var i = 0; i < 4; i++) {
+                    Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
+                }
+
+                Lines.stroke(Math.max(0, e.fout() - 0.5F) * 2.5F);
+                Lines.circle(e.x, e.y, 24 * e.finpow());
+
+                Draw.color();
+                for (var i = 0; i < 4; i++) {
+                    Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
+                }
+            });
+
+            {
+                final int turretRange = 220;
+                cooldownTime = 0.04F;
+                recoil = 1.5F;
+                liquidCapacity = 10;
+                buildVisibility = BuildVisibility.shown;
+                category = Category.turret;
+                health = 1800;
+                size = 3;
+                reload = 45 - 1;
+                range = turretRange;
+                rotateSpeed = 10;
+                inaccuracy = 2;
+                xRand = 0;
+                shootEffect = fxTeleporterShoot;
+                shootSound = Lib.loadSound("bomb-teleport");
+                heatColor = teleportColor;
+                requirements = ItemStack.with(
+                    Items.copper, 200,
+                    Items.silicon, 130,
+                    Items.thorium, 110,
+                    DsItems.spaceCrystal, 30
+                );
+                this.consumePower(1F);
+
+                ammo(
+                    Items.coal, new PointBulletType() {{
+                        shootEffect = Fx.none;
+                        hitEffect = Fx.explosion;
+                        smokeEffect = Fx.none;
+                        trailEffect = Fx.none;
+                        despawnEffect = Fx.explosion;
+                        hitSound = Sounds.explosion;
+                        damage = 0;
+                        splashDamageRadius = 30;
+                        splashDamage = 30;
+                        makeFire = true;
+                        status = StatusEffects.burning;
+                        statusDuration = 120;
+                        speed = turretRange;
+                        hitShake = 1;
+                        reflectable = false;
+                        absorbable = false;
+                    }},
+                    Items.sporePod, new PointBulletType() {{
+                        shootEffect = Fx.none;
+                        hitEffect = Fx.explosion;
+                        smokeEffect = Fx.none;
+                        trailEffect = Fx.none;
+                        despawnEffect = Fx.explosion;
+                        hitSound = Sounds.explosion;
+                        damage = 0;
+                        splashDamageRadius = 24;
+                        splashDamage = 10;
+                        makeFire = true;
+                        status = StatusEffects.burning;
+                        statusDuration = 150;
+                        speed = turretRange;
+                        hitShake = 1.1F;
+                        reflectable = false;
+                        absorbable = false;
+                    }},
+                    Items.pyratite, new PointBulletType() {{
+                        shootEffect = Fx.none;
+                        hitEffect = Fx.blastExplosion;
+                        smokeEffect = Fx.smokeCloud;
+                        trailEffect = Fx.none;
+                        despawnEffect = Fx.blastExplosion;
+                        hitSound = Sounds.explosion;
+                        damage = 0;
+                        splashDamageRadius = 32;
+                        splashDamage = 50;
+                        makeFire = true;
+                        status = StatusEffects.burning;
+                        statusDuration = 240;
+                        speed = turretRange;
+                        hitShake = 1.5F;
+                        reflectable = false;
+                        absorbable = false;
+                    }},
+                    Items.blastCompound, new PointBulletType() {{
+                        shootEffect = Fx.none;
+                        hitEffect = Fx.massiveExplosion;
+                        smokeEffect = Fx.none;
+                        trailEffect = Fx.none;
+                        despawnEffect = Fx.massiveExplosion;
+                        hitSound = Sounds.explosion;
+                        damage = 0;
+                        splashDamageRadius = 45;
+                        splashDamage = 105;
+                        status = StatusEffects.blasted;
+                        speed = turretRange;
+                        hitShake = 2;
+                        reflectable = false;
+                        absorbable = false;
+                    }},
+                    DsItems.dimensionShard, new PointBulletType() {{
+                        shootEffect = Fx.none;
+                        hitEffect = DsFx.fxDimensionShardExplosion;
+                        smokeEffect = Fx.none;
+                        trailEffect = Fx.none;
+                        despawnEffect = DsFx.fxDimensionShardExplosion;
+                        hitSound = Sounds.explosion;
+                        damage = 0;
+                        splashDamageRadius = 38;
+                        splashDamage = 70;
+                        speed = turretRange;
+                        hitShake = 1.6F;
+                        reflectable = false;
+                        absorbable = false;
+                    }},
+                    DsItems.spaceCrystal, new PointBulletType() {
+                        {
+                            shootEffect = Fx.none;
+                            hitEffect = DsFx.fxBlackHoleExplode;
+                            smokeEffect = Fx.none;
+                            trailEffect = Fx.none;
+                            despawnEffect = DsFx.fxBlackHoleExplode;
+                            hitSound = Sounds.explosion;
+                            damage = 0;
+                            splashDamageRadius = 80;
+                            splashDamage = 15;
+                            speed = turretRange;
+                            hitShake = 2;
+                            knockback = -0.55F;
+                            reloadMultiplier = 0.6F;
+                            ammoMultiplier = 1;
+                            reflectable = false;
+                            absorbable = false;
+                        }
+
+                        @Override
+                        public void hit(Bullet b, float x, float y) {
+                            super.hit(b, x, y);
+                            DsBullets.blackHole.create(b, x, y, 0);
+                        }
+                    }
+                );
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+
+        electricStormTurret = new ElectricStormTurret("electric-storm-turret");
 
         // endregion Turrets
 

@@ -1,9 +1,9 @@
 package dimensionshard;
 
+import dimensionshard.entities.bullets.BlackHoleBulletType;
 import dimensionshard.entities.bullets.ElectricStormBulletType;
 import dimensionshard.entities.bullets.IonBoltBulletType;
 import mindustry.content.Fx;
-import mindustry.entities.bullet.BulletType;
 
 import static dimensionshard.DsItems.ionLiquid;
 
@@ -16,17 +16,22 @@ import static dimensionshard.DsItems.ionLiquid;
 public final class DsBullets {
 
     /** 离子射弹的破片 1 */
-    public static BulletType standardIonFrag1;
+    public static ElectricStormBulletType standardIonFrag1;
     /** 离子射弹的破片 2 */
-    public static BulletType standardIonFrag2;
+    public static ElectricStormBulletType standardIonFrag2;
     /** 离子射弹的破片 3 */
-    public static BulletType standardIonFrag3;
+    public static ElectricStormBulletType standardIonFrag3;
     /** 离子射弹 1 */
-    public static BulletType standardIonBolt1;
+    public static IonBoltBulletType standardIonBolt1;
     /** 离子射弹 2 */
-    public static BulletType standardIonBolt2;
+    public static IonBoltBulletType standardIonBolt2;
     /** 离子射弹 */
-    public static BulletType standardIonBolt;
+    public static IonBoltBulletType standardIonBolt;
+
+    /** 小黑洞 */
+    public static BlackHoleBulletType blackHole;
+    /** 伤害型黑洞 */
+    public static BlackHoleBulletType blackHoleDamaged;
 
     public static void load() {
         standardIonFrag1 = new ElectricStormBulletType() {{
@@ -111,6 +116,20 @@ public final class DsBullets {
             hitEffect = Fx.explosion;
             puddles = 2;
             puddleAmount = 9;
+        }};
+
+        blackHole = new BlackHoleBulletType() {{
+            lifetime = 60;
+            knockback = -0.55F;
+            splashDamage = 15;
+            splashDamageRadius = 80;
+        }};
+
+        blackHoleDamaged = new BlackHoleBulletType() {{
+            lifetime = 120;
+            knockback = -0.65F;
+            splashDamage = 80;
+            splashDamageRadius = 160;
         }};
     }
 }

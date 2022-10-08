@@ -3,6 +3,7 @@ package dimensionshard.entities.bullets;
 import arc.Core;
 import arc.graphics.Color;
 import arc.math.Mathf;
+import arc.math.geom.Position;
 import arc.math.geom.Vec2;
 import arc.util.Time;
 import dimensionshard.DsFx;
@@ -12,7 +13,6 @@ import mindustry.entities.Lightning;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.gen.Bullet;
-import mindustry.gen.Teamc;
 
 /**
  * 闪电风暴球体
@@ -195,7 +195,7 @@ public class ElectricStormBulletType extends BasicBulletType {
         /** 是否停用了动画 */
         public boolean animationDisabled;
         /** 跟踪目标 */
-        public Teamc target;
+        public Position target;
     }
 }
 
