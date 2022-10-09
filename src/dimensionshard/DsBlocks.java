@@ -3,6 +3,8 @@ package dimensionshard;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.math.Mathf;
+import dimensionshard.entities.bullets.DirectLightning;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
 import dimensionshard.world.blocks.ArmoredWall;
@@ -15,7 +17,9 @@ import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
+import mindustry.entities.bullet.LightningBulletType;
 import mindustry.entities.bullet.PointBulletType;
+import mindustry.entities.pattern.ShootSpread;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
@@ -25,6 +29,7 @@ import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.liquid.ArmoredConduit;
 import mindustry.world.blocks.liquid.LiquidRouter;
@@ -44,6 +49,7 @@ public final class DsBlocks {
     // turrets
     public static IonBoltTurret ionBoltTurret;
     public static Turret bombTeleporter;
+    public static Turret dc;
     public static ElectricStormTurret electricStormTurret;
 
     // distributions
@@ -243,6 +249,68 @@ public final class DsBlocks {
             }
         };
 
+        dc = new PowerTurret("dc") {
+            {
+                cooldownTime = 0.04F;
+                recoil = 1;
+                liquidCapacity = 10;
+                buildVisibility = BuildVisibility.shown;
+                category = Category.turret;
+                health = 1700;
+                size = 3;
+                reload = 50 - 1;
+                range = 165;
+                inaccuracy = 0;
+                shoot = new ShootSpread(4, 1);
+                shoot.shots = 4;
+                shootEffect = Fx.lightningShoot;
+                heatColor = Color.red;
+                rotateSpeed = 10;
+                xRand = 6;
+                shootSound = Sounds.spark;
+                loopSound = Sounds.none;
+                requirements = ItemStack.with(
+                    Items.lead, 320,
+                    Items.silicon, 80,
+                    Items.plastanium, 120,
+                    DsItems.spaceCrystal, 60,
+                    DsItems.hardThoriumAlloy, 30
+                );
+                shootType = new LightningBulletType() {
+                    {
+                        damage = 22;
+                        lightningLength = 24;
+                        lightningLengthRand = 12;
+                        lightningColor = Color.valueOf("69dcee");
+                    }
+
+                    @Override
+                    public void init(Bullet b) {
+                        DirectLightning.createDirectLightning(b,
+                            b.team,
+                            this.lightningColor,
+                            this.damage,
+                            b.x, b.y,
+                            b.rotation(),
+                            this.lightningLength + Mathf.random(this.lightningLengthRand));
+                    }
+                };
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
         electricStormTurret = new ElectricStormTurret("electric-storm-turret");
 
         // endregion Turrets
