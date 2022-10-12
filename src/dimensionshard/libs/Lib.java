@@ -47,4 +47,22 @@ public final class Lib {
     public static Sound loadSound(String name) {
         return Vars.headless ? Sounds.none : Vars.tree.loadSound(name);
     }
+
+    /**
+     * 获取当前 Mod 版本
+     *
+     * @return Mod 信息
+     */
+    public static String getModVersion() {
+        return Vars.mods.locateMod(modName).meta.version;
+    }
+
+    /**
+     * 判断当前 mod 是否为 dev 版本
+     *
+     * @return 是否为 dev 版本
+     */
+    public static boolean isDev() {
+        return getModVersion().contains("dev");
+    }
 }

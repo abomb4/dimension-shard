@@ -132,4 +132,34 @@ public final class DsFx {
             Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1 + e.fout() * 6);
         });
     });
+
+    /** 黑光击中 */
+    public static final Effect fxDarkLightHit = new Effect(12, e -> {
+
+        Draw.color(Color.valueOf("a108f5"));
+        Lines.stroke(e.fout() * 1.5F);
+
+        Angles.randLenVectors(e.id, 8, e.finpow() * 17, e.rotation, 360, ((x, y) -> {
+            var ang = Mathf.angle(x, y);
+            Lines.lineAngle(e.x + x, e.y + y, ang, e.fout() * 4 + 1);
+        }));
+    });
+
+    /** 黑光憋气 */
+    public static final Effect fxDarkLightCharge = new Effect(90, 100, e -> {
+        Draw.color(DsColors.purple);
+        Lines.stroke(e.fin() * 2);
+        Lines.circle(e.x, e.y, 4 + e.fout() * 70);
+
+        Draw.alpha(0.5F);
+        Fill.circle(e.x, e.y, e.fin() * 15);
+
+        Draw.alpha(1);
+        Angles.randLenVectors(e.id, 15, 30 * e.fout(), (x, y) ->
+            Fill.circle(e.x + x, e.y + y, e.fin() * 5));
+
+        Draw.color(DsColors.laserColor3);
+        Fill.circle(e.x, e.y, e.fin() * 8);
+
+    });
 }

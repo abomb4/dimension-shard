@@ -4,7 +4,7 @@ import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import dimensionshard.DsBullets;
-import dimensionshard.DsItems;
+import dimensionshard.DsStatusEffects;
 import mindustry.content.Fx;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.LaserBoltBulletType;
@@ -50,7 +50,7 @@ public class IonBoltBulletType extends LaserBoltBulletType {
         this.puddleRange = 8;
         this.puddleAmount = 10;
         this.puddleLiquid = ionLiquid;
-        this.status = DsItems.ionBurningEffect;
+        this.status = DsStatusEffects.ionBurningEffect;
         this.statusDuration = 120;
         this.fragBullets = 1;
         this.fragBullet = DsBullets.standardIonFrag3;

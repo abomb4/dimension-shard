@@ -1,21 +1,24 @@
 package dimensionshard;
 
 import arc.util.Log;
+import dimensionshard.libs.Changelog;
 import mindustry.mod.Mod;
 
+/**
+ * Entrance
+ */
 public class DimensionShardMod extends Mod {
-
-    public DimensionShardMod() {
-        Log.info("Loaded DimensionShardV7Mod constructor.");
-    }
 
     @Override
     public void loadContent() {
-        Log.info("Loading some example content.");
+        Log.info("Loading Dimension Shard mod.");
         DsGlobal.mod = this;
 
         DsBullets.load();
         DsBlocks.load();
+
+        DsCall.initClientSide();
+        Changelog.init();
     }
 
 }

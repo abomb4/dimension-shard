@@ -8,6 +8,7 @@ import dimensionshard.entities.bullets.DirectLightning;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
 import dimensionshard.world.blocks.ArmoredWall;
+import dimensionshard.world.blocks.DarkLightTurret;
 import dimensionshard.world.blocks.ElectricStormTurret;
 import dimensionshard.world.blocks.HardPhaseSpaceBridge;
 import dimensionshard.world.blocks.IonBoltTurret;
@@ -51,6 +52,7 @@ public final class DsBlocks {
     public static Turret bombTeleporter;
     public static Turret dc;
     public static ElectricStormTurret electricStormTurret;
+    public static DarkLightTurret darkLightTurret;
 
     // distributions
     public static PhaseSpaceBridge phaseSpaceBridge;
@@ -133,7 +135,7 @@ public final class DsBlocks {
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 120;
-                        speed = turretRange;
+                        speed = 999999999F;
                         hitShake = 1;
                         reflectable = false;
                         absorbable = false;
@@ -151,7 +153,7 @@ public final class DsBlocks {
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 150;
-                        speed = turretRange;
+                        speed = 999999999F;
                         hitShake = 1.1F;
                         reflectable = false;
                         absorbable = false;
@@ -169,7 +171,7 @@ public final class DsBlocks {
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 240;
-                        speed = turretRange;
+                        speed = 999999999F;
                         hitShake = 1.5F;
                         reflectable = false;
                         absorbable = false;
@@ -185,7 +187,7 @@ public final class DsBlocks {
                         splashDamageRadius = 45;
                         splashDamage = 105;
                         status = StatusEffects.blasted;
-                        speed = turretRange;
+                        speed = 999999999F;
                         hitShake = 2;
                         reflectable = false;
                         absorbable = false;
@@ -200,7 +202,7 @@ public final class DsBlocks {
                         damage = 0;
                         splashDamageRadius = 38;
                         splashDamage = 70;
-                        speed = turretRange;
+                        speed = 999999999F;
                         hitShake = 1.6F;
                         reflectable = false;
                         absorbable = false;
@@ -216,7 +218,7 @@ public final class DsBlocks {
                             damage = 0;
                             splashDamageRadius = 80;
                             splashDamage = 15;
-                            speed = turretRange;
+                            speed = 999999999F;
                             hitShake = 2;
                             knockback = -0.55F;
                             reloadMultiplier = 0.6F;
@@ -259,7 +261,7 @@ public final class DsBlocks {
                 health = 1700;
                 size = 3;
                 reload = 50 - 1;
-                range = 165;
+                range = 170;
                 inaccuracy = 0;
                 shoot = new ShootSpread(4, 1);
                 shoot.shots = 4;
@@ -276,10 +278,11 @@ public final class DsBlocks {
                     DsItems.spaceCrystal, 60,
                     DsItems.hardThoriumAlloy, 30
                 );
+                consumePower(10F);
                 shootType = new LightningBulletType() {
                     {
-                        damage = 22;
-                        lightningLength = 24;
+                        damage = 25;
+                        lightningLength = 26;
                         lightningLengthRand = 12;
                         lightningColor = Color.valueOf("69dcee");
                     }
@@ -312,6 +315,7 @@ public final class DsBlocks {
             }
         };
         electricStormTurret = new ElectricStormTurret("electric-storm-turret");
+        darkLightTurret = new DarkLightTurret("dark-light");
 
         // endregion Turrets
 
@@ -534,7 +538,7 @@ public final class DsBlocks {
             {
                 armor = 5;
                 size = 1;
-                health = 950;
+                health = 900;
                 requirements = ItemStack.with(DsItems.hardThoriumAlloy, 6);
                 buildVisibility = BuildVisibility.shown;
                 category = Category.defense;

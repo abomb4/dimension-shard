@@ -1,10 +1,8 @@
 package dimensionshard;
 
 import arc.graphics.Color;
-import mindustry.content.StatusEffects;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
-import mindustry.type.StatusEffect;
 import mindustry.world.blocks.environment.OreBlock;
 
 /**
@@ -55,26 +53,12 @@ public final class DsItems {
         this.cost = 1.8F;
     }};
 
-    public static StatusEffect timeFreezingEffect = new StatusEffect("time-freezing") {{
-        this.color = Color.valueOf("6ecdec");
-        this.speedMultiplier = 0.4F;
-        this.effect = DsFx.fxTimeFreezing;
-        this.init(() -> this.opposite(StatusEffects.melting, StatusEffects.burning));
-    }};
-
     public static final Liquid timeFlow = new Liquid("time-flow", Color.valueOf("a76ab3")) {{
         this.heatCapacity = 2;
         this.temperature = 0.1F;
         this.viscosity = 0.85F;
-        this.effect = timeFreezingEffect;
+        this.effect = DsStatusEffects.timeFreezingEffect;
         this.lightColor = Color.valueOf("a76ab333");
-    }};
-
-    public static StatusEffect ionBurningEffect = new StatusEffect("ion-burning") {{
-        this.color = Color.valueOf("cee0e9");
-        this.damage = 0.6F;
-        this.healthMultiplier = 0.75F;
-        this.init(() -> this.opposite(StatusEffects.wet, StatusEffects.freezing, timeFreezingEffect));
     }};
 
     public static final Liquid ionLiquid = new Liquid("ion-liquid", Color.valueOf("cee0e9")) {{
@@ -84,6 +68,6 @@ public final class DsItems {
         this.explosiveness = 3;
         this.viscosity = 0.3F;
         this.lightColor = Color.valueOf("cee0e988");
-        this.effect = ionBurningEffect;
+        this.effect = DsStatusEffects.ionBurningEffect;
     }};
 }
