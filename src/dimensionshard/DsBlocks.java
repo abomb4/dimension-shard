@@ -119,6 +119,7 @@ public final class DsBlocks {
                     Items.thorium, 110,
                     DsItems.spaceCrystal, 30
                 );
+                coolant = consumeCoolant(0.3f);
                 this.consumePower(1F);
 
                 ammo(
@@ -279,6 +280,7 @@ public final class DsBlocks {
                     DsItems.hardThoriumAlloy, 30
                 );
                 consumePower(10F);
+                coolant = consumeCoolant(0.3f);
                 shootType = new LightningBulletType() {
                     {
                         damage = 25;
