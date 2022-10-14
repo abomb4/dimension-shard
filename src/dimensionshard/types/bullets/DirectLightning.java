@@ -1,4 +1,4 @@
-package dimensionshard.entities.bullets;
+package dimensionshard.types.bullets;
 
 import arc.graphics.Color;
 import arc.math.Angles;

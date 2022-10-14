@@ -1,12 +1,12 @@
-package dimensionshard.world.blocks;
+package dimensionshard.types.blocks;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import dimensionshard.DsGlobal;
 import dimensionshard.DsItems;
-import dimensionshard.entities.bullets.ElectricStormBulletType;
 import dimensionshard.libs.Lib;
+import dimensionshard.types.bullets.ElectricStormBulletType;
 import mindustry.content.Items;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.BulletType;

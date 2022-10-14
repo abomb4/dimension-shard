@@ -1,4 +1,4 @@
-package dimensionshard.world.blocks;
+package dimensionshard.types.blocks;
 
 import arc.Core;
 import arc.graphics.Color;
@@ -11,8 +11,8 @@ import dimensionshard.DsCall;
 import dimensionshard.DsFx;
 import dimensionshard.DsGlobal;
 import dimensionshard.DsItems;
-import dimensionshard.entities.bullets.DarkLightBulletType;
 import dimensionshard.libs.Lib;
+import dimensionshard.types.bullets.DarkLightBulletType;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;

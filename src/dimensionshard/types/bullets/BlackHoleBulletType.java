@@ -1,4 +1,4 @@
-package dimensionshard.entities.bullets;
+package dimensionshard.types.bullets;
 
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;

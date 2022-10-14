@@ -1,8 +1,8 @@
 package dimensionshard;
 
-import dimensionshard.entities.bullets.BlackHoleBulletType;
-import dimensionshard.entities.bullets.ElectricStormBulletType;
-import dimensionshard.entities.bullets.IonBoltBulletType;
+import dimensionshard.types.bullets.BlackHoleBulletType;
+import dimensionshard.types.bullets.ElectricStormBulletType;
+import dimensionshard.types.bullets.IonBoltBulletType;
 import mindustry.content.Fx;
 
 import static dimensionshard.DsItems.ionLiquid;

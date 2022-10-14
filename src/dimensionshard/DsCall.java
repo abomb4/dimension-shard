@@ -2,7 +2,7 @@ package dimensionshard;
 
 import arc.util.Log;
 import dimensionshard.libs.Lib;
-import dimensionshard.world.blocks.DarkLightTurret;
+import dimensionshard.types.blocks.DarkLightTurret;
 import mindustry.Vars;
 import mindustry.gen.Call;
 
