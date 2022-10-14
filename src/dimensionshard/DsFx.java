@@ -7,6 +7,7 @@ import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
 import mindustry.entities.Effect;
+import mindustry.graphics.Drawf;
 
 /**
  * 特效
@@ -161,5 +162,35 @@ public final class DsFx {
         Draw.color(DsColors.laserColor3);
         Fill.circle(e.x, e.y, e.fin() * 8);
 
+    });
+
+    /** 呃罩打空间结晶射击轨道 */
+    public static final Effect fxForeshadowSpaceShootTrial = new Effect(24, e -> {
+        for (var i = 0; i < 2; i++) {
+            Draw.color(i == 0 ? DsItems.spaceCrystalColor : DsItems.spaceCrystalColorLight);
+
+            float m = i == 0 ? 1 : 0.5F;
+
+            float rot = e.rotation + 180;
+            float w = 15F * e.fout() * m;
+            Drawf.tri(e.x, e.y, w, (30 + Mathf.randomSeedRange(e.id, 15)) * m, rot);
+            Drawf.tri(e.x, e.y, w, 10 * m, rot + 180);
+        }
+    });
+
+    /** 呃罩打空间结晶 */
+    public static final Effect fxForeshadowSpaceShoot = new Effect(24, e -> {
+        e.scaled(10, (b -> {
+            Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, b.fin());
+            Lines.stroke(b.fout() * 3 + 0.2F);
+            Lines.circle(b.x, b.y, b.fin() * 50);
+        }));
+
+        Draw.color(DsItems.spaceCrystalColor);
+
+        for (var i : Mathf.signs) {
+            Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
+            Drawf.tri(e.x, e.y, 13 * e.fout(), 50, e.rotation + 20 * i);
+        }
     });
 }

@@ -14,6 +14,8 @@ public class DimensionShardMod extends Mod {
         Log.info("Loading Dimension Shard mod.");
         DsGlobal.mod = this;
 
+        DsOverride.load();
+
         DsBullets.load();
         DsBlocks.load();
 
