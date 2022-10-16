@@ -1,7 +1,6 @@
 package dimensionshard;
 
 import arc.graphics.Color;
-import mindustry.content.Fx;
 import mindustry.content.StatusEffects;
 import mindustry.type.StatusEffect;
 
@@ -28,7 +27,7 @@ public class DsStatusEffects {
 
     /** 无法移动效果 */
     public static StatusEffect darkLightedEffect = new StatusEffect("dark-lighted") {{
-        this.speedMultiplier = 0;
-        this.effect = Fx.none;
+        this.speedMultiplier = 0.1F;
+        this.effect = DsFx.fxTimeFreezing;
     }};
 }

@@ -31,14 +31,11 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
     protected Vec2 tr2 = new Vec2();
 
     public float dragRadius = 9 * 8;
-    public float dragPower = 3.8F;
-    public float lightningSpacing = 45;
-    public float lightningLength = 6;
-    public float lightningLengthRand = 12;
-    public float lightningDelay = 1.1F;
-    public float lightningAngleRand = 35;
-    public float lightningDamage = 50;
-    public Color lightningColor = Color.valueOf("a108f5");
+    public float dragPower = 64F;
+    public float lightningSpacing;
+    public float lightningDelay;
+    public float lightningAngleRand;
+    public Color lightningColor;
 
     public DarkLightBulletType() {
         this.shake = 1.5F;
@@ -48,11 +45,18 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
         this.smokeEffect = Fx.none;
         this.trailEffect = Fx.none;
         this.despawnEffect = Fx.none;
+        this.damage = 120;
         // this.status = StatusEffects.sapped;
         this.statusDuration = 120;
         this.length = 42 * 8;
         this.width = 12;
         this.incendChance = 0;
+        this.lightningSpacing = 45;
+        this.lightningLength = 6;
+        this.lightningLengthRand = 12;
+        this.lightningDelay = 1.1F;
+        this.lightningAngleRand = 35;
+        this.lightningColor = Color.valueOf("a108f5");
         this.colors = new Color[]{
             DsColors.laserColor1,
             DsColors.laserColor2,
@@ -109,17 +113,17 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
                 // drag to the line
                 var power = this.dragPowerPercent(absY, this.dragRadius);
                 var angle = y > 0 ? rotation - 90 : rotation + 90;
-                Tmp.v3.trns(angle, 80).scl(this.dragPower * power);
-                var realPower = Tmp.v3.len() / u.mass();
+                Tmp.v3.trns(angle, Time.delta * this.dragPower * power * Math.max(1, Mathf.log2(u.mass())));
+                var realPower = Tmp.v3.len();
                 // print('pre power: ' + Tmp.v3.len() + ', real power: ' + realPower);
                 // If too close, stop it moving
-                if (absY < 3 && realPower > u.type.speed) {
-                    // print('stop moving: ' + u + ', u.type.speed: ' + u.type.speed + ', realPower: ' + realPower);
-                    u.vel.limit(0);
-                    u.apply(DsStatusEffects.darkLightedEffect, 3);
+                if (absY < 3 && realPower > u.type.speed * u.mass()) {
+                    // System.out.println("stop moving: " + u + ", u.type.speed: " + u.type.speed + ", realPower: " +
+                    // realPower);
+                    u.apply(DsStatusEffects.darkLightedEffect, 6);
+                    u.vel.limit(1);
                 } else {
                     u.impulse(Tmp.v3);
-                    u.vel.limit(absY);
                 }
             })));
         }

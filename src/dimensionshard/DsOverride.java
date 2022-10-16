@@ -27,7 +27,7 @@ public class DsOverride {
 
         // region Dimension Shard Ammo
 
-        ((ItemTurret) Blocks.scatter).ammo(
+        ((ItemTurret) Blocks.scatter).ammoTypes.put(
             DsItems.dimensionShard, new FlakBulletType(4.2F, 12F) {{
                 lifetime = 70;
                 ammoMultiplier = 2;
@@ -44,7 +44,7 @@ public class DsOverride {
             }}
         );
 
-        ((ItemTurret) Blocks.cyclone).ammo(
+        ((ItemTurret) Blocks.cyclone).ammoTypes.put(
             DsItems.dimensionShard, new FlakBulletType(4.2F, 15F) {{
                 lifetime = 60;
                 ammoMultiplier = 2;
@@ -62,7 +62,7 @@ public class DsOverride {
             }}
         );
 
-        ((ItemTurret) Blocks.ripple).ammo(
+        ((ItemTurret) Blocks.ripple).ammoTypes.put(
             DsItems.dimensionShard, new ArtilleryBulletType(2, 20F) {{
                 lifetime = 80;
                 ammoMultiplier = 2;
@@ -83,8 +83,8 @@ public class DsOverride {
         // region Hard Thorium Alloy Ammo
 
         BasicBulletType salvoThorium = (BasicBulletType) ((ItemTurret) Blocks.salvo).ammoTypes.get(Items.thorium);
-        ((ItemTurret) Blocks.salvo).ammo(
-            DsItems.hardThoriumAlloy, new ArtilleryBulletType(4, 44) {{
+        ((ItemTurret) Blocks.salvo).ammoTypes.put(
+            DsItems.hardThoriumAlloy, new BasicBulletType(4, 44) {{
                 lifetime = salvoThorium.lifetime;
                 ammoMultiplier = 4;
                 width = salvoThorium.width;
@@ -97,8 +97,8 @@ public class DsOverride {
         );
 
         BasicBulletType spectreThorium = (BasicBulletType) ((ItemTurret) Blocks.spectre).ammoTypes.get(Items.thorium);
-        ((ItemTurret) Blocks.spectre).ammo(
-            DsItems.hardThoriumAlloy, new ArtilleryBulletType(8, 125) {{
+        ((ItemTurret) Blocks.spectre).ammoTypes.put(
+            DsItems.hardThoriumAlloy, new BasicBulletType(8, 125) {{
                 lifetime = spectreThorium.lifetime;
                 knockback = spectreThorium.knockback;
                 shootEffect = spectreThorium.shootEffect;
@@ -115,7 +115,7 @@ public class DsOverride {
         // endregion Hard Thorium Alloy Ammo
 
         // region Space Crystal Ammo
-        ((ItemTurret) Blocks.foreshadow).ammo(
+        ((ItemTurret) Blocks.foreshadow).ammoTypes.put(
             DsItems.spaceCrystal, new PointBulletType() {
                 {
                     shootEffect = DsFx.fxForeshadowSpaceShoot;
@@ -137,9 +137,9 @@ public class DsOverride {
                 }
 
                 @Override
-                public void despawned(Bullet b) {
+                public void removed(Bullet b) {
                     DsBullets.blackHoleDamaged.create(b, b.x, b.y, 0);
-                    super.despawned(b);
+                    super.removed(b);
                 }
             }
         );
@@ -149,6 +149,7 @@ public class DsOverride {
         ((LiquidTurret) Blocks.wave).ammoTypes.put(DsItems.timeFlow, new LiquidBulletType(DsItems.timeFlow) {{
             knockback = 1;
             drag = 0.03F;
+            status = DsStatusEffects.timeFreezingEffect;
         }});
 
         ((LiquidTurret) Blocks.tsunami).ammoTypes.put(DsItems.timeFlow, new LiquidBulletType(DsItems.timeFlow) {{
@@ -160,12 +161,14 @@ public class DsOverride {
             ammoMultiplier = 0.4F;
             statusDuration = 60 * 4;
             damage = 0.4F;
+            status = DsStatusEffects.timeFreezingEffect;
         }});
 
         ((LiquidTurret) Blocks.wave).ammoTypes.put(DsItems.ionLiquid, new LiquidBulletType(DsItems.ionLiquid) {{
             knockback = 1;
             damage = 20;
             drag = 0.03F;
+            status = DsStatusEffects.ionBurningEffect;
         }});
         ((LiquidTurret) Blocks.tsunami).ammoTypes.put(DsItems.ionLiquid, new LiquidBulletType(DsItems.ionLiquid) {{
             lifetime = 49;
@@ -176,6 +179,7 @@ public class DsOverride {
             ammoMultiplier = 0.4F;
             statusDuration = 60 * 4;
             damage = 25F;
+            status = DsStatusEffects.ionBurningEffect;
         }});
         // endregion Liquid Ammo
     }

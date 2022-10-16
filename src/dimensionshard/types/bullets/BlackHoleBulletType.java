@@ -9,6 +9,7 @@ import arc.math.geom.Rect;
 import arc.util.Time;
 import arc.util.Tmp;
 import dimensionshard.DsItems;
+import dimensionshard.DsStatusEffects;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
 import mindustry.entities.Units;
@@ -25,6 +26,8 @@ public class BlackHoleBulletType extends BasicBulletType {
 
     /** 隔几个 tick 触发一次伤害 */
     public int damageTicks = 5;
+    /** 吸力 */
+    public float dragPower = 10F;
 
     public BlackHoleBulletType() {
         lifetime = 60;
@@ -90,10 +93,17 @@ public class BlackHoleBulletType extends BasicBulletType {
                 return;
             }
             float p = percent(x, y, unit.getX(), unit.getY(), this.splashDamageRadius);
+            Tmp.v3.set(unit).sub(x, y).nor()
+                .scl(this.knockback * p * this.dragPower * Time.delta * Math.max(1, Mathf.log2(unit.mass())));
 
-            // drag
-            unit.impulse(Tmp.v3.set(unit).sub(x, y).nor().scl(this.knockback * p * 80 * Time.delta));
-            unit.vel.limit(3);
+            // cannot move if at center
+            if (p > 0.97 && Tmp.v3.len() >= unit.type.speed * unit.mass()) {
+                unit.apply(DsStatusEffects.darkLightedEffect, 3);
+            } else {
+                // drag
+                unit.impulse(Tmp.v3);
+                unit.vel.limit(3);
+            }
         });
 
         // Damage per 5 ticks (damage 12 times expected, full damage once expected)
