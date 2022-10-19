@@ -1,9 +1,12 @@
 package dimensionshard;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
+import arc.util.Strings;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
 import dimensionshard.types.blocks.ArmoredWall;
@@ -16,6 +19,7 @@ import dimensionshard.types.bullets.DirectLightning;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.LightningBulletType;
@@ -25,16 +29,28 @@ import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Layer;
+import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
+import mindustry.ui.Bar;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.liquid.ArmoredConduit;
 import mindustry.world.blocks.liquid.LiquidRouter;
+import mindustry.world.blocks.power.Battery;
+import mindustry.world.blocks.power.ConsumeGenerator;
+import mindustry.world.blocks.production.Drill;
+import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.production.Pump;
+import mindustry.world.consumers.ConsumeItemRadioactive;
+import mindustry.world.draw.DrawDefault;
+import mindustry.world.draw.DrawFlame;
+import mindustry.world.draw.DrawMulti;
+import mindustry.world.draw.DrawWarmupRegion;
 import mindustry.world.meta.BuildVisibility;
 
 /**
@@ -69,6 +85,16 @@ public final class DsBlocks {
     public static Wall shardWallLarge;
     public static ArmoredWall hardThoriumAlloyWall;
     public static ArmoredWall hardThoriumAlloyWallLarge;
+
+    // Drill
+    public static Drill hardThoriumDrill;
+
+    // Power
+    public static Battery dimensionCrystalBattery;
+    public static ConsumeGenerator timeCompressedRtg;
+
+    // Factory
+    public static GenericCrafter shardReceiver;
 
     // endregion Dimension Shard technology
     ;
@@ -588,6 +614,233 @@ public final class DsBlocks {
             }
         };
         // endregion Defence
+
+        // region Drill
+
+        hardThoriumDrill = new Drill("hard-thorium-drill") {
+            {
+                buildVisibility = BuildVisibility.shown;
+                size = 4;
+                health = 800;
+                liquidCapacity = 300;
+                requirements = ItemStack.with(
+                    Items.copper, 200,
+                    Items.graphite, 140,
+                    Items.titanium, 100,
+                    DsItems.hardThoriumAlloy, 120,
+                    DsItems.timeCrystal, 50
+                );
+                category = Category.production;
+
+                drillTime = 100;
+                drawRim = true;
+                drawMineItem = true;
+                hasPower = true;
+                canOverdrive = false;
+                tier = 9;
+                updateEffect = Fx.pulverizeRed;
+                updateEffectChance = 0.01F;
+                drillEffect = Fx.mine;
+                rotateSpeed = 4;
+                warmupSpeed = 0.01F;
+                heatColor = Color.valueOf("9a48ff");
+                hardnessDrillMultiplier = 25;
+                liquidBoostIntensity = 3;
+                consumePower(8F);
+                consumeLiquid(Liquids.water, 2F).boost();
+            }
+
+            /** 光圈 */
+            public TextureRegion rotatorLightRegion;
+            /** 色 */
+            @SuppressWarnings("FieldMayBeFinal")
+            public Color lightColor = Color.valueOf("9a48ff");
+
+            @Override
+            public void load() {
+                super.load();
+                rotatorLightRegion = Lib.loadRegion("hard-thorium-drill-rotator-light");
+                rotatorRegion = Lib.loadRegion("hard-thorium-drill-rotator");
+            }
+
+            @Override
+            public void setBars() {
+                super.setBars();
+
+                removeBar("drillspeed");
+                addBar("drillspeed", (DrillBuild e) -> new Bar(() ->
+                    Core.bundle.format("bar.drillspeed", Strings.fixed(e.lastDrillSpeed * 60, 2)),
+                    () -> Pal.ammo,
+                    () -> e.warmup
+                ));
+            }
+
+            {
+                this.buildType = () -> new DrillBuild() {
+                    /** 圈圈 */
+                    public float lightup = 0F;
+
+                    @Override
+                    public void updateTile() {
+                        if (timer(timerDump, dumpTime)) {
+                            dump(dominantItem != null && items.has(dominantItem) ? dominantItem : null);
+                        }
+
+                        if (dominantItem == null) {
+                            return;
+                        }
+
+                        timeDrilled += warmup * delta();
+
+                        float delay = getDrillTime(dominantItem);
+
+                        if (items.total() < itemCapacity && dominantItems > 0 && efficiency > 0) {
+                            float speed = Mathf.lerp(1f, liquidBoostIntensity, optionalEfficiency) * efficiency;
+
+                            lastDrillSpeed = (speed * dominantItems * warmup) / delay;
+                            warmup = Mathf.approachDelta(warmup, speed, warmupSpeed);
+                            progress += delta() * dominantItems * speed * warmup;
+
+                            if (Mathf.chanceDelta(updateEffectChance * warmup)) {
+                                updateEffect.at(x + Mathf.range(size * 2f), y + Mathf.range(size * 2f));
+                            }
+
+                            // purple light
+                            if (this.optionalEfficiency > 0) {
+                                this.lightup = Mathf.lerpDelta(this.lightup, 1, warmupSpeed);
+                            } else {
+                                this.lightup = Mathf.lerpDelta(this.lightup, 0, warmupSpeed);
+                            }
+                        } else {
+                            lastDrillSpeed = 0f;
+                            warmup = Mathf.approachDelta(warmup, 0f, warmupSpeed);
+                            return;
+                        }
+
+                        if (dominantItems > 0 && progress >= delay && items.total() < itemCapacity) {
+                            offload(dominantItem);
+
+                            progress %= delay;
+
+                            if (wasVisible) {
+                                drillEffect.at(x + Mathf.range(drillEffectRnd), y + Mathf.range(drillEffectRnd),
+                                    dominantItem.color);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void draw() {
+                        super.draw();
+
+                        Draw.z(Layer.effect);
+                        Draw.color(lightColor);
+                        Draw.alpha(this.lightup * 0.9F);
+                        Draw.rect(rotatorLightRegion, this.x, this.y, this.timeDrilled * rotateSpeed);
+                        Draw.reset();
+                    }
+                };
+            }
+
+        };
+
+        // endregion Drill
+
+        // region Power
+        dimensionCrystalBattery = new Battery("dimension-crystal-battery") {
+            {
+                buildVisibility = BuildVisibility.shown;
+                size = 1;
+                requirements = ItemStack.with(
+                    Items.lead, 120,
+                    Items.silicon, 60,
+                    Items.titanium, 60,
+                    DsItems.spaceCrystal, 80,
+                    DsItems.timeCrystal, 10
+                );
+                category = Category.power;
+                health = 180;
+                final float largeBatteryCapacity = Blocks.batteryLarge.consPower.capacity;
+                consumePowerBuffered(largeBatteryCapacity * 3);
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+
+        timeCompressedRtg = new ConsumeGenerator("time-compressed-rtg") {{
+            final int rtgMultipler = 12;
+            final int rtgItemMultipler = 10;
+            requirements(Category.power, ItemStack.with(
+                Items.lead, 100 * rtgItemMultipler,
+                Items.silicon, 75 * rtgItemMultipler,
+                Items.phaseFabric, 25 * rtgItemMultipler,
+                Items.plastanium, 75 * rtgItemMultipler,
+                DsItems.dimensionShard, 50 * rtgItemMultipler / 2,
+                DsItems.spaceCrystal, 120,
+                DsItems.timeCrystal, 180,
+                DsItems.hardThoriumAlloy, 50 * rtgItemMultipler / 2
+            ));
+            size = 3;
+            canOverdrive = false;
+            powerProduction = ((ConsumeGenerator) Blocks.rtgGenerator).powerProduction * rtgMultipler;
+            itemDuration = ((ConsumeGenerator) Blocks.rtgGenerator).itemDuration / (rtgMultipler - 1);
+            drawer = new DrawMulti(new DrawDefault(), new DrawWarmupRegion() {{
+                color = Color.valueOf("ffc4b7");
+            }});
+
+            consume(new ConsumeItemRadioactive());
+        }};
+
+        // endregion Power
+
+        // region Factory
+
+        shardReceiver = new GenericCrafter("shard-receiver") {
+            {
+
+                size = 4;
+                // health = 600;
+                requirements = ItemStack.with(
+                    Items.metaglass, 160,
+                    Items.silicon, 60,
+                    Items.thorium, 120,
+                    Items.phaseFabric, 150,
+                    Items.surgeAlloy, 30
+                );
+                buildVisibility = BuildVisibility.shown;
+                category = Category.crafting;
+
+                craftEffect = Fx.smeltsmoke;
+                outputItem = new ItemStack(DsItems.dimensionShard, 1);
+                craftTime = 300;
+                hasPower = true;
+                itemCapacity = 10;
+                consumePower(7);
+                drawer = new DrawMulti(new DrawDefault(), new DrawFlame(DsColors.dimensionShardColor));
+            }
+
+            @Override
+            public void setBars() {
+                super.setBars();
+                addBar("progress",
+                    (GenericCrafter.GenericCrafterBuild e) -> new Bar("bar.progress", DsColors.dimensionShardColor,
+                        e::progress));
+            }
+        };
+
+        // endregion Factory
 
         // endregion Dimension Shard technology
     }

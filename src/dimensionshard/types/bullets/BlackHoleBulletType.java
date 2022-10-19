@@ -7,7 +7,7 @@ import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.util.Time;
-import dimensionshard.DsItems;
+import dimensionshard.DsColors;
 import dimensionshard.libs.AttractUtils;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
@@ -53,12 +53,12 @@ public class BlackHoleBulletType extends BasicBulletType {
     public void draw(Bullet b) {
         float fin = b.time / this.lifetime;
         float fout = 1 - fin;
-        Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, fout * 0.8F + 0.2F);
+        Draw.color(DsColors.spaceCrystalColor, DsColors.spaceCrystalColorLight, fout * 0.8F + 0.2F);
         Draw.alpha(0.4F * fin + 0.6F);
         Lines.stroke(fin * 3);
         Lines.circle(b.x, b.y, Mathf.sin(fout) * splashDamageRadius);
 
-        Draw.color(DsItems.spaceCrystalColor);
+        Draw.color(DsColors.spaceCrystalColor);
         Draw.alpha(Mathf.clamp(9 * fout, 0, 1));
         Fill.circle(b.x, b.y, (Interp.pow2Out.apply(fout) + 0.2F) * splashDamageRadius / 10F);
     }

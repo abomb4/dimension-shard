@@ -39,8 +39,8 @@ public class DsOverride {
                 splashDamageRadius = 26;
                 knockback = 0.6F;
                 reloadMultiplier = 0.6F;
-                frontColor = DsItems.dimensionShardColorLight;
-                backColor = DsItems.dimensionShardColor;
+                frontColor = DsColors.dimensionShardColorLight;
+                backColor = DsColors.dimensionShardColor;
             }}
         );
 
@@ -56,8 +56,8 @@ public class DsOverride {
                 splashDamageRadius = 34;
                 knockback = 0.6F;
                 reloadMultiplier = 0.8F;
-                frontColor = DsItems.dimensionShardColorLight;
-                backColor = DsItems.dimensionShardColor;
+                frontColor = DsColors.dimensionShardColorLight;
+                backColor = DsColors.dimensionShardColor;
                 collidesGround = true;
             }}
         );
@@ -72,8 +72,8 @@ public class DsOverride {
                 splashDamageRadius = 34;
                 knockback = 2;
                 reloadMultiplier = 0.8F;
-                frontColor = DsItems.dimensionShardColorLight;
-                backColor = DsItems.dimensionShardColor;
+                frontColor = DsColors.dimensionShardColorLight;
+                backColor = DsColors.dimensionShardColor;
                 collidesTiles = false;
             }}
         );
@@ -89,8 +89,8 @@ public class DsOverride {
                 ammoMultiplier = 4;
                 width = salvoThorium.width;
                 height = salvoThorium.height * 1.4F;
-                frontColor = salvoThorium.frontColor.cpy().lerp(DsItems.hardThoriumAlloyColor, 0.5F);
-                backColor = salvoThorium.backColor.cpy().lerp(DsItems.hardThoriumAlloyColorLight, 0.5F);
+                frontColor = salvoThorium.frontColor.cpy().lerp(DsColors.hardThoriumAlloyColor, 0.5F);
+                backColor = salvoThorium.backColor.cpy().lerp(DsColors.hardThoriumAlloyColorLight, 0.5F);
                 pierceCap = 2;
                 pierceBuilding = true;
             }}
@@ -104,8 +104,8 @@ public class DsOverride {
                 shootEffect = spectreThorium.shootEffect;
                 width = spectreThorium.width;
                 height = spectreThorium.height * 1.4F;
-                frontColor = spectreThorium.frontColor.cpy().lerp(DsItems.hardThoriumAlloyColor, 0.5F);
-                backColor = spectreThorium.backColor.cpy().lerp(DsItems.hardThoriumAlloyColorLight, 0.5F);
+                frontColor = spectreThorium.frontColor.cpy().lerp(DsColors.hardThoriumAlloyColor, 0.5F);
+                backColor = spectreThorium.backColor.cpy().lerp(DsColors.hardThoriumAlloyColorLight, 0.5F);
                 ammoMultiplier = 2;
                 pierceCap = 4;
                 pierceBuilding = true;

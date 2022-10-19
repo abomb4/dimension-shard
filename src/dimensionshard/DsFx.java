@@ -18,7 +18,7 @@ public final class DsFx {
 
     /** 次元碎片破片武器爆炸 */
     public static final Effect fxDimensionShardExplosion = new Effect(24, e -> {
-        Draw.color(DsItems.dimensionShardColorLight);
+        Draw.color(DsColors.dimensionShardColorLight);
 
         e.scaled(7, i -> {
             Lines.stroke(3 * i.fout());
@@ -31,7 +31,7 @@ public final class DsFx {
             Fill.circle(e.x + x, e.y + y, e.fout() * 4 + 0.5F);
         });
 
-        Draw.color(DsItems.dimensionShardColor);
+        Draw.color(DsColors.dimensionShardColor);
         Lines.stroke(1 * e.fout());
 
         Angles.randLenVectors(e.id + 1, 4, 1 + 25 * e.finpow(), (x, y) -> {
@@ -97,14 +97,15 @@ public final class DsFx {
             Lines.circle(e.x, e.y, 3 + i.fin() * 60);
         }));
 
-        Draw.color(DsItems.spaceCrystalColor);
+        Draw.color(DsColors.spaceCrystalColor);
 
         Angles.randLenVectors(e.id, 6, 2 + 19 * e.finpow(), (x, y) -> {
             Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5F);
             Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
         });
 
-        Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, DsItems.spaceCrystalColorLight, e.fin());
+        Draw.color(DsColors.spaceCrystalColor, DsColors.spaceCrystalColorLight, DsColors.spaceCrystalColorLight,
+            e.fin());
         Lines.stroke(1.5F * e.fout());
 
         Angles.randLenVectors(e.id + 1, 8, 1 + 46 * e.finpow(), (x, y) -> {
@@ -119,14 +120,15 @@ public final class DsFx {
             Lines.circle(e.x, e.y, 3 + i.fin() * 60);
         }));
 
-        Draw.color(DsItems.spaceCrystalColor);
+        Draw.color(DsColors.spaceCrystalColor);
 
         Angles.randLenVectors(e.id, 6, 2 + 119 * e.finpow(), (x, y) -> {
             Fill.circle(e.x + x, e.y + y, e.fout() * 5 + 0.5F);
             Fill.circle(e.x + x / 2, e.y + y / 2, e.fout() * 2);
         });
 
-        Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, DsItems.spaceCrystalColorLight, e.fin());
+        Draw.color(DsColors.spaceCrystalColor, DsColors.spaceCrystalColorLight, DsColors.spaceCrystalColorLight,
+            e.fin());
         Lines.stroke(1.5F * e.fout());
 
         Angles.randLenVectors(e.id + 1, 8, 1 + 146 * e.finpow(), (x, y) -> {
@@ -167,7 +169,7 @@ public final class DsFx {
     /** 呃罩打空间结晶射击轨道 */
     public static final Effect fxForeshadowSpaceShootTrial = new Effect(24, e -> {
         for (var i = 0; i < 2; i++) {
-            Draw.color(i == 0 ? DsItems.spaceCrystalColor : DsItems.spaceCrystalColorLight);
+            Draw.color(i == 0 ? DsColors.spaceCrystalColor : DsColors.spaceCrystalColorLight);
 
             float m = i == 0 ? 1 : 0.5F;
 
@@ -181,12 +183,12 @@ public final class DsFx {
     /** 呃罩打空间结晶 */
     public static final Effect fxForeshadowSpaceShoot = new Effect(24, e -> {
         e.scaled(10, (b -> {
-            Draw.color(DsItems.spaceCrystalColor, DsItems.spaceCrystalColorLight, b.fin());
+            Draw.color(DsColors.spaceCrystalColor, DsColors.spaceCrystalColorLight, b.fin());
             Lines.stroke(b.fout() * 3 + 0.2F);
             Lines.circle(b.x, b.y, b.fin() * 50);
         }));
 
-        Draw.color(DsItems.spaceCrystalColor);
+        Draw.color(DsColors.spaceCrystalColor);
 
         for (var i : Mathf.signs) {
             Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
