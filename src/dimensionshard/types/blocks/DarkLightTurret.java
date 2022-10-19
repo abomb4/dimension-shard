@@ -51,7 +51,6 @@ public class DarkLightTurret extends PowerTurret {
         this.canOverdrive = false;
         this.chargeEffects = 0;
         this.chargeEffect = DsFx.fxDarkLightCharge;
-        this.chargeSound = Lib.loadSound("dark-light-charge");
         this.recoil = 2;
         this.reload = 60 * 7.5F;
         this.cooldownTime = 0.04F;
@@ -67,8 +66,6 @@ public class DarkLightTurret extends PowerTurret {
 
         this.size = 5;
         this.health = 6000;
-        this.loopSound = Lib.loadSound("dark-light-loop");
-        this.shootSound = Lib.loadSound("dark-light-shoot");
         this.loopSoundVolume = 1;
         this.consumeCoolant(1).update(false);
         this.coolantMultiplier = 0.5F;
@@ -85,6 +82,14 @@ public class DarkLightTurret extends PowerTurret {
             DsItems.hardThoriumAlloy, 850,
             DsItems.dimensionAlloy, 375
         );
+    }
+
+    @Override
+    public void load() {
+        super.load();
+        this.chargeSound = Lib.loadSound("dark-light-charge");
+        this.loopSound = Lib.loadSound("dark-light-loop");
+        this.shootSound = Lib.loadSound("dark-light-shoot");
     }
 
     @Override

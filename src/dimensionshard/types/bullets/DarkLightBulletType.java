@@ -7,10 +7,10 @@ import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.util.Time;
-import arc.util.Tmp;
 import dimensionshard.DsColors;
 import dimensionshard.DsFx;
 import dimensionshard.DsStatusEffects;
+import dimensionshard.libs.AttractUtils;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
 import mindustry.entities.Effect;
@@ -30,8 +30,8 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
     protected Vec2 tr = new Vec2();
     protected Vec2 tr2 = new Vec2();
 
-    public float dragRadius = 9 * 8;
-    public float dragPower = 64F;
+    public float dragRadius = 11 * 8;
+    public float dragPower = 200F;
     public float lightningSpacing;
     public float lightningDelay;
     public float lightningAngleRand;
@@ -101,31 +101,36 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
             this.rect.width += expand * 2;
             this.rect.height += expand * 2;
 
-            Units.nearbyEnemies(b.team, this.rect, ((u -> {
-                var rotation = b.rotation();
-                this.rotate(b.x, b.y, u.x, u.y, rotation);
-                var x = this.tr2.x;
-                var y = this.tr2.y;
-                var absY = Math.abs(y);
-                if (x < 0 || x > length || absY > this.dragRadius) {
-                    return;
-                }
-                // drag to the line
-                var power = this.dragPowerPercent(absY, this.dragRadius);
-                var angle = y > 0 ? rotation - 90 : rotation + 90;
-                Tmp.v3.trns(angle, Time.delta * this.dragPower * power * Math.max(1, Mathf.log2(u.mass())));
-                var realPower = Tmp.v3.len();
-                // print('pre power: ' + Tmp.v3.len() + ', real power: ' + realPower);
-                // If too close, stop it moving
-                if (absY < 3 && realPower > u.type.speed * u.mass()) {
-                    // System.out.println("stop moving: " + u + ", u.type.speed: " + u.type.speed + ", realPower: " +
-                    // realPower);
+            Units.nearbyEnemies(b.team, this.rect, u -> {
+                final float dst =
+                    AttractUtils.attractUnitToLine(u, b.x, b.y, b.rotation(), length, this.dragRadius, this.dragPower);
+                if (dst < 3 && this.dragPower > AttractUtils.enginePower(u)) {
                     u.apply(DsStatusEffects.darkLightedEffect, 6);
-                    u.vel.limit(1);
-                } else {
-                    u.impulse(Tmp.v3);
                 }
-            })));
+                // float rotation = b.rotation();
+                // this.rotate(b.x, b.y, u.x, u.y, rotation);
+                // var x = this.tr2.x;
+                // var y = this.tr2.y;
+                // var absY = Math.abs(y);
+                // if (x < 0 || x > length || absY > this.dragRadius) {
+                //     return;
+                // }
+                // // drag to the line
+                // var power = this.dragPowerPercent(absY, this.dragRadius);
+                // var angle = y > 0 ? rotation - 90 : rotation + 90;
+                // Tmp.v3.trns(angle, Time.delta * this.dragPower * power * Math.max(1, Mathf.log2(u.mass())));
+                // var realPower = Tmp.v3.len();
+                // // print('pre power: ' + Tmp.v3.len() + ', real power: ' + realPower);
+                // // If too close, stop it moving
+                // if (absY < 3 && realPower > u.type.speed * u.mass()) {
+                //     // System.out.println("stop moving: " + u + ", u.type.speed: " + u.type.speed + ", realPower: " +
+                //     // realPower);
+                //     u.apply(DsStatusEffects.darkLightedEffect, 6);
+                //     u.vel.limit(1);
+                // } else {
+                //     u.impulse(Tmp.v3);
+                // }
+            });
         }
 
         if (b.timer.get(2, 5)) {

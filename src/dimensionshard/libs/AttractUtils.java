@@ -1,6 +1,8 @@
 package dimensionshard.libs;
 
-import arc.struct.IntFloatMap;
+import arc.math.Mathf;
+import arc.math.geom.Vec2;
+import arc.util.Time;
 import mindustry.gen.Unit;
 
 /**
@@ -8,10 +10,20 @@ import mindustry.gen.Unit;
  *
  * @author abomb4 2022-10-16
  */
-public class DraggingUtils {
+public class AttractUtils {
 
-    public static IntFloatMap enginePowerMap = new IntFloatMap();
+    /** 临时变量，在单线程环境正常工作 */
+    private static final Vec2 tmp = new Vec2();
 
+    /** 引擎力量 100 视为一个标准单位 */
+    public static final float STANDARD_ENGINE_POWER = 100;
+
+    /**
+     * 获取某单位的引擎功率
+     *
+     * @param unit 单位
+     * @return 引擎力量
+     */
     public static float enginePower(Unit unit) {
         // dagger, 		mass: 201.06194, 	acc: 0.5, 	enginePower: 100.53097
         // mace, 		mass: 314.15927, 	acc: 0.5, 	enginePower: 157.07964
@@ -84,7 +96,112 @@ public class DraggingUtils {
         // emanate, 	mass: 452.38934, 	acc: 0.08, 	enginePower: 36.191147
         // manifold, 	mass: 380.13272, 	acc: 0.1, 	enginePower: 38.01327
 
+        return unit.mass() * unit.type.accel;
+    }
 
-        return enginePowerMap.get(
+    /**
+     * 获取将单位向某个点进行吸引的引力百分比
+     *
+     * @param fromX        被吸引 x
+     * @param fromY        被吸引 y
+     * @param toX          吸引中心 x
+     * @param toY          吸引中心 y
+     * @param affectRadius 吸引半径
+     */
+    public static float attractPowerPercent(float fromX, float fromY, float toX, float toY, float affectRadius) {
+        float dst = dst(fromX, fromY, toX, toY);
+        return attractPowerPercent(dst, affectRadius);
+    }
+
+
+    /**
+     * 获取将单位向某个点进行吸引的引力百分比
+     *
+     * @param dst          目标距离
+     * @param affectRadius 吸引半径
+     */
+    public static float attractPowerPercent(float dst, float affectRadius) {
+        if (dst > affectRadius) {
+            return 0;
+        }
+        return 1 - dst / affectRadius;
+    }
+
+    /**
+     * 距离
+     *
+     * @param fromX x
+     * @param fromY y
+     * @param toX   x
+     * @param toY   y
+     * @return dst
+     */
+    private static float dst(float fromX, float fromY, float toX, float toY) {
+        return Mathf.dst(toX, toY, fromX, fromY);
+    }
+
+    /**
+     * 将某单位向某个点牵引
+     *
+     * @param unit            单位
+     * @param toX             牵引目标 x
+     * @param toY             牵引目标 y
+     * @param affectRadius    引力半径
+     * @param maxAttractPower 最大牵引力量
+     */
+    public static void attractUnit(Unit unit, float toX, float toY, float affectRadius, float maxAttractPower) {
+        float dst = dst(unit.x, unit.y, toX, toY);
+        float powerPercent = attractPowerPercent(dst, affectRadius);
+
+        tmp.set(toX, toY)
+            .sub(unit)
+            .nor()
+            .scl(maxAttractPower * powerPercent * Time.delta * Mathf.log2(unit.type.hitSize));
+        unit.impulse(tmp);
+        unit.vel.limit(Math.max(dst / 2, unit.type.speed));
+        // unit.vel.limit(len * 2);
+    }
+
+    /**
+     * 将某单位向一条线的方向牵引
+     *
+     * <pre>
+     *   + 0 1 2 sX
+     *   0          enemy
+     *   1            |
+     *   2            v
+     *  sY        X - - - - -> angle 0, length 5
+     *   2              ^
+     *   3              |
+     *   4            enemy
+     * </pre>
+     *
+     * @param unit            单位
+     * @param shotX           发射点 x
+     * @param shotY           发射点 y
+     * @param rotation        发射角度
+     * @param length          线长度
+     * @param affectRadius    线的左右影响范围
+     * @param maxAttractPower 最大牵引力量
+     * @return distance
+     */
+    public static float attractUnitToLine(Unit unit, float shotX, float shotY, float rotation, float length,
+                                          float affectRadius, float maxAttractPower) {
+        tmp.set(unit.x, unit.y).sub(shotX, shotY).rotate(-rotation);
+        float x = tmp.x;
+        float y = tmp.y;
+
+        float dst = Math.abs(y);
+        if (x < 0 || x > length || dst > affectRadius) {
+            return dst;
+        }
+        // drag to the line
+        float powerPercent = attractPowerPercent(dst, affectRadius);
+        var angle = y > 0 ? rotation - 90 : rotation + 90;
+
+        tmp.trns(angle, maxAttractPower * powerPercent * Time.delta * Mathf.log2(unit.type.hitSize));
+        unit.impulse(tmp);
+        unit.vel.limit(Math.max(dst / 2, unit.type.speed));
+        return dst;
     }
 }

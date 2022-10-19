@@ -7,9 +7,8 @@ import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.util.Time;
-import arc.util.Tmp;
 import dimensionshard.DsItems;
-import dimensionshard.DsStatusEffects;
+import dimensionshard.libs.AttractUtils;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
 import mindustry.entities.Units;
@@ -27,11 +26,11 @@ public class BlackHoleBulletType extends BasicBulletType {
     /** 隔几个 tick 触发一次伤害 */
     public int damageTicks = 5;
     /** 吸力 */
-    public float dragPower = 10F;
+    public float dragPower = 20F;
 
     public BlackHoleBulletType() {
         lifetime = 60;
-        knockback = -0.55F;
+        knockback = 0;
         splashDamage = 15;
         splashDamageRadius = 80;
         shootEffect = Fx.none;
@@ -48,22 +47,6 @@ public class BlackHoleBulletType extends BasicBulletType {
         hittable = false;
         keepVelocity = false;
         reflectable = false;
-    }
-
-    /**
-     * 计算吸力百分比
-     *
-     * @param centerX 吸收中心 x
-     * @param centerY 吸收中心 y
-     * @param unitX   单位所在 x
-     * @param unitY   单位所在 y
-     * @param radius  吸收能力半径
-     * @return 吸力百分比
-     */
-    public float percent(float centerX, float centerY, float unitX, float unitY, float radius) {
-        float dst = Mathf.dst(centerX, centerY, unitX, unitY);
-        float falloff = 0.4F;
-        return Mathf.lerp(1 - dst / radius, 1, falloff);
     }
 
     @Override
@@ -89,21 +72,7 @@ public class BlackHoleBulletType extends BasicBulletType {
         rect.setSize(this.splashDamageRadius * 2).setCenter(x, y);
 
         Units.nearbyEnemies(team, rect, unit -> {
-            if (unit.team == team || !unit.within(x, y, this.splashDamageRadius)) {
-                return;
-            }
-            float p = percent(x, y, unit.getX(), unit.getY(), this.splashDamageRadius);
-            Tmp.v3.set(unit).sub(x, y).nor()
-                .scl(this.knockback * p * this.dragPower * Time.delta * Math.max(1, Mathf.log2(unit.mass())));
-
-            // cannot move if at center
-            if (p > 0.97 && Tmp.v3.len() >= unit.type.speed * unit.mass()) {
-                unit.apply(DsStatusEffects.darkLightedEffect, 3);
-            } else {
-                // drag
-                unit.impulse(Tmp.v3);
-                unit.vel.limit(3);
-            }
+            AttractUtils.attractUnit(unit, x, y, this.splashDamageRadius, this.dragPower);
         });
 
         // Damage per 5 ticks (damage 12 times expected, full damage once expected)
