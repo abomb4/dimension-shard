@@ -8,11 +8,13 @@ import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
+import arc.struct.EnumSet;
 import arc.util.Strings;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
 import dimensionshard.types.blocks.ArmoredWall;
 import dimensionshard.types.blocks.DarkLightTurret;
+import dimensionshard.types.blocks.DeflectForceProjector;
 import dimensionshard.types.blocks.ElectricStormTurret;
 import dimensionshard.types.blocks.HardPhaseSpaceBridge;
 import dimensionshard.types.blocks.IonBoltTurret;
@@ -63,6 +65,7 @@ import mindustry.world.draw.DrawFlame;
 import mindustry.world.draw.DrawMulti;
 import mindustry.world.draw.DrawWarmupRegion;
 import mindustry.world.meta.Attribute;
+import mindustry.world.meta.BlockFlag;
 import mindustry.world.meta.BuildVisibility;
 
 import static dimensionshard.DsItems.dimensionAlloy;
@@ -139,7 +142,7 @@ public final class DsBlocks {
     // Effect
     public static CoreBlock dimensionTechnologyCore3;
     public static CoreBlock dimensionTechnologyCore;
-    // public static DeflectForceProjector deflectForceProjector;
+    public static DeflectForceProjector deflectForceProjector;
     public static StorageBlock spaceVault;
     public static OverdriveProjector timeOverdrive;
 
@@ -1222,6 +1225,125 @@ public final class DsBlocks {
             drawer = new DrawMulti(new DrawDefault(), new DrawFlame(dimensionAlloy.color));
         }};
         // endregion Factory
+
+        // region Effect
+        dimensionTechnologyCore3 = new CoreBlock("dimension-technology-core-3") {{
+            size = 5;
+            health = 6000;
+            itemCapacity = 14000;
+            unitCapModifier = 22;
+            researchCostMultiplier = 0.07F;
+            // unitType = electron;
+            requirements(Category.effect, ItemStack.with(
+                Items.copper, 8000,
+                Items.lead, 8000,
+                Items.silicon, 5000,
+                Items.thorium, 1000,
+                dimensionShard, 3000
+            ));
+        }};
+
+        dimensionTechnologyCore = new CoreBlock("dimension-technology-core") {{
+            size = 6;
+            health = 10000;
+            itemCapacity = 24000;
+            unitCapModifier = 34;
+            researchCostMultiplier = 0.08F;
+            // unitType = lightning;
+            requirements(Category.effect, ItemStack.with(
+                Items.copper, 15000,
+                Items.lead, 15000,
+                Items.silicon, 10000,
+                Items.thorium, 8000,
+                Items.phaseFabric, 3000,
+                dimensionShard, 8000
+            ));
+        }};
+
+        deflectForceProjector = new DeflectForceProjector("deflect-force-projector") {
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+
+        spaceVault = new StorageBlock("space-vault") {
+            {
+                size = 3;
+                health = 600;
+                itemCapacity = Blocks.vault.itemCapacity * 5;
+                flags = EnumSet.of(BlockFlag.storage);
+                requirements(Category.effect, ItemStack.with(
+                    Items.titanium, 400,
+                    Items.thorium, 30,
+                    Items.phaseFabric, 80,
+                    spaceCrystal, 140,
+                    hardThoriumAlloy, 130
+                ));
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+
+        timeOverdrive = new OverdriveProjector("time-overdrive") {
+            {
+                hasLiquids = true;
+                liquidCapacity = 20;
+                size = 3;
+                range = 180;
+                phaseRangeBoost = 40;
+                speedBoost = 2.0F;
+                speedBoostPhase = 2.0F;
+                useTime = 180;
+                hasBoost = true;
+                consumePower(15);
+                consumeLiquid(timeFlow, 0.1F).boost();
+                requirements(Category.effect, ItemStack.with(
+                    Items.lead, 400,
+                    Items.silicon, 220,
+                    Items.titanium, 240,
+                    Items.plastanium, 150,
+                    Items.surgeAlloy, 200,
+                    timeCrystal, 150
+                ));
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+        // endregion Effect
 
         // endregion Dimension Shard technology
     }
