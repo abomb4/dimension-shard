@@ -1,0 +1,29 @@
+apply plugin: "java"
+
+version '1'
+targetCompatibility = 8
+sourceCompatibility = 8
+
+// fuck gbk
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+//sourceSets.main.java.srcDirs = ["src"]
+
+repositories {
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+}
+
+ext {
+    //the build number that this mod is made for
+    mindustryVersion = 'v139'
+}
+
+dependencies {
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+}
+
+ext {
+}
