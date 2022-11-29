@@ -44,7 +44,7 @@ public class ElectricStormBulletType extends BasicBulletType {
         var transparentColor = new Color(255, 255, 255, 0);
         this.sprite = Lib.modName + "-electric-storm";
 
-        this.damage = 50;
+        this.damage = 125;
         this.speed = 3;
         this.lifetime = 180;
         this.pierceCap = 10;
@@ -57,8 +57,8 @@ public class ElectricStormBulletType extends BasicBulletType {
         this.homingDelay = 30;
         this.homingPower = 0.025F;
         this.homingRange = 200;
-        this.splashDamageRadius = 6 * 8;
-        this.splashDamage = 70;
+        this.splashDamageRadius = 32;
+        this.splashDamage = 60;
         this.weaveMag = 8;
         this.weaveScale = 6;
         this.spin = 32.31234F;

@@ -1,6 +1,11 @@
 package dimensionshard.libs.skill;
 
 import arc.struct.ObjectMap;
+import dimensionshard.libs.skill.units.SkilledLegsUnit;
+import dimensionshard.libs.skill.units.SkilledMechUnit;
+import dimensionshard.libs.skill.units.SkilledPayloadUnit;
+import dimensionshard.libs.skill.units.SkilledUnitEntity;
+import dimensionshard.libs.skill.units.SkilledUnitWaterMove;
 
 /**
  * Skill Framework.
@@ -30,4 +35,19 @@ public class SkillFramework {
 
     /** 共有多少个技能 */
     public ObjectMap<Integer, SkillDefinition> registry;
+
+    /** 界面 */
+    public static SkillFragment skillFragment;
+
+    /** load */
+    public static void load() {
+        SkilledUnitEntity.load();
+        SkilledMechUnit.load();
+        SkilledLegsUnit.load();
+        SkilledUnitWaterMove.load();
+        SkilledPayloadUnit.load();
+
+        skillFragment = new SkillFragment();
+        skillFragment.load();
+    }
 }

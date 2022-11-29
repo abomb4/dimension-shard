@@ -29,6 +29,8 @@ public abstract class SkillDefinition {
 
     /** 技能名称，应当使用纯 ascii ，推荐用小写 + 横线命名法，如 my-unit-boom */
     public String name;
+    /** 影响范围 */
+    public int range;
     /** 技能冷却时间 */
     public float cooldown;
     /** 技能图标 */
@@ -44,6 +46,10 @@ public abstract class SkillDefinition {
 
     /** 技能状态构造器 */
     public Func<SkillDefinition, SkillStatus> skillStatusFunc = SkillStatus::new;
+
+    public SkillDefinition(String name) {
+        this.name = name;
+    }
 
     /**
      * AI 运算检查，当单位非玩家控制时，用于判断技能触发时机

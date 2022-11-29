@@ -59,7 +59,9 @@ public class DarkLightTurret extends PowerTurret {
         this.shootEffect = Fx.hitLancer;
         this.smokeEffect = Fx.none;
         this.heatColor = Color.valueOf("a955f7");
-        this.shootType = new DarkLightBulletType();
+        this.shootType = new DarkLightBulletType() {{
+            this.buildingDamageMultiplier = 0.3F;
+        }};
 
         this.shoot.firstShotDelay = 80;
         this.shootDuration = 60 * 5F;
@@ -72,15 +74,15 @@ public class DarkLightTurret extends PowerTurret {
 
         this.requirements = ItemStack.with(
             Items.copper, 2100,
-            Items.lead, 3000,
+            Items.lead, 2000,
             Items.graphite, 1800,
-            Items.silicon, 1400,
+            Items.silicon, 1000,
             Items.phaseFabric, 850,
-            Items.surgeAlloy, 1150,
-            DsItems.spaceCrystal, 1200,
-            DsItems.timeCrystal, 400,
-            DsItems.hardThoriumAlloy, 850,
-            DsItems.dimensionAlloy, 375
+            Items.surgeAlloy, 320,
+            DsItems.spaceCrystal, 800,
+            DsItems.timeCrystal, 220,
+            DsItems.hardThoriumAlloy, 600,
+            DsItems.dimensionAlloy, 400
         );
     }
 

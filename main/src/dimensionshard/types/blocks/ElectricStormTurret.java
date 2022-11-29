@@ -54,7 +54,7 @@ public class ElectricStormTurret extends ItemTurret {
             Items.silicon, 1200,
             Items.plastanium, 1000,
             Items.phaseFabric, 800,
-            Items.surgeAlloy, 1000,
+            Items.surgeAlloy, 500,
             DsItems.dimensionShard, 1600,
             DsItems.hardThoriumAlloy, 800,
             DsItems.dimensionAlloy, 300
@@ -67,6 +67,7 @@ public class ElectricStormTurret extends ItemTurret {
             lifetime = 150;
             homingRange = 4000;
             ammoMultiplier = 2;
+            buildingDamageMultiplier = 0.3F;
         }});
         consumePowerDynamic(building -> ((ElectricStormTurretBuild) building).isActive() ? 75 : 0);
     }

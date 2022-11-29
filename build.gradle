@@ -1,0 +1,9 @@
+ext {
+    def jsonFile = file('mod.hjson')
+    for (final def line in jsonFile.readLines()) {
+        if (line.startsWith("version: ")) {
+            ext.modVersion = line.substring("version: ".length())
+            break
+        }
+    }
+}

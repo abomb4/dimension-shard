@@ -91,6 +91,7 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("import arc.Events;");
         w.l("import arc.struct.ObjectMap;");
         w.l("import arc.struct.Seq;");
+        w.l("import arc.util.Interval;");
         w.l("import arc.util.Time;");
         w.l("import arc.util.io.Reads;");
         w.l("import arc.util.io.Writes;");
@@ -100,6 +101,7 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("import dimensionshard.libs.skill.SkillStatus;");
         w.l("import dimensionshard.libs.skill.SkilledUnit;");
         w.l("import dimensionshard.libs.skill.SkilledUnitType;");
+        w.l("import mindustry.ai.types.LogicAI;");
         w.l("import mindustry.game.EventType;");
         w.l("import mindustry.gen.EntityMapping;");
         w.l("import mindustry.gen.Payloadc;");
@@ -110,6 +112,8 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("    public static boolean loaded = false;");
         w.l("");
         w.l("    public static final int CLASS_ID = %s;", classId);
+        w.l("");
+        w.l("    public transient Interval timer = new Interval();");
         w.l("");
         w.l("    public static void load() {");
         w.l("        if (!loaded) {");
@@ -179,7 +183,8 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("            super.update();");
         w.l("        } else {");
         w.l("            for (SkillStatus s : this.statusList) {");
-        w.l("                if (s.reload >= s.def.cooldown) {");
+        w.l("                if (!(this.controller instanceof LogicAI) && !this.isPlayer()");
+        w.l("                    && timer.get(0, s.def.aiCheckInterval) && s.reload >= s.def.cooldown) {");
         w.l("                    s.def.aiCheck(s, this);");
         w.l("                }");
         w.l("                if (s.active) {");
@@ -202,13 +207,13 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("    }");
         w.l("");
         w.l("    @Override");
-        w.l("    public void damage(float amount, boolean withEffect) {");
+        w.l("    public void damage(float amount) {");
         w.l("        for (SkillStatus status : this.statusList) {");
         w.l("            if (status.active) {");
         w.l("                amount = status.def.updateDamage(status, this, amount);");
         w.l("            }");
         w.l("        }");
-        w.l("        super.damage(amount, withEffect);");
+        w.l("        super.damage(amount);");
         w.l("    }");
         w.l("");
         w.l("    @Override");
@@ -275,6 +280,11 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("        }");
         w.l("    }");
         w.l("");
+        w.l("    @Override");
+        w.l("    public Seq<SkillStatus> getSkillList() {");
+        w.l("        return this.statusList;");
+        w.l("    }");
+        w.l("");
         w.l("    protected void writeSkillStatuses(Writes write) {");
         w.l("        if (this.type instanceof SkilledUnitType sku) {");
         w.l("            write.s(this.statusList.size);");
@@ -286,6 +296,7 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("");
         w.l("    protected void readSkillStatuses(Reads read) {");
         w.l("        if (this.type instanceof SkilledUnitType sku) {");
+        w.l("            this.initSkill();");
         w.l("            final Seq<SkillDefinition> defs = sku.getSkillDefinitions();");
         w.l("            final short count = read.s();");
         w.l("            for (int i = 0; i < count; i++) {");
@@ -300,8 +311,8 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("                    read.f();");
         w.l("                } else {");
         w.l("                    SkillStatus status = defs.get(i).readStatus(read);");
-        w.l("                    this.statusList.add(status);");
-        w.l("                    this.skillStatusMap.put(status.def.getSkillId(), status);");
+        w.l("                    SkillStatus existing = this.skillStatusMap.get(status.def.getSkillId());");
+        w.l("                    existing.setFrom(status);");
         w.l("                }");
         w.l("            }");
         w.l("        }");

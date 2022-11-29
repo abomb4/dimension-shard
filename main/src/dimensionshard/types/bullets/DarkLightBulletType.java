@@ -45,7 +45,7 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
         this.smokeEffect = Fx.none;
         this.trailEffect = Fx.none;
         this.despawnEffect = Fx.none;
-        this.damage = 120;
+        this.damage = 160;
         // this.status = StatusEffects.sapped;
         this.statusDuration = 120;
         this.length = 42 * 8;
@@ -57,6 +57,7 @@ public class DarkLightBulletType extends ContinuousLaserBulletType {
         this.lightningDelay = 1.1F;
         this.lightningAngleRand = 35;
         this.lightningColor = Color.valueOf("a108f5");
+        this.lightningDamage = 45;
         this.colors = new Color[]{
             DsColors.laserColor1,
             DsColors.laserColor2,

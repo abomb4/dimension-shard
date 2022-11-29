@@ -25,7 +25,7 @@ public class IonBoltBulletType extends LaserBoltBulletType {
     });
 
     public IonBoltBulletType() {
-        this.damage = 40;
+        this.damage = 90;
         this.speed = 5.2F;
         this.lifetime = 48;
         this.width = 4;
@@ -45,7 +45,6 @@ public class IonBoltBulletType extends LaserBoltBulletType {
         this.lightningAngle = 90;
         this.lightningDamage = 30;
         this.lightningColor = ionLiquid.color;
-        this.buildingDamageMultiplier = 0.8F;
         this.puddles = 2;
         this.puddleRange = 8;
         this.puddleAmount = 10;

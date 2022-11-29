@@ -15,7 +15,7 @@ public class SkillCall {
     public static final String TYPE = Lib.modName + "-SfActiveSkill";
 
     /** 信息分隔符 */
-    private static final String DELIMITER = "#";
+    private static final String DELIMITER = SkillData.DELIMITER;
 
     /**
      * 若当前触发者为服务器，则发送到所有客户端；若为客户端则发送给服务器
@@ -25,7 +25,7 @@ public class SkillCall {
      * @param data    技能数据
      */
     public static void callActiveSkill(Unit unit, int skillId, SkillData data) {
-        Call.clientPacketReliable(TYPE, skillId + DELIMITER + data.serializeToNetPack());
+        Call.clientPacketReliable(TYPE, unit.id + DELIMITER + skillId + DELIMITER + data.serializeToNetPack());
     }
 
     /**

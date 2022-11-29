@@ -2,6 +2,7 @@ package dimensionshard;
 
 import arc.util.Log;
 import dimensionshard.libs.Changelog;
+import dimensionshard.libs.skill.SkillFramework;
 import mindustry.mod.Mod;
 
 /**
@@ -17,6 +18,8 @@ public class DimensionShardMod extends Mod {
         DsOverride.load();
 
         DsBullets.load();
+        SkillFramework.load();
+        DsUnits.load();
         DsBlocks.load();
 
         DsCall.initClientSide();

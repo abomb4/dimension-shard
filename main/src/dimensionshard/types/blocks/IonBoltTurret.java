@@ -83,8 +83,8 @@ public class IonBoltTurret extends LiquidTurret {
             DsItems.hardThoriumAlloy, 500
         );
         this.ammo(DsItems.ionLiquid, new IonBoltBulletType() {{
-            this.damage = 50;
             this.ammoMultiplier = 2;
+            this.buildingDamageMultiplier = 0.3F;
         }});
     }
 

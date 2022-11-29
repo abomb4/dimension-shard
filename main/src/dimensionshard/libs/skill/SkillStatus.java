@@ -34,4 +34,14 @@ public class SkillStatus {
         write.f(this.numValue3);
         write.f(this.numValue4);
     }
+
+    public void setFrom(SkillStatus other) {
+        this.reload = other.reload;
+        this.active = other.active;
+        this.activeTimeLeft = other.activeTimeLeft;
+        this.numValue1 = other.numValue1;
+        this.numValue2 = other.numValue2;
+        this.numValue3 = other.numValue3;
+        this.numValue4 = other.numValue4;
+    }
 }

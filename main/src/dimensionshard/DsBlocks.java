@@ -28,6 +28,7 @@ import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
+import mindustry.content.UnitTypes;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.LightningBulletType;
 import mindustry.entities.bullet.PointBulletType;
@@ -58,7 +59,7 @@ import mindustry.world.blocks.production.GenericCrafter;
 import mindustry.world.blocks.production.Pump;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.storage.StorageBlock;
-import mindustry.world.blocks.units.UnitFactory;
+import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.consumers.ConsumeItemRadioactive;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.draw.DrawFlame;
@@ -135,8 +136,8 @@ public final class DsBlocks {
     public static GenericCrafter dimensionAlloySmelter;
 
     // Unit
-    public static UnitFactory dimensionT4Reconstructor;
-    public static UnitFactory dimensionT5Reconstructor;
+    public static Reconstructor dimensionT4Reconstructor;
+    public static Reconstructor dimensionT5Reconstructor;
     // public static UnitTeleporter unitTeleporter;
 
     // Effect
@@ -215,6 +216,7 @@ public final class DsBlocks {
                         hitShake = 1;
                         reflectable = false;
                         absorbable = false;
+                        buildingDamageMultiplier = 0.3F;
                     }},
                     Items.sporePod, new PointBulletType() {{
                         shootEffect = Fx.none;
@@ -233,6 +235,7 @@ public final class DsBlocks {
                         hitShake = 1.1F;
                         reflectable = false;
                         absorbable = false;
+                        buildingDamageMultiplier = 0.3F;
                     }},
                     Items.pyratite, new PointBulletType() {{
                         shootEffect = Fx.none;
@@ -251,6 +254,7 @@ public final class DsBlocks {
                         hitShake = 1.5F;
                         reflectable = false;
                         absorbable = false;
+                        buildingDamageMultiplier = 0.3F;
                     }},
                     Items.blastCompound, new PointBulletType() {{
                         shootEffect = Fx.none;
@@ -267,6 +271,7 @@ public final class DsBlocks {
                         hitShake = 2;
                         reflectable = false;
                         absorbable = false;
+                        buildingDamageMultiplier = 0.3F;
                     }},
                     dimensionShard, new PointBulletType() {{
                         shootEffect = Fx.none;
@@ -282,6 +287,7 @@ public final class DsBlocks {
                         hitShake = 1.6F;
                         reflectable = false;
                         absorbable = false;
+                        buildingDamageMultiplier = 0.3F;
                     }},
                     spaceCrystal, new PointBulletType() {
                         {
@@ -362,6 +368,7 @@ public final class DsBlocks {
                         lightningLength = 26;
                         lightningLengthRand = 12;
                         lightningColor = Color.valueOf("69dcee");
+                        buildingDamageMultiplier = 0.3F;
                     }
 
                     @Override
@@ -1344,6 +1351,95 @@ public final class DsBlocks {
             }
         };
         // endregion Effect
+
+        // region Unit
+        dimensionT4Reconstructor = new Reconstructor("dimension-t4-reconstructor") {
+            {
+                requirements(Category.units, ItemStack.with(
+                    Items.lead, 2000,
+                    Items.silicon, 1000,
+                    Items.plastanium, 500,
+                    DsItems.dimensionShard, 1200,
+                    DsItems.hardThoriumAlloy, 500,
+                    DsItems.spaceCrystal, 400,
+                    DsItems.timeCrystal, 150
+                ));
+                size = 7;
+                liquidCapacity = 100;
+                constructTime = 60 * 60 * 1.5F;
+                consumePower(13F);
+                consumeItems(ItemStack.with(
+                    Items.silicon, 900,
+                    DsItems.hardThoriumAlloy, 700,
+                    DsItems.spaceCrystal, 420,
+                    DsItems.timeCrystal, 330
+                ));
+                consumeLiquid(ionLiquid, 0.5F);
+                addUpgrade(UnitTypes.mega, DsUnits.formula);
+                addUpgrade(UnitTypes.zenith, DsUnits.burn);
+                addUpgrade(UnitTypes.fortress, DsUnits.beat);
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+
+        dimensionT5Reconstructor = new Reconstructor("dimension-t5-reconstructor") {
+            {
+                requirements(Category.units, ItemStack.with(
+                    Items.lead, 5000,
+                    Items.silicon, 3000,
+                    Items.surgeAlloy, 300,
+                    DsItems.hardThoriumAlloy, 800,
+                    DsItems.spaceCrystal, 600,
+                    DsItems.timeCrystal, 300,
+                    DsItems.dimensionAlloy, 200
+                ));
+                size = 9;
+                liquidCapacity = 180;
+                constructTime = 60 * 60 * 4F;
+                consumePower(25F);
+                consumeItems(ItemStack.with(
+                    DsItems.hardThoriumAlloy, 900,
+                    DsItems.spaceCrystal, 900,
+                    DsItems.timeCrystal, 500,
+                    DsItems.dimensionAlloy, 200
+                ));
+                consumeLiquid(ionLiquid, 1F);
+                addUpgrade(UnitTypes.quad, DsUnits.equa);
+                addUpgrade(DsUnits.formula, DsUnits.equa);
+                addUpgrade(UnitTypes.antumbra, DsUnits.collapse);
+                addUpgrade(DsUnits.burn, DsUnits.collapse);
+                addUpgrade(UnitTypes.scepter, DsUnits.rhapsody);
+                addUpgrade(DsUnits.beat, DsUnits.rhapsody);
+            }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
+        // endregion
 
         // endregion Dimension Shard technology
     }
