@@ -8,6 +8,7 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Pal;
 
 /**
  * 特效
@@ -194,5 +195,22 @@ public final class DsFx {
             Drawf.tri(e.x, e.y, 13 * e.fout(), 85, e.rotation + 90 * i);
             Drawf.tri(e.x, e.y, 13 * e.fout(), 50, e.rotation + 20 * i);
         }
+    });
+
+    /** 过载动画 */
+    public static Effect hyperSpeed1Effect = new Effect(40, e -> {
+        Draw.color(Pal.accent);
+
+        Fill.square(e.x, e.y, e.fslope() * 2, 45);
+        Fill.square(e.x, e.y, e.fslope() * 2, 35);
+    });
+
+    /** 过载动画 */
+    public static Effect hyperSpeed2Effect = new Effect(40, e -> {
+        Draw.color(Pal.accent);
+
+        Fill.square(e.x, e.y, e.fslope() * 2, 45);
+        Fill.square(e.x, e.y, e.fslope() * 2.1F, 35);
+        Fill.square(e.x, e.y, e.fslope() * 1.9F, 25);
     });
 }

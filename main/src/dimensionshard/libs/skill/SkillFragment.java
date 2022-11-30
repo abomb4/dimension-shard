@@ -244,6 +244,7 @@ public class SkillFragment {
             // Build fragments by unit
             if (!Vars.headless && Vars.player != null && Vars.player.unit() == event.unit) {
                 if (event.unit instanceof SkilledUnit unit) {
+                    unit.initSkill();
                     skillList = unit.getSkillList();
                 } else {
                     skillList = null;

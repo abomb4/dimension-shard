@@ -3,7 +3,15 @@ package dimensionshard.libs;
 import arc.Core;
 import arc.audio.Sound;
 import arc.graphics.g2d.TextureRegion;
+import arc.math.geom.Rect;
+import arc.math.geom.Vec2;
+import arc.struct.IntSet;
+import arc.struct.Seq;
 import mindustry.Vars;
+import mindustry.entities.Damage;
+import mindustry.entities.Effect;
+import mindustry.game.Team;
+import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
 
 /**
@@ -64,5 +72,33 @@ public final class Lib {
      */
     public static boolean isDev() {
         return getModVersion().contains("dev");
+    }
+
+    private static Vec2 tr = new Vec2();
+    private static IntSet collidedBlocks = new IntSet();
+    private static Vec2 seg1 = new Vec2();
+    private static Vec2 seg2 = new Vec2();
+    private static Rect rect = new Rect();
+    private static Seq units = new Seq();
+    private static Rect hitrect = new Rect();
+
+    public enum PierceType {
+        /** 贯穿，塑钢也不好使 */
+        PIERCE,
+        /** 贯穿不了 */
+        BLOCKING,
+        /** 普通，被塑钢阻塞 */
+        NORMAL,
+    }
+
+    public static void damageLine(Bullet hitter, Team team, Effect effect, float x, float y, float angle, float length,
+                                  boolean large, PierceType pierce) {
+        if (pierce == PierceType.NORMAL) {
+            Damage.collideLine(hitter, team, effect, x, y, angle, length, large, true);
+        } else if (pierce == PierceType.BLOCKING) {
+            Damage.collideLine(hitter, team, effect, x, y, angle, length, large, true, 1);
+        } else {
+            Damage.collideLine(hitter, team, effect, x, y, angle, length, large, false);
+        }
     }
 }

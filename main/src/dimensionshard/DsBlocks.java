@@ -1240,7 +1240,7 @@ public final class DsBlocks {
             itemCapacity = 14000;
             unitCapModifier = 22;
             researchCostMultiplier = 0.07F;
-            // unitType = electron;
+            unitType = DsUnits.electron;
             requirements(Category.effect, ItemStack.with(
                 Items.copper, 8000,
                 Items.lead, 8000,
@@ -1256,7 +1256,7 @@ public final class DsBlocks {
             itemCapacity = 24000;
             unitCapModifier = 34;
             researchCostMultiplier = 0.08F;
-            // unitType = lightning;
+            unitType = DsUnits.lightning;
             requirements(Category.effect, ItemStack.with(
                 Items.copper, 15000,
                 Items.lead, 15000,

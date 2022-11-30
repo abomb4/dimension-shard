@@ -143,7 +143,8 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("    /**");
         w.l("     * 初始化技能数据");
         w.l("     */");
-        w.l("    protected void initSkill() {");
+        w.l("    @Override");
+        w.l("    public void initSkill() {");
         w.l("        if (this.init) {");
         w.l("            return;");
         w.l("        }");

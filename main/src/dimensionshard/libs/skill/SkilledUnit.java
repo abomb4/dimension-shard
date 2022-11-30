@@ -52,4 +52,9 @@ public interface SkilledUnit extends Unitc {
      * @return 技能列表
      */
     Seq<SkillStatus> getSkillList();
+
+    /**
+     * 初始化技能数据
+     */
+    void initSkill();
 }

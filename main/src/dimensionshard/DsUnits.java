@@ -7,7 +7,9 @@ import dimensionshard.libs.skill.units.SkilledMechUnit;
 import dimensionshard.libs.skill.units.SkilledUnitEntity;
 import dimensionshard.types.bullets.SurroundingElectricBallBulletType;
 import dimensionshard.types.units.CollapseUnitType;
+import dimensionshard.types.units.ElectronUnitType;
 import dimensionshard.types.units.EquaUnitType;
+import dimensionshard.types.units.LightningUnitType;
 import dimensionshard.types.units.RhapsodyUnitType;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
@@ -53,6 +55,12 @@ public final class DsUnits {
 
     /** 狂想曲 Attack Mech T5 */
     public static UnitType rhapsody;
+
+    /** 电电 */
+    public static UnitType electron;
+
+    /** 雷雷 */
+    public static UnitType lightning;
 
     /** load all */
     public static void load() {
@@ -228,6 +236,8 @@ public final class DsUnits {
         }};
 
         rhapsody = new RhapsodyUnitType("rhapsody");
+        electron = new ElectronUnitType("electron");
+        lightning = new LightningUnitType("lightning");
     }
 
     private DsUnits() {

@@ -99,7 +99,7 @@ public class DeflectForceProjector extends ForceProjector {
         this.cooldownNormal = 1.5F;
         this.cooldownLiquid = 1.2F;
         this.cooldownBrokenBase = 0.35F;
-        this.consumeItem(spaceCrystal).boost();
+        this.itemConsumer = consumeItem(spaceCrystal).boost();
         this.consumePower(12);
 
         this.requirements(Category.effect, ItemStack.with(

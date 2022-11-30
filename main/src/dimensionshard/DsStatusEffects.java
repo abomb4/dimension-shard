@@ -2,6 +2,7 @@ package dimensionshard;
 
 import arc.graphics.Color;
 import mindustry.content.StatusEffects;
+import mindustry.gen.Unit;
 import mindustry.type.StatusEffect;
 
 /**
@@ -27,7 +28,54 @@ public class DsStatusEffects {
 
     /** 无法移动效果 */
     public static StatusEffect darkLightedEffect = new StatusEffect("dark-lighted") {{
+        this.show = false;
         this.speedMultiplier = 0.1F;
         this.effect = DsFx.fxTimeFreezing;
     }};
+
+    /** 初级过载 */
+    public static StatusEffect hyper1 = new StatusEffect("hyperspeed-1") {
+        {
+            this.show = false;
+            this.damage = 4 / 60F;
+            this.effectChance = 0.4F;
+            this.effect = DsFx.hyperSpeed1Effect;
+            this.speedMultiplier = 1.3F;
+            this.reloadMultiplier = 2.5F;
+            this.buildSpeedMultiplier = this.reloadMultiplier;
+            this.color = Color.valueOf("cee0e9");
+        }
+
+        @Override
+        public void update(Unit unit, float time) {
+            super.update(unit, time);
+            // mine speed
+            if (unit.mining()) {
+                unit.mineTimer += unit.type.mineSpeed * (this.reloadMultiplier - 1);
+            }
+        }
+    };
+
+    /** 高级过载 */
+    public static StatusEffect hyper2 = new StatusEffect("hyperspeed-2") {
+        {
+            this.show = false;
+            this.damage = 5 / 60F;
+            this.effectChance = 0.5F;
+            this.effect = DsFx.hyperSpeed1Effect;
+            this.speedMultiplier = 1.6F;
+            this.reloadMultiplier = 4.5F;
+            this.buildSpeedMultiplier = this.reloadMultiplier;
+            this.color = Color.valueOf("69dcee");
+        }
+
+        @Override
+        public void update(Unit unit, float time) {
+            super.update(unit, time);
+            // mine speed
+            if (unit.mining()) {
+                unit.mineTimer += unit.type.mineSpeed * (this.reloadMultiplier - 1);
+            }
+        }
+    };
 }
