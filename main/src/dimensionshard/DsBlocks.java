@@ -19,6 +19,8 @@ import dimensionshard.types.blocks.ElectricStormTurret;
 import dimensionshard.types.blocks.HardPhaseSpaceBridge;
 import dimensionshard.types.blocks.IonBoltTurret;
 import dimensionshard.types.blocks.PhaseSpaceBridge;
+import dimensionshard.types.blocks.ResourcesDispatchingCenter;
+import dimensionshard.types.blocks.SpaceUnloader;
 import dimensionshard.types.blocks.ds.DsAttributeCrafter;
 import dimensionshard.types.blocks.ds.DsGenericCrafter;
 import dimensionshard.types.bullets.DirectLightning;
@@ -103,8 +105,8 @@ public final class DsBlocks {
     // distributions
     public static PhaseSpaceBridge phaseSpaceBridge;
     public static HardPhaseSpaceBridge hardPhaseSpaceBridge;
-    // public static ResourcesDispatchingCenter resourcesDispatchingCenter;
-    // public static SpaceUnloader spaceUnloader;
+    public static ResourcesDispatchingCenter resourcesDispatchingCenter;
+    public static SpaceUnloader spaceUnloader;
 
     // liquids
     public static ArmoredConduit hardThoriumConduit;
@@ -449,6 +451,9 @@ public final class DsBlocks {
             ));
             consumePower(0.8F);
         }};
+
+        resourcesDispatchingCenter = new ResourcesDispatchingCenter("resources-dispatching-center");
+        spaceUnloader = new SpaceUnloader("space-unloader");
         // endregion Distribution
 
         // region Liquid
