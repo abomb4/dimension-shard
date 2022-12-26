@@ -32,6 +32,7 @@ public class Changelog {
         final String version = Lib.getModVersion();
 
         BaseDialog dialog = new BaseDialog(Lib.getMessage("msg", "changelogTitle", version));
+        dialog.closeOnBack();
 
         dialog.buttons.defaults().size(210, 64);
         CheckBox box = new CheckBox(Lib.getMessage("msg", "dontShowAgain"));

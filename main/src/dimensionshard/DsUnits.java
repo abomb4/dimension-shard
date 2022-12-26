@@ -18,6 +18,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.Fires;
 import mindustry.entities.Lightning;
 import mindustry.entities.Puddles;
+import mindustry.entities.abilities.SuppressionFieldAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.pattern.ShootSpread;
 import mindustry.entities.units.WeaponMount;
@@ -141,10 +142,10 @@ public final class DsUnits {
             speed = 2.5F;
             rotateSpeed = 2.2F;
             accel = 0.06F;
-            drag = 0.017F;
+            drag = 0.04F;
             flying = true;
-            engineOffset = 12;
-            engineSize = 6;
+            engineOffset = 15;
+            engineSize = 0;
             buildSpeed = 3.7F;
             itemCapacity = 150;
             mineTier = 4;
@@ -156,32 +157,45 @@ public final class DsUnits {
             targetFlags = new BlockFlag[]{BlockFlag.battery, BlockFlag.factory, null};
             ammoType = new PowerAmmoType(3000);
 
-            final Effect fxCharge = Fx.greenLaserChargeSmall;
-            weapons.add(new Weapon() {{
+            final Effect fxCharge = DsFx.formulaCharge;
+            weapons.add(new Weapon(Lib.modName + "formula-weapon") {{
                 shake = 4;
-                shoot = new ShootSpread(8, 360 / 8f);
+                shoot = new ShootSpread(8, 180 / 8f);
                 shoot.shotDelay = 0;
                 shoot.firstShotDelay = fxCharge.lifetime - 1;
                 inaccuracy = 0;
                 shootX = 0;
                 shootY = 0;
+                recoil = 0;
                 x = 0;
-                y = 0;
+                y = -5.2F;
                 mirror = false;
                 reload = 10 * 60 - 1;
-                recoil = 0;
                 shootSound = Sounds.shootBig;
                 shootCone = 360;
                 rotate = false;
                 bullet = new SurroundingElectricBallBulletType() {{
                     lightningColor = DsItems.ionLiquid.color;
                     frontColor = DsItems.ionLiquid.color;
-                    shootEffect = fxCharge;
+                    shootEffect = Fx.none;
+                    chargeEffect = fxCharge;
                     status = DsStatusEffects.ionBurningEffect;
                     statusDuration = 60;
                     lifetime = 5 * 60;
                 }};
             }});
+
+            abilities.add(new SuppressionFieldAbility() {{
+                color = DsItems.ionLiquid.color;
+                orbRadius = 4;
+                particleSize = 3;
+                y = -5.2F;
+                particles = 10;
+            }});
+
+            setEnginesMirror(
+                new UnitEngine(16f, -19.0f, 7f, 330f)
+            );
         }};
 
         equa = new EquaUnitType();

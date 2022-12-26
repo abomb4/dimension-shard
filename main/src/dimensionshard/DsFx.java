@@ -10,6 +10,9 @@ import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 
+import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Lines.stroke;
+
 /**
  * 特效
  *
@@ -213,4 +216,11 @@ public final class DsFx {
         Fill.square(e.x, e.y, e.fslope() * 2.1F, 35);
         Fill.square(e.x, e.y, e.fslope() * 1.9F, 25);
     });
+
+    /** 公式充能 */
+    public static Effect formulaCharge = new Effect(40f, 100f, e -> {
+        color(DsItems.ionLiquid.lightColor);
+        stroke(e.fin() * 2f);
+        Lines.circle(e.x, e.y, e.fout() * 50f);
+    }).followParent(true).rotWithParent(true);
 }
