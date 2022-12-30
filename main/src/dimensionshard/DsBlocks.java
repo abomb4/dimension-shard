@@ -63,6 +63,7 @@ import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.storage.StorageBlock;
 import mindustry.world.blocks.units.Reconstructor;
 import mindustry.world.consumers.ConsumeItemRadioactive;
+import mindustry.world.draw.DrawBlock;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.draw.DrawFlame;
 import mindustry.world.draw.DrawMulti;
@@ -143,8 +144,8 @@ public final class DsBlocks {
     // public static UnitTeleporter unitTeleporter;
 
     // Effect
-    public static CoreBlock dimensionTechnologyCore3;
-    public static CoreBlock dimensionTechnologyCore;
+    public static CoreBlock dimensionTechnologyCore5;
+    public static CoreBlock dimensionTechnologyCore6;
     public static DeflectForceProjector deflectForceProjector;
     public static StorageBlock spaceVault;
     public static OverdriveProjector timeOverdrive;
@@ -175,7 +176,7 @@ public final class DsBlocks {
             });
 
             {
-                final int turretRange = 220;
+                final int turretRange = 240;
                 cooldownTime = 0.04F;
                 recoil = 1.5F;
                 liquidCapacity = 10;
@@ -193,9 +194,9 @@ public final class DsBlocks {
                 heatColor = teleportColor;
                 requirements = ItemStack.with(
                     Items.copper, 200,
-                    Items.silicon, 130,
-                    Items.thorium, 110,
-                    spaceCrystal, 30
+                    Items.silicon, 120,
+                    Items.thorium, 100,
+                    spaceCrystal, 20
                 );
                 coolant = consumeCoolant(0.3f);
                 this.consumePower(1F);
@@ -442,15 +443,30 @@ public final class DsBlocks {
             range = 18;
             transportTime = 0.01F;
             requirements(Category.distribution, ItemStack.with(
-                Items.metaglass, 20,
-                Items.silicon, 8,
-                Items.plastanium, 10,
+                Items.metaglass, 15,
+                Items.silicon, 5,
+                Items.plastanium, 8,
                 Items.phaseFabric, 20,
-                dimensionShard, 30,
-                hardThoriumAlloy, 30
+                dimensionShard, 20,
+                hardThoriumAlloy, 10
             ));
             consumePower(0.8F);
-        }};
+        }
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
+        };
 
         resourcesDispatchingCenter = new ResourcesDispatchingCenter("resources-dispatching-center");
         spaceUnloader = new SpaceUnloader("space-unloader");
@@ -625,7 +641,7 @@ public final class DsBlocks {
 
         hardThoriumAlloyWall = new ArmoredWall("hard-thorium-alloy-wall") {
             {
-                armor = 5;
+                armor = 7;
                 size = 1;
                 health = 900;
                 requirements = ItemStack.with(hardThoriumAlloy, 6);
@@ -651,7 +667,7 @@ public final class DsBlocks {
 
         hardThoriumAlloyWallLarge = new ArmoredWall("hard-thorium-alloy-wall-large") {
             {
-                armor = 7;
+                armor = 10;
                 size = 2;
                 health = hardThoriumAlloyWall.health * 4;
                 requirements = ItemStack.mult(hardThoriumAlloyWall.requirements, 4);
@@ -716,6 +732,20 @@ public final class DsBlocks {
             /** 色 */
             @SuppressWarnings("FieldMayBeFinal")
             public Color lightColor = Color.valueOf("9a48ff");
+
+            @Override
+            public boolean isPlaceable() {
+                return DsGlobal.techDsAvailable() && super.isPlaceable();
+            }
+
+            @Override
+            public void drawPlace(int x, int y, int rotation, boolean valid) {
+                if (!DsGlobal.techDsAvailable()) {
+                    this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
+                    return;
+                }
+                super.drawPlace(x, y, rotation, valid);
+            }
 
             @Override
             public void load() {
@@ -1234,12 +1264,17 @@ public final class DsBlocks {
             ));
             consumeLiquid(ionLiquid, 0.1F);
             consumePower(8);
-            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(dimensionAlloy.color));
+            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(dimensionAlloy.color), new DrawBlock() {
+                @Override
+                public void draw(Building build) {
+                    Draw.rect(Items.copper.fullIcon, build.x, build.y);
+                }
+            });
         }};
         // endregion Factory
 
         // region Effect
-        dimensionTechnologyCore3 = new CoreBlock("dimension-technology-core-3") {{
+        dimensionTechnologyCore5 = new CoreBlock("dimension-technology-core-3") {{
             size = 5;
             health = 6000;
             itemCapacity = 14000;
@@ -1255,7 +1290,7 @@ public final class DsBlocks {
             ));
         }};
 
-        dimensionTechnologyCore = new CoreBlock("dimension-technology-core") {{
+        dimensionTechnologyCore6 = new CoreBlock("dimension-technology-core") {{
             size = 6;
             health = 10000;
             itemCapacity = 24000;

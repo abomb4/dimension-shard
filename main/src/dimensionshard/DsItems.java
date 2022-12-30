@@ -1,6 +1,7 @@
 package dimensionshard;
 
 import arc.graphics.Color;
+import arc.struct.Seq;
 import mindustry.type.Item;
 import mindustry.type.Liquid;
 import mindustry.world.blocks.environment.OreBlock;
@@ -60,4 +61,8 @@ public final class DsItems {
         this.lightColor = Color.valueOf("cee0e988");
         this.effect = DsStatusEffects.ionBurningEffect;
     }};
+
+    public static Seq<Item> dimensionShardItems = Seq.with(
+        dimensionShard, spaceCrystal, timeCrystal, hardThoriumAlloy, dimensionAlloy
+    );
 }

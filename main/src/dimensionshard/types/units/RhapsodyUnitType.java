@@ -146,8 +146,8 @@ public class RhapsodyUnitType extends UnitType implements SkilledUnitType {
                     flyingLightningColor = DsItems.ionLiquid.color;
                     flyingLightningChange = 0.07F;
                 }};
-                damage = 50;
-                splashDamage = 60;
+                damage = 80;
+                splashDamage = 55;
                 lightning = 1;
                 fragLifeMax = 0.8F;
                 width = 3;

@@ -21,7 +21,7 @@ public final class DsBullets {
     public static ElectricStormBulletType standardIonFrag2;
     /** 离子射弹的破片 3 */
     public static ElectricStormBulletType standardIonFrag3;
-    /** 离子射弹 1 */
+    /** 离子射弹 1，由 burn 使用 */
     public static IonBoltBulletType standardIonBolt1;
     /** 离子射弹 2 */
     public static IonBoltBulletType standardIonBolt2;
@@ -91,13 +91,13 @@ public final class DsBullets {
             fragBullet = standardIonFrag1;
             width = 2;
             height = 8;
-            damage = 10;
+            damage = 50;
             lightning = 1;
             lightningDamage = 16;
             lightningLength = 5;
             lightningLengthRand = 0;
             splashDamageRadius = 26;
-            splashDamage = 20;
+            splashDamage = 50;
             hitEffect = Fx.explosion;
             puddles = 2;
             puddleAmount = 8;
@@ -108,7 +108,8 @@ public final class DsBullets {
             fragBullets = 1;
             width = 3;
             height = 9;
-            damage = 25;
+            damage = 60;
+            splashDamage = 60;
             lightningDamage = 18;
             lightningLength = 5;
             lightningLengthRand = 0;

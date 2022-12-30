@@ -22,6 +22,9 @@ public class DimensionShardMod extends Mod {
         DsUnits.load();
         DsBlocks.load();
 
+        DsPlanets.load();
+        DsSectorPresets.load();
+        DsTechTree.load();
         DsCall.initClientSide();
         Changelog.init();
     }
