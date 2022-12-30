@@ -67,6 +67,7 @@ import mindustry.world.draw.DrawBlock;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.draw.DrawFlame;
 import mindustry.world.draw.DrawMulti;
+import mindustry.world.draw.DrawRegion;
 import mindustry.world.draw.DrawWarmupRegion;
 import mindustry.world.meta.Attribute;
 import mindustry.world.meta.BlockFlag;
@@ -431,27 +432,28 @@ public final class DsBlocks {
             consumePower(0.5F);
         }};
 
-        hardPhaseSpaceBridge = new HardPhaseSpaceBridge("hard-phase-space-bridge") {{
-            size = 1;
-            health = 450;
-            hasItems = true;
-            hasLiquids = true;
-            outputsLiquid = true;
-            itemCapacity = 40;
-            liquidCapacity = 80;
-            liquidPressure = 1.3F;
-            range = 18;
-            transportTime = 0.01F;
-            requirements(Category.distribution, ItemStack.with(
-                Items.metaglass, 15,
-                Items.silicon, 5,
-                Items.plastanium, 8,
-                Items.phaseFabric, 20,
-                dimensionShard, 20,
-                hardThoriumAlloy, 10
-            ));
-            consumePower(0.8F);
-        }
+        hardPhaseSpaceBridge = new HardPhaseSpaceBridge("hard-phase-space-bridge") {
+            {
+                size = 1;
+                health = 450;
+                hasItems = true;
+                hasLiquids = true;
+                outputsLiquid = true;
+                itemCapacity = 40;
+                liquidCapacity = 80;
+                liquidPressure = 1.3F;
+                range = 18;
+                transportTime = 0.01F;
+                requirements(Category.distribution, ItemStack.with(
+                    Items.metaglass, 15,
+                    Items.silicon, 5,
+                    Items.plastanium, 8,
+                    Items.phaseFabric, 20,
+                    dimensionShard, 20,
+                    hardThoriumAlloy, 10
+                ));
+                consumePower(0.8F);
+            }
 
             @Override
             public boolean isPlaceable() {
@@ -938,7 +940,25 @@ public final class DsBlocks {
             hasPower = true;
             itemCapacity = 20;
             // boostScale = 0.15;
-            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(Color.valueOf("00000000")));
+            drawer = new DrawMulti(
+                new DrawRegion("-bottom"),
+                new DrawBlock() {
+                    @Override
+                    public void draw(Building build) {
+                        var b = (DsGenericCrafterBuild) build;
+                        Draw.color(Color.valueOf("55aaff"));
+                        Lines.poly(build.x, build.y, 6, (1 - b.progress) * 7, b.progress * 180);
+                        Draw.blend(Blending.additive);
+                        Draw.alpha(build.warmup());
+                        Lines.poly(build.x, build.y, 6, (1 - b.progress) * 7, b.progress * 180);
+                        Draw.blend();
+                        Draw.reset();
+                    }
+                },
+                new DrawDefault(),
+                new DrawWarmupRegion() {{
+                    color = Color.valueOf("4f74f9");
+                }});
             requirements(Category.crafting, ItemStack.with(
                 Items.lead, 120,
                 Items.silicon, 40,
