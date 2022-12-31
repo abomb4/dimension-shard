@@ -7,6 +7,7 @@ import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
+import arc.math.Interp;
 import arc.math.Mathf;
 import arc.struct.EnumSet;
 import arc.util.Strings;
@@ -66,7 +67,9 @@ import mindustry.world.consumers.ConsumeItemRadioactive;
 import mindustry.world.draw.DrawBlock;
 import mindustry.world.draw.DrawDefault;
 import mindustry.world.draw.DrawFlame;
+import mindustry.world.draw.DrawGlowRegion;
 import mindustry.world.draw.DrawMulti;
+import mindustry.world.draw.DrawParticles;
 import mindustry.world.draw.DrawRegion;
 import mindustry.world.draw.DrawWarmupRegion;
 import mindustry.world.meta.Attribute;
@@ -981,7 +984,28 @@ public final class DsBlocks {
             craftTime = 90;
             hasPower = true;
             hasLiquids = false;
-            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(hardThoriumAlloy.color));
+            drawer = new DrawMulti(
+                new DrawRegion("-bottom"),
+                new DrawParticles() {{
+                    color = Color.valueOf("#4064e9");
+                    alpha = 0.5f;
+                    particleSize = 3f;
+                    particles = 10;
+                    particleRad = 9f;
+                    particleLife = 200f;
+                    reverse = true;
+                    particleSizeInterp = Interp.one;
+                }},
+                new DrawDefault(),
+                new DrawGlowRegion("-top") {{
+                    color = Color.valueOf("fbd267");
+                }},
+                new DrawGlowRegion("-glow") {{
+                    alpha = 0.6f;
+                    glowIntensity = 0.5f;
+                    glowScale = 30f;
+                }}
+            );
             itemCapacity = 20;
             requirements(Category.crafting, ItemStack.with(
                 Items.copper, 120,
@@ -1284,12 +1308,7 @@ public final class DsBlocks {
             ));
             consumeLiquid(ionLiquid, 0.1F);
             consumePower(8);
-            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(dimensionAlloy.color), new DrawBlock() {
-                @Override
-                public void draw(Building build) {
-                    Draw.rect(Items.copper.fullIcon, build.x, build.y);
-                }
-            });
+            drawer = new DrawMulti(new DrawDefault(), new DrawFlame(dimensionAlloy.color));
         }};
         // endregion Factory
 
