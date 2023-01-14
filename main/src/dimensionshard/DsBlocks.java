@@ -20,12 +20,12 @@ import dimensionshard.types.blocks.ElectricStormTurret;
 import dimensionshard.types.blocks.HardPhaseSpaceBridge;
 import dimensionshard.types.blocks.IonBoltTurret;
 import dimensionshard.types.blocks.PhaseSpaceBridge;
+import dimensionshard.types.blocks.PowerNetTower;
 import dimensionshard.types.blocks.ResourcesDispatchingCenter;
 import dimensionshard.types.blocks.SpaceUnloader;
 import dimensionshard.types.blocks.ds.DsAttributeCrafter;
 import dimensionshard.types.blocks.ds.DsGenericCrafter;
 import dimensionshard.types.bullets.DirectLightning;
-import mindustry.Vars;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
 import mindustry.content.Items;
@@ -83,6 +83,7 @@ import static dimensionshard.DsItems.ionLiquid;
 import static dimensionshard.DsItems.spaceCrystal;
 import static dimensionshard.DsItems.timeCrystal;
 import static dimensionshard.DsItems.timeFlow;
+import static mindustry.Vars.tilesize;
 
 /**
  * bu lao ke si
@@ -130,6 +131,8 @@ public final class DsBlocks {
 
     // Power
     public static Battery dimensionCrystalBattery;
+    public static PowerNetTower powerNetNode;
+    public static PowerNetTower powerNetTower;
     public static ConsumeGenerator timeCompressedRtg;
 
     // Factory
@@ -780,6 +783,7 @@ public final class DsBlocks {
                     public void updateTile() {
                         if (timer(timerDump, dumpTime)) {
                             dump(dominantItem != null && items.has(dominantItem) ? dominantItem : null);
+                            dump(dominantItem != null && items.has(dominantItem) ? dominantItem : null);
                         }
 
                         if (dominantItem == null) {
@@ -813,10 +817,10 @@ public final class DsBlocks {
                             return;
                         }
 
-                        if (dominantItems > 0 && progress >= delay && items.total() < itemCapacity) {
+                        while (dominantItems > 0 && progress >= delay && items.total() < itemCapacity) {
                             offload(dominantItem);
 
-                            progress %= delay;
+                            progress -= delay;
 
                             if (wasVisible) {
                                 drillEffect.at(x + Mathf.range(drillEffectRnd), y + Mathf.range(drillEffectRnd),
@@ -874,6 +878,60 @@ public final class DsBlocks {
                 super.drawPlace(x, y, rotation, valid);
             }
         };
+
+        powerNetNode = new PowerNetTower("power-net-node") {{
+            requirements(Category.power, ItemStack.with(
+                Items.lead, 120,
+                Items.silicon, 50,
+                Items.surgeAlloy, 60,
+                dimensionShard, 10,
+                spaceCrystal, 120,
+                hardThoriumAlloy, 30
+            ));
+            consumePowerBuffered(5000f);
+            range = 16;
+            size = 3;
+            drawer = new DrawMulti(
+                new DrawDefault(),
+                new DrawBlock() {
+                    public TextureRegion topRegion;
+
+                    @Override
+                    public void load(Block block) {
+                        topRegion = Lib.loadRegion("power-net-tower-node-top");
+                    }
+
+                    @Override
+                    public TextureRegion[] icons(Block block) {
+                        return new TextureRegion[]{topRegion};
+                    }
+
+                    @Override
+                    public void draw(Building build) {
+                        final PowerNetTowerBuild battery = (PowerNetTowerBuild) build;
+                        final float status = battery.power.status;
+                        Draw.alpha(status);
+                        Draw.rect(topRegion, battery.x, battery.y);
+                        Draw.reset();
+                    }
+                }
+            );
+        }};
+
+        powerNetTower = new PowerNetTower("power-net-tower") {{
+            requirements(Category.power, ItemStack.with(
+                Items.lead, 300,
+                Items.silicon, 80,
+                Items.surgeAlloy, 120,
+                dimensionShard, 30,
+                spaceCrystal, 240,
+                hardThoriumAlloy, 60,
+                dimensionAlloy, 100
+            ));
+            consumePowerBuffered(50000f);
+            range = 56;
+            size = 4;
+        }};
 
         timeCompressedRtg = new ConsumeGenerator("time-compressed-rtg") {{
             final int rtgMultipler = 12;
@@ -1075,7 +1133,7 @@ public final class DsBlocks {
             consumePower(3f);
             consumeItems(ItemStack.with(
                 dimensionShard, 4,
-                Items.phaseFabric, 2
+                Items.phaseFabric, 1
             ));
             consumeLiquid(Liquids.cryofluid, 6f / 60f);
             requirements(Category.crafting, ItemStack.with(
@@ -1128,7 +1186,7 @@ public final class DsBlocks {
             itemCapacity = 20;
             boostScale = 0.2F;
 
-            consumeItems(ItemStack.with(Items.plastanium, 2));
+            consumeItems(ItemStack.with(Items.titanium, 2));
             consumePower(2.5F);
             consumeLiquid(timeFlow, 0.1F);
             requirements(Category.crafting, ItemStack.with(
@@ -1203,13 +1261,13 @@ public final class DsBlocks {
 
                     Draw.color(Pal.accent);
                     Draw.alpha(entity.warmup * 0.8F);
-                    var dst = Mathf.sin(entity.totalProgress, 6, Vars.tilesize * entity.block.size / 6F);
+                    var dst = Mathf.sin(entity.totalProgress, 6, tilesize * entity.block.size / 6F);
                     var rot = entity.totalProgress + 90;
                     Lines.lineAngleCenter(
                         entity.x + Angles.trnsx(rot, dst),
                         entity.y + Angles.trnsy(rot, dst),
                         rot + 90,
-                        entity.block.size * Vars.tilesize / 3F
+                        entity.block.size * tilesize / 3F
                     );
                     Draw.reset();
 
@@ -1400,7 +1458,7 @@ public final class DsBlocks {
                 range = 180;
                 phaseRangeBoost = 40;
                 speedBoost = 2.0F;
-                speedBoostPhase = 2.0F;
+                speedBoostPhase = 1.5F;
                 useTime = 180;
                 hasBoost = true;
                 consumePower(15);

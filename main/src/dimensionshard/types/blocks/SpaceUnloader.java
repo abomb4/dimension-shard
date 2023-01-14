@@ -148,6 +148,7 @@ public class SpaceUnloader extends StorageBlock {
 
     @Override
     public void drawPlace(int x, int y, int rotation, boolean valid) {
+        Drawf.dashCircle(x * Vars.tilesize, y * Vars.tilesize, range, Pal.accent);
         if (!DsGlobal.techDsAvailable()) {
             this.drawPlaceText(Lib.getMessage("msg", "dimensionCoreRequired"), x, y, valid);
             return;
@@ -360,6 +361,10 @@ public class SpaceUnloader extends StorageBlock {
                             if (max <= 0) {
                                 break;
                             }
+                            continue;
+                        }
+
+                        if (linkTarget.items == null) {
                             continue;
                         }
 
