@@ -15,13 +15,14 @@ compileTestJava.options.encoding = "UTF-8"
 sourceSets.main.java.srcDirs = ["src"]
 
 repositories {
+    maven { name "Alibaba" ; url "https://maven.aliyun.com/repository/public" }
     mavenCentral()
     maven { url 'https://www.jitpack.io' }
 }
 
 ext {
     //the build number that this mod is made for
-    mindustryVersion = 'v140'
+    mindustryVersion = 'v141'
     jabelVersion = "0.9.0"
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
@@ -46,6 +47,7 @@ allprojects {
 
 dependencies {
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Arc:arcnet:$mindustryVersion"
     compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
     compileOnly(project(":annotation"))
 
