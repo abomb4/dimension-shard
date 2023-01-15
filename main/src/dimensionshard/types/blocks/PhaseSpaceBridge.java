@@ -1,22 +1,29 @@
 package dimensionshard.types.blocks;
 
 import arc.Events;
+import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.struct.Seq;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
+import mindustry.core.Renderer;
 import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.input.Placement;
 import mindustry.type.Item;
 import mindustry.world.Tile;
 import mindustry.world.blocks.distribution.ItemBridge;
+
+import static mindustry.Vars.tilesize;
+import static mindustry.Vars.world;
 
 /**
  * 相位空间桥，多方向传输物品
@@ -143,6 +150,55 @@ public class PhaseSpaceBridge extends ItemBridge {
             }
 
             Drawf.dashCircle(x, y, block.range * Vars.tilesize, Pal.accent);
+        }
+
+        @Override
+        public void draw() {
+            Draw.rect(this.block.region, this.x, this.y, this.block.rotate ? this.rotdeg() : 0);
+            this.drawTeamTop();
+            Draw.z(Layer.power);
+
+            Tile other = world.tile(link);
+            if (!linkValid(tile, other)) {
+                return;
+            }
+
+            if (Mathf.zero(Renderer.bridgeOpacity)) {
+                return;
+            }
+
+            int i = relativeTo(other.x, other.y);
+
+            if (pulse) {
+                Draw.color(Color.white, Color.black, Mathf.absin(Time.time, 6f, 0.07f));
+            }
+
+            float warmup = hasPower ? this.warmup : 1f;
+
+            Draw.alpha((fadeIn ? Math.max(warmup, 0.25f) : 1f) * Renderer.bridgeOpacity);
+
+            var angle = Angles.angle(tile.worldx(), tile.worldy(), other.worldx(), other.worldy());
+
+            Draw.rect(endRegion, x, y, angle + 90);
+            Draw.rect(endRegion, other.drawx(), other.drawy(), angle + 270);
+
+            Lines.stroke(bridgeWidth);
+            Lines.line(bridgeRegion, tile.worldx(), tile.worldy(), other.worldx(), other.worldy(), false);
+
+            int dist = Math.max(Math.abs(other.x - tile.x), Math.abs(other.y - tile.y)) - 1;
+
+            Draw.color();
+
+            int arrows = dist * 2 - 2;
+
+            for (int a = 0; a < arrows; a++) {
+                Draw.alpha(Mathf.absin(a - time / arrowTimeScl, arrowPeriod, 1f) * warmup * Renderer.bridgeOpacity);
+                Draw.rect(arrowRegion,
+                    tile.worldx() + Angles.trnsx(angle, (tilesize / 2f + a * 4 + time % 4)),
+                    tile.worldy() + Angles.trnsy(angle, (tilesize / 2f + a * 4 + time % 4)), angle);
+            }
+
+            Draw.reset();
         }
 
         @Override
