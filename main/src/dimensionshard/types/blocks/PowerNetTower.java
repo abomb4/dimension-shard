@@ -10,6 +10,7 @@ import arc.struct.EnumSet;
 import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Tmp;
+import dimensionshard.DsLayers;
 import dimensionshard.libs.Lib;
 import mindustry.Vars;
 import mindustry.core.UI;
@@ -46,7 +47,7 @@ public class PowerNetTower extends PowerBlock {
 
     public float range;
     private Color baseColor = Pal.accent;
-    public DrawBlock drawer = new DrawDefault();
+    public DrawBlock drawer;
 
     public PowerNetTower(String name) {
         super(name);
@@ -85,18 +86,7 @@ public class PowerNetTower extends PowerBlock {
                     Draw.reset();
                 }
             },
-            new DrawBlock() {
-                @Override
-                public void draw(Building b) {
-                    final PowerNetTowerBuild build = (PowerNetTowerBuild) b;
-                    final Color color = Color.valueOf("00aaff");
-                    Draw.z(26F);
-                    Draw.color(color);
-                    // Draw.alpha(0.1f);
-                    Fill.square(build.x, build.y, range * tilesize / 2);
-                    Draw.reset();
-                }
-            }
+            new DrawPowerNet()
         );
     }
 
@@ -304,4 +294,47 @@ public class PowerNetTower extends PowerBlock {
         // }
     }
 
+    /**
+     * 绘制电力网格，使用 {@link dimensionshard.DsShaders#powerNetShader}
+     */
+    public static class DrawPowerNet extends DrawBlock {
+
+        public static final Color DEFAULT_MIN_COLOR = Color.valueOf("ff5e1a");
+        public static final Color DEFAULT_MAX_COLOR = Color.valueOf("1a9eff");
+
+        public float range;
+
+        public Color minColor;
+        public Color maxColor;
+
+        public DrawPowerNet() {
+            this(DEFAULT_MIN_COLOR, DEFAULT_MAX_COLOR);
+        }
+
+        public DrawPowerNet(Color minColor, Color maxColor) {
+            this.minColor = minColor;
+            this.maxColor = maxColor;
+        }
+
+        @Override
+        public void load(Block block) {
+            if (block instanceof PowerNetTower) {
+                this.range = ((PowerNetTower) block).range;
+            }
+        }
+
+        @Override
+        public void draw(Building b) {
+            if (Vars.player == null || Vars.player.team() != b.team()) {
+                return;
+            }
+            final PowerNetTowerBuild build = (PowerNetTowerBuild) b;
+            Draw.z(DsLayers.Z_POWER_NET_EFFECT);
+            float percent = (build.power.status - 0.25f) * 1.5f;
+            Color color = minColor.cpy().lerp(maxColor, percent);
+            Draw.color(color);
+            Fill.square(build.x, build.y, range * tilesize / 2);
+            Draw.reset();
+        }
+    }
 }

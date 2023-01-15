@@ -889,33 +889,9 @@ public final class DsBlocks {
                 hardThoriumAlloy, 30
             ));
             consumePowerBuffered(5000f);
-            range = 16;
+            health = 900;
+            range = 15;
             size = 3;
-            drawer = new DrawMulti(
-                new DrawDefault(),
-                new DrawBlock() {
-                    public TextureRegion topRegion;
-
-                    @Override
-                    public void load(Block block) {
-                        topRegion = Lib.loadRegion("power-net-tower-node-top");
-                    }
-
-                    @Override
-                    public TextureRegion[] icons(Block block) {
-                        return new TextureRegion[]{topRegion};
-                    }
-
-                    @Override
-                    public void draw(Building build) {
-                        final PowerNetTowerBuild battery = (PowerNetTowerBuild) build;
-                        final float status = battery.power.status;
-                        Draw.alpha(status);
-                        Draw.rect(topRegion, battery.x, battery.y);
-                        Draw.reset();
-                    }
-                }
-            );
         }};
 
         powerNetTower = new PowerNetTower("power-net-tower") {{
@@ -930,6 +906,7 @@ public final class DsBlocks {
             ));
             consumePowerBuffered(50000f);
             range = 56;
+            health = 1800;
             size = 4;
         }};
 

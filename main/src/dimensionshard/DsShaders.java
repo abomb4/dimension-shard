@@ -44,7 +44,7 @@ public class DsShaders {
             final FrameBuffer effectBuffer = Vars.renderer.effectBuffer;
             effectBuffer.resize(graphics.getWidth(), graphics.getHeight());
             // effectBuffer.begin(Color.clear);
-            Draw.drawRange(26f, () -> {
+            Draw.drawRange(DsLayers.Z_POWER_NET_EFFECT, () -> {
                 effectBuffer.begin(Color.clear);
             }, () -> {
                 effectBuffer.end();
