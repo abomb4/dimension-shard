@@ -15,6 +15,7 @@ import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.game.Team;
 import mindustry.gen.Bullet;
+import mindustry.graphics.Pal;
 
 /**
  * 向中间吸附
@@ -53,7 +54,7 @@ public class BlackHoleBulletType extends BasicBulletType {
     public void draw(Bullet b) {
         float fin = b.time / this.lifetime;
         float fout = 1 - fin;
-        Draw.color(DsColors.spaceCrystalColor, DsColors.spaceCrystalColorLight, fout * 0.8F + 0.2F);
+        Draw.color(DsColors.spaceCrystalColor, Pal.darkMetal, fout * 0.8F + 0.2F);
         Draw.alpha(0.4F * fin + 0.6F);
         Lines.stroke(fin * 3);
         Lines.circle(b.x, b.y, Mathf.sin(fout) * splashDamageRadius);

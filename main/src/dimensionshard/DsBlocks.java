@@ -213,7 +213,8 @@ public final class DsBlocks {
                         shootEffect = Fx.none;
                         hitEffect = Fx.explosion;
                         smokeEffect = Fx.none;
-                        trailEffect = Fx.none;
+                        trailEffect = DsFx.fxBombTeleporterShootTrial;
+                        trailSpacing = 14;
                         despawnEffect = Fx.explosion;
                         hitSound = Sounds.explosion;
                         damage = 0;
@@ -232,7 +233,8 @@ public final class DsBlocks {
                         shootEffect = Fx.none;
                         hitEffect = Fx.explosion;
                         smokeEffect = Fx.none;
-                        trailEffect = Fx.none;
+                        trailEffect = DsFx.fxBombTeleporterShootTrial;
+                        trailSpacing = 14;
                         despawnEffect = Fx.explosion;
                         hitSound = Sounds.explosion;
                         damage = 0;
@@ -251,7 +253,8 @@ public final class DsBlocks {
                         shootEffect = Fx.none;
                         hitEffect = Fx.blastExplosion;
                         smokeEffect = Fx.smokeCloud;
-                        trailEffect = Fx.none;
+                        trailEffect = DsFx.fxBombTeleporterShootTrial;
+                        trailSpacing = 14;
                         despawnEffect = Fx.blastExplosion;
                         hitSound = Sounds.explosion;
                         damage = 0;
@@ -270,7 +273,8 @@ public final class DsBlocks {
                         shootEffect = Fx.none;
                         hitEffect = Fx.massiveExplosion;
                         smokeEffect = Fx.none;
-                        trailEffect = Fx.none;
+                        trailEffect = DsFx.fxBombTeleporterShootTrial;
+                        trailSpacing = 14;
                         despawnEffect = Fx.massiveExplosion;
                         hitSound = Sounds.explosion;
                         damage = 0;
@@ -287,7 +291,8 @@ public final class DsBlocks {
                         shootEffect = Fx.none;
                         hitEffect = DsFx.fxDimensionShardExplosion;
                         smokeEffect = Fx.none;
-                        trailEffect = Fx.none;
+                        trailEffect = DsFx.fxBombTeleporterShootTrial;
+                        trailSpacing = 14;
                         despawnEffect = DsFx.fxDimensionShardExplosion;
                         hitSound = Sounds.explosion;
                         damage = 0;
@@ -304,7 +309,8 @@ public final class DsBlocks {
                             shootEffect = Fx.none;
                             hitEffect = DsFx.fxBlackHoleExplode;
                             smokeEffect = Fx.none;
-                            trailEffect = Fx.none;
+                            trailEffect = DsFx.fxBombTeleporterShootTrial;
+                            trailSpacing = 14;
                             despawnEffect = DsFx.fxBlackHoleExplode;
                             hitSound = Sounds.explosion;
                             damage = 0;

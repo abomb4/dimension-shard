@@ -223,4 +223,19 @@ public final class DsFx {
         stroke(e.fin() * 2f);
         Lines.circle(e.x, e.y, e.fout() * 50f);
     }).followParent(true).rotWithParent(true);
+
+    /** 炸弹传送器轨迹效果 */
+    public static final Effect fxBombTeleporterShootTrial = new Effect(15, e -> {
+        for (var i = 0; i < 2; i++) {
+            Draw.color(i == 0 ? Color.valueOf("69dcee") : Color.white);
+            Draw.alpha(0.7f * e.fout());
+
+            float m = i == 0 ? 1.25F : 0.75F;
+
+            float rot = e.rotation + 180;
+            float w = 28F * e.fout() * m;
+            Drawf.tri(e.x, e.y, w, m, rot);
+            Drawf.tri(e.x, e.y, w, m, rot + 180);
+        }
+    });
 }

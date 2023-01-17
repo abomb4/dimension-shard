@@ -72,7 +72,7 @@ public final class DsUnits {
     public static void load() {
         burn = new UnitType("burn") {{
             armor = 8;
-            health = 6400;
+            health = 6800;
             speed = 0.75F;
             rotateSpeed = 2;
             accel = 0.04F;
@@ -99,7 +99,7 @@ public final class DsUnits {
                 x = 15;
                 y = 6;
                 rotateSpeed = 4;
-                reload = 50;
+                reload = 60;
                 recoil = 4;
                 shootSound = Lib.loadSound("ion-shot");
                 shadow = 20;

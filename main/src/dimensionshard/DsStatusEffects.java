@@ -14,6 +14,8 @@ public class DsStatusEffects {
     public static StatusEffect timeFreezingEffect = new StatusEffect("time-freezing") {{
         this.color = Color.valueOf("6ecdec");
         this.speedMultiplier = 0.4F;
+        this.reloadMultiplier = 0.4F;
+        this.buildSpeedMultiplier = 0.6F;
         this.effect = DsFx.fxTimeFreezing;
         this.init(() -> this.opposite(StatusEffects.melting, StatusEffects.burning));
     }};
@@ -22,7 +24,7 @@ public class DsStatusEffects {
     public static StatusEffect ionBurningEffect = new StatusEffect("ion-burning") {{
         this.color = Color.valueOf("cee0e9");
         this.damage = 0.6F;
-        this.healthMultiplier = 0.75F;
+        this.healthMultiplier = 0.70F;
         this.init(() -> this.opposite(StatusEffects.wet, StatusEffects.freezing, timeFreezingEffect));
     }};
 
@@ -62,7 +64,7 @@ public class DsStatusEffects {
             this.show = false;
             this.damage = 5 / 60F;
             this.effectChance = 0.5F;
-            this.effect = DsFx.hyperSpeed1Effect;
+            this.effect = DsFx.hyperSpeed2Effect;
             this.speedMultiplier = 1.6F;
             this.reloadMultiplier = 4.5F;
             this.buildSpeedMultiplier = this.reloadMultiplier;
