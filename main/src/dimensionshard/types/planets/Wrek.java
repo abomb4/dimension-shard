@@ -18,8 +18,8 @@ import mindustry.type.Planet;
  */
 public class Wrek extends Planet {
 
-    public Wrek() {
-        super("wrek", Planets.serpulo, 1, 2);
+    public Wrek(Planet parent) {
+        super("wrek", parent, 1, 2);
 
         generator = new SerpuloPlanetGenerator();
         meshLoader = () -> new HexMesh(this, 5);
