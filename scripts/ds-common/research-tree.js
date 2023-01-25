@@ -43,8 +43,8 @@ const { resourcesDispatchingCenter } = require('tech-ds/distribution/resources-d
 const { deflectForceProjector } = require('tech-ds/effect/deflect-force-projector')
 const { spaceVault } = require('tech-ds/effect/space-vault');
 const { timeOverdrive } = require('tech-ds/effect/time-overdrive')
-const { dimensionTechnologyCore3 } = require('tech-ds/effect/dimension-technology-core-3');
-const { dimensionTechnologyCore4 } = require('tech-ds/effect/dimension-technology-core')
+const { dimensionTechnologyCore3 } = require('tech-ds/effect/dimension-technology-core-5');
+const { dimensionTechnologyCore4 } = require('tech-ds/effect/dimension-technology-core-6')
 
 const { formula } = require('tech-ds/unit/ast4-formula');
 const { equa } = require('tech-ds/unit/ast5-equa');

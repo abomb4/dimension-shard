@@ -227,15 +227,61 @@ public final class DsFx {
     /** 炸弹传送器轨迹效果 */
     public static final Effect fxBombTeleporterShootTrial = new Effect(15, e -> {
         for (var i = 0; i < 2; i++) {
-            Draw.color(i == 0 ? Color.valueOf("69dcee") : Color.white);
+            Draw.color(i == 0 ? DsColors.teleportColor : Color.white);
             Draw.alpha(0.7f * e.fout());
 
             float m = i == 0 ? 1.25F : 0.75F;
 
             float rot = e.rotation + 180;
-            float w = 28F * e.fout() * m;
+            float w = 18F * e.fout() * m;
             Drawf.tri(e.x, e.y, w, m, rot);
             Drawf.tri(e.x, e.y, w, m, rot + 180);
+            Drawf.tri(e.x, e.y, m, w, rot);
+            Drawf.tri(e.x, e.y, m, w, rot + 180);
+        }
+
+
+        // float lin = e.fin();
+        // float lout = (e.fout() - 0.3f) / 0.7f;
+        // if (lout <= 0) {
+        //     return;
+        // }
+        //
+        // Color lcolor = DsColors.teleportColor.cpy().a(lout);
+        // Tmp.v6.set(lin * 10f, 0);
+        // Tmp.v6.setAngle(e.rotation + 90);
+        // float fx = Angles.trnsx(e.rotation, 14);
+        // float fy = Angles.trnsy(e.rotation, 14);
+        // float x1, y1, x2, y2;
+        //
+        // Lines.stroke(lout + 0.5f, lcolor);
+        // x1 = e.x + Tmp.v6.x;
+        // y1 = e.y + Tmp.v6.y;
+        // x2 = x1 + fx;
+        // y2 = y1 + fy;
+        // Lines.line(x1, y1, x2, y2);
+        //
+        // Lines.stroke(lout + 0.5f, lcolor);
+        // x1 = e.x - Tmp.v6.x;
+        // y1 = e.y - Tmp.v6.y;
+        // x2 = x1 + fx;
+        // y2 = y1 + fy;
+        // Lines.line(x1, y1, x2, y2);
+    });
+
+    /** 炸弹传送器开炮效果 */
+    public static final Effect fxTeleporterShoot = new Effect(16, 24, e -> {
+        Draw.color(DsColors.teleportColor);
+        for (var i = 0; i < 4; i++) {
+            Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
+        }
+
+        Lines.stroke(Math.max(0, e.fout() - 0.5F) * 2.5F);
+        Lines.circle(e.x, e.y, 24 * e.finpow());
+
+        Draw.color();
+        for (var i = 0; i < 4; i++) {
+            Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
         }
     });
 }

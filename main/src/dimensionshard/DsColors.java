@@ -27,4 +27,5 @@ public final class DsColors {
     public static final Color hardThoriumAlloyColorLight = Color.valueOf("d97368");
     public static final Color dimensionAlloyColor = Color.valueOf("20c0d6");
     public static final Color dimensionAlloyColorLight = Color.valueOf("69dcee");
+    public static final Color teleportColor = Color.valueOf("69dcee");
 }

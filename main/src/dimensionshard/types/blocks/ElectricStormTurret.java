@@ -62,6 +62,10 @@ public class ElectricStormTurret extends ItemTurret {
         coolantMultiplier = 0.15F;
         consumeCoolant(2);
         ammo(DsItems.dimensionAlloy, new ElectricStormBulletType() {{
+            damage = 175;
+            splashDamage = 100;
+            lightningDamage = 50;
+            this.pierceCap = 6;
             speedStart = 0.8F;
             homingDelay = 30;
             lifetime = 150;

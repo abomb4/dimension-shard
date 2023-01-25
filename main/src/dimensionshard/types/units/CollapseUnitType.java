@@ -64,7 +64,7 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
     public float maxRange = 120;
     public float rangeUpDmg = 1000;
     public float maxRangeDmg = 4000;
-    public float damageDeflection = 0.2F;
+    public float damageDeflection = 0.25F;
     public Seq<SkillDefinition> skillDefinitions;
 
     /**
@@ -160,11 +160,11 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
             bullet = new PointBulletType() {{
                 lifetime = 1;
                 shootEffect = CollapseUnitType.shootEffect;
-                hitEffect = Fx.none;
+                hitEffect = Fx.massiveExplosion;
                 smokeEffect = Fx.smokeCloud;
                 trailEffect = DsFx.fxBombTeleporterShootTrial;
                 trailSpacing = 14;
-                despawnEffect = Fx.massiveExplosion;
+                despawnEffect = Fx.none;
                 hitSound = Sounds.explosion;
                 damage = 3;
                 splashDamageRadius = 34;
@@ -194,11 +194,11 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
             bullet = new PointBulletType() {{
                 lifetime = 1;
                 shootEffect = CollapseUnitType.shootEffect;
-                hitEffect = Fx.none;
+                hitEffect = DsFx.fxDimensionShardExplosion;
                 smokeEffect = Fx.none;
                 trailEffect = DsFx.fxBombTeleporterShootTrial;
                 trailSpacing = 14;
-                despawnEffect = DsFx.fxDimensionShardExplosion;
+                despawnEffect = Fx.none;
                 hitSound = Sounds.explosion;
                 damage = 3;
                 splashDamageRadius = 32;
@@ -227,11 +227,11 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
             bullet = new PointBulletType() {{
                 lifetime = 1;
                 shootEffect = CollapseUnitType.shootEffect;
-                hitEffect = Fx.none;
+                hitEffect = DsFx.fxDimensionShardExplosion;
                 smokeEffect = Fx.none;
                 trailEffect = DsFx.fxBombTeleporterShootTrial;
                 trailSpacing = 14;
-                despawnEffect = DsFx.fxDimensionShardExplosion;
+                despawnEffect = Fx.none;
                 hitSound = Sounds.explosion;
                 damage = 3;
                 splashDamageRadius = 32;
@@ -257,6 +257,7 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
         );
         skillDefinitions = Seq.with(
 
+            // num1: absorbed damage, num2: activi state, num3: health snapshot for ai dps check, num4:
             new SkillDefinition("damage-deflection") {
                 {
                     this.range = 20;
@@ -302,7 +303,7 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
                 @Override
                 public void postUpdate(SkillStatus status, SkilledUnit unit, boolean isLastFrame) {
                     if (isLastFrame && unit != null && !unit.dead()) {
-                        if (status.numValue1 > 1500) {
+                        if (status.numValue1 > (maxRangeDmg - rangeUpDmg) * 0.25 + rangeUpDmg) {
                             Fx.dynamicExplosion.at(unit.x(), unit.y(), calculateRangeByDmg(status.numValue1) / 8 / 2);
                         } else {
                             Fx.bigShockwave.at(unit.x(), unit.y());

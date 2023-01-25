@@ -64,7 +64,7 @@ public class IonBoltTurret extends LiquidTurret {
         this.category = Category.turret;
         this.health = 3000;
         this.size = 4;
-        this.reload = 60 - 1;
+        this.reload = 60;
         this.range = 220;
         this.inaccuracy = 2;
         this.shoot.shots = 3;
@@ -75,12 +75,12 @@ public class IonBoltTurret extends LiquidTurret {
         this.loopSound = Sounds.none;
         this.requirements = ItemStack.with(
             Items.lead, 1200,
-            Items.metaglass, 500,
-            Items.graphite, 600,
-            Items.plastanium, 600,
-            Items.surgeAlloy, 400,
-            DsItems.timeCrystal, 160,
-            DsItems.hardThoriumAlloy, 500
+            Items.metaglass, 400,
+            Items.graphite, 500,
+            Items.plastanium, 120,
+            Items.surgeAlloy, 300,
+            DsItems.timeCrystal, 180,
+            DsItems.hardThoriumAlloy, 400
         );
         this.ammo(DsItems.ionLiquid, new IonBoltBulletType() {{
             this.ammoMultiplier = 2;
@@ -169,7 +169,7 @@ public class IonBoltTurret extends LiquidTurret {
 
             Draw.z(Layer.turret);
             for (int i = 0; i < IonBoltTurret.this.chargeRegions.size; i++) {
-                Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0.0F, 1.0F)));
+                Draw.alpha(Interp.pow2In.apply(Mathf.clamp(loadPercentLen - i, 0.0F, 1.2F)));
                 Draw.rect(IonBoltTurret.this.chargeRegions.get(i), this.x + tr2.x, this.y + tr2.y, this.drawrot());
             }
         }

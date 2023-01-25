@@ -19,7 +19,7 @@ const lib = require('abomb4/lib');
 const items = require('ds-common/items');
 const { lightning } = require('tech-ds/unit/core2-lightning');
 
-const block = extend(CoreBlock, "dimension-technology-core", {
+const block = extend(CoreBlock, "dimension-technology-core-6", {
 });
 block.buildVisibility = BuildVisibility.shown;
 block.category = Category.effect;

@@ -20,8 +20,9 @@ public final class DsGlobal {
         return Vars.state == null
             || Vars.state.rules.infiniteResources
             || Vars.player == null
-            || Vars.player.team().cores().contains(v -> v.block.name.equals(Lib.modName + "-dimension-technology-core"))
             ||
-            Vars.player.team().cores().contains(v -> v.block.name.equals(Lib.modName + "-dimension-technology-core-3"));
+            Vars.player.team().cores().contains(v -> v.block.name.equals(Lib.modName + "-dimension-technology-core-6"))
+            ||
+            Vars.player.team().cores().contains(v -> v.block.name.equals(Lib.modName + "-dimension-technology-core-5"));
     }
 }

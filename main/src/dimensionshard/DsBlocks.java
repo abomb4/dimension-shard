@@ -32,7 +32,6 @@ import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.content.StatusEffects;
 import mindustry.content.UnitTypes;
-import mindustry.entities.Effect;
 import mindustry.entities.bullet.LightningBulletType;
 import mindustry.entities.bullet.PointBulletType;
 import mindustry.entities.pattern.ShootSpread;
@@ -166,24 +165,9 @@ public final class DsBlocks {
         ionBoltTurret = new IonBoltTurret("ion-bolt-turret");
 
         bombTeleporter = new ItemTurret("bomb-teleporter") {
-            final Color teleportColor = Color.valueOf("69dcee");
-            final Effect fxTeleporterShoot = new Effect(16, 24, e -> {
-                Draw.color(teleportColor);
-                for (var i = 0; i < 4; i++) {
-                    Drawf.tri(e.x, e.y, 4, 24 * e.fout(), i * 90 + e.id * 10);
-                }
-
-                Lines.stroke(Math.max(0, e.fout() - 0.5F) * 2.5F);
-                Lines.circle(e.x, e.y, 24 * e.finpow());
-
-                Draw.color();
-                for (var i = 0; i < 4; i++) {
-                    Drawf.tri(e.x, e.y, 2, 12 * e.fout(), i * 90 + e.id * 10);
-                }
-            });
 
             {
-                final int turretRange = 240;
+                final int turretRange = 32 * 8;
                 cooldownTime = 0.04F;
                 recoil = 1.5F;
                 liquidCapacity = 10;
@@ -196,9 +180,9 @@ public final class DsBlocks {
                 rotateSpeed = 10;
                 inaccuracy = 2;
                 xRand = 0;
-                shootEffect = fxTeleporterShoot;
+                shootEffect = DsFx.fxTeleporterShoot;
                 shootSound = Lib.loadSound("bomb-teleport");
-                heatColor = teleportColor;
+                heatColor = DsColors.teleportColor;
                 requirements = ItemStack.with(
                     Items.copper, 200,
                     Items.silicon, 120,
@@ -380,7 +364,7 @@ public final class DsBlocks {
                 coolant = consumeCoolant(0.3f);
                 shootType = new LightningBulletType() {
                     {
-                        damage = 25;
+                        damage = 35;
                         lightningLength = 26;
                         lightningLengthRand = 12;
                         lightningColor = Color.valueOf("69dcee");
@@ -887,12 +871,12 @@ public final class DsBlocks {
 
         powerNetNode = new PowerNetTower("power-net-node") {{
             requirements(Category.power, ItemStack.with(
-                Items.lead, 120,
-                Items.silicon, 50,
-                Items.surgeAlloy, 60,
+                Items.lead, 100,
+                Items.silicon, 40,
+                Items.surgeAlloy, 10,
                 dimensionShard, 10,
-                spaceCrystal, 120,
-                hardThoriumAlloy, 30
+                spaceCrystal, 20,
+                hardThoriumAlloy, 15
             ));
             consumePowerBuffered(5000f);
             health = 900;
@@ -979,8 +963,8 @@ public final class DsBlocks {
 
         spaceCrystallizer = new DsGenericCrafter("space-crystallizer") {{
             size = 2;
-            outputItem = new ItemStack(spaceCrystal, 2);
-            craftTime = 90;
+            outputItem = new ItemStack(spaceCrystal, 3);
+            craftTime = 120;
             hasPower = true;
             itemCapacity = 20;
             // boostScale = 0.15;
@@ -992,9 +976,20 @@ public final class DsBlocks {
                         var b = (DsGenericCrafterBuild) build;
                         Draw.color(Color.valueOf("55aaff"));
                         Lines.poly(build.x, build.y, 6, (1 - b.progress) * 7, b.progress * 180);
+
+                        // Draw.blend(Blending.additive);
+                        // Draw.alpha(build.warmup());
+                        // Drawf.light(build.x, build.y, (1 - b.progress) * 7, 1f);
+                        // Draw.blend();
+                        Draw.reset();
+                    }
+
+                    @Override
+                    public void drawLight(Building build) {
+                        var b = (DsGenericCrafterBuild) build;
                         Draw.blend(Blending.additive);
                         Draw.alpha(build.warmup());
-                        Lines.poly(build.x, build.y, 6, (1 - b.progress) * 7, b.progress * 180);
+                        Drawf.light(build.x, build.y, (1 - b.progress) * 7, 1f);
                         Draw.blend();
                         Draw.reset();
                     }
@@ -1011,18 +1006,18 @@ public final class DsBlocks {
                 dimensionShard, 70
             ));
             consumeItems(ItemStack.with(
-                dimensionShard, 3,
-                Items.silicon, 1,
-                Items.phaseFabric, 1
+                dimensionShard, 5,
+                Items.silicon, 2,
+                Items.phaseFabric, 2
             ));
-            consumePower(2F);
+            consumePower(3F);
         }};
 
         hardThoriumAlloySmelter = new DsGenericCrafter("hard-thorium-alloy-smelter") {{
             size = 3;
             craftEffect = Fx.smeltsmoke;
             outputItem = new ItemStack(hardThoriumAlloy, 2);
-            craftTime = 90;
+            craftTime = 120;
             hasPower = true;
             hasLiquids = false;
             drawer = new DrawMulti(
@@ -1058,9 +1053,9 @@ public final class DsBlocks {
             consumeItems(ItemStack.with(
                 spaceCrystal, 1,
                 Items.graphite, 3,
-                Items.thorium, 5
+                Items.thorium, 8
             ));
-            consumePower(3);
+            consumePower(4);
         }};
 
         timeCondenser = new DsGenericCrafter("time-condenser") {{
@@ -1110,15 +1105,15 @@ public final class DsBlocks {
                 }
             };
             liquidCapacity = 24f;
-            craftTime = 100;
-            outputLiquid = new LiquidStack(timeFlow, 12F / 60F);
+            craftTime = 60;
+            outputLiquid = new LiquidStack(timeFlow, 18F / 60F);
 
-            consumePower(3f);
+            consumePower(4f);
             consumeItems(ItemStack.with(
                 dimensionShard, 4,
                 Items.phaseFabric, 1
             ));
-            consumeLiquid(Liquids.cryofluid, 6f / 60f);
+            consumeLiquid(Liquids.cryofluid, 3f / 60f);
             requirements(Category.crafting, ItemStack.with(
                 Items.lead, 100,
                 Items.silicon, 70,
@@ -1184,17 +1179,17 @@ public final class DsBlocks {
         radioisotopeWeaver = new DsGenericCrafter("radioisotope-weaver") {{
             size = 3;
             craftEffect = Fx.smeltsmoke;
-            outputItem = new ItemStack(Items.phaseFabric, 2);
-            craftTime = 80;
+            outputItem = new ItemStack(Items.phaseFabric, 3);
+            craftTime = 60;
             hasPower = true;
-            itemCapacity = 50;
+            itemCapacity = 70;
             ambientSound = Sounds.techloop;
             ambientSoundVolume = 0.02F;
             consumeItems(ItemStack.with(
-                dimensionShard, 6,
-                Items.sand, 18
+                dimensionShard, 9,
+                Items.sand, 27
             ));
-            consumePower(18F);
+            consumePower(15F);
             requirements(Category.crafting, ItemStack.with(
                 Items.silicon, 180,
                 dimensionShard, 70,
@@ -1330,7 +1325,7 @@ public final class DsBlocks {
             size = 4;
             craftEffect = Fx.smeltsmoke;
             outputItem = new ItemStack(dimensionAlloy, 1);
-            craftTime = 90;
+            craftTime = 120;
             hasPower = true;
             itemCapacity = 20;
 
@@ -1343,7 +1338,7 @@ public final class DsBlocks {
                 timeCrystal, 100
             ));
             consumeItems(ItemStack.with(
-                spaceCrystal, 4,
+                spaceCrystal, 5,
                 timeCrystal, 3,
                 Items.surgeAlloy, 2
             ));
@@ -1354,7 +1349,7 @@ public final class DsBlocks {
         // endregion Factory
 
         // region Effect
-        dimensionTechnologyCore5 = new CoreBlock("dimension-technology-core-3") {{
+        dimensionTechnologyCore5 = new CoreBlock("dimension-technology-core-5") {{
             size = 5;
             health = 6000;
             itemCapacity = 14000;
@@ -1362,15 +1357,15 @@ public final class DsBlocks {
             researchCostMultiplier = 0.07F;
             unitType = DsUnits.electron;
             requirements(Category.effect, ItemStack.with(
-                Items.copper, 8000,
-                Items.lead, 8000,
+                Items.copper, 7000,
+                Items.lead, 7000,
                 Items.silicon, 5000,
                 Items.thorium, 1000,
                 dimensionShard, 3000
             ));
         }};
 
-        dimensionTechnologyCore6 = new CoreBlock("dimension-technology-core") {{
+        dimensionTechnologyCore6 = new CoreBlock("dimension-technology-core-6") {{
             size = 6;
             health = 10000;
             itemCapacity = 24000;
@@ -1441,7 +1436,7 @@ public final class DsBlocks {
                 range = 180;
                 phaseRangeBoost = 40;
                 speedBoost = 2.0F;
-                speedBoostPhase = 1.5F;
+                speedBoostPhase = 1.0F;
                 useTime = 180;
                 hasBoost = true;
                 consumePower(15);
