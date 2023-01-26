@@ -85,6 +85,14 @@ public class ElectronUnitType extends UnitType implements SkilledUnitType {
             statusEffect.buildSpeedMultiplier * 100,      // mining
             statusEffect.buildSpeedMultiplier * 100      // build
         );
+        if (this.skillDefinitions != null) {
+            this.skillDefinitions.forEach(def -> def.load(this));
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
 
         skillDefinitions = Seq.with(
             new SkillDefinition("hyperspeed-1") {

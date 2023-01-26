@@ -3,6 +3,8 @@ package dimensionshard.libs.skill;
 import arc.func.Func;
 import arc.graphics.g2d.TextureRegion;
 import arc.util.io.Reads;
+import dimensionshard.libs.Lib;
+import mindustry.type.UnitType;
 
 /**
  * 技能定义
@@ -39,7 +41,7 @@ public abstract class SkillDefinition {
     public boolean directive;
     /** 是否为排他性技能，适用于持续一段时间生效的技能，在技能持续时间内是否阻止其他技能的触发 */
     public boolean exclusive;
-    /** 持续性技能持续时间 */
+    /** 持续性技能持续时间，大于 0 则视为持续性技能 */
     public float activeTime;
     /** AI 运算检查间隔，避免太频繁占用性能 */
     public float aiCheckInterval;
@@ -49,6 +51,15 @@ public abstract class SkillDefinition {
 
     public SkillDefinition(String name) {
         this.name = name;
+    }
+
+    /**
+     * 读取贴图等客户端资源文件，在服务端不运行
+     *
+     * @param unitType 单位定义
+     */
+    public void load(UnitType unitType) {
+        icon = Lib.loadRegion(this.name);
     }
 
     /**
@@ -69,6 +80,27 @@ public abstract class SkillDefinition {
      * @param data   技能触发数据，指向性技能有 x 与 y 做目标
      */
     public void active(SkillStatus status, SkilledUnit unit, Object data) {
+
+    }
+
+    /**
+     * 是否可重复触发
+     *
+     * @param status 技能状态
+     * @param unit   技能单位
+     */
+    public boolean canActiveAgain(SkillStatus status, SkilledUnit unit) {
+        return false;
+    }
+
+    /**
+     * 再次触发技能
+     *
+     * @param status 技能状态
+     * @param unit   技能单位
+     * @param data   技能触发数据，指向性技能有 x 与 y 做目标
+     */
+    public void activeAgain(SkillStatus status, SkilledUnit unit, Object data) {
 
     }
 
@@ -142,5 +174,15 @@ public abstract class SkillDefinition {
         status.numValue3 = read.f();
         status.numValue4 = read.f();
         return status;
+    }
+
+    /**
+     * icon
+     *
+     * @param skill 技能状态
+     * @return icon
+     */
+    public TextureRegion getIcon(SkillStatus skill) {
+        return icon;
     }
 }

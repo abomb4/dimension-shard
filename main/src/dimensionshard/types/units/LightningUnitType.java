@@ -151,6 +151,14 @@ public class LightningUnitType extends UnitType implements SkilledUnitType {
             range2 / Vars.tilesize,
             damage2
         );
+        if (this.skillDefinitions != null) {
+            this.skillDefinitions.forEach(def -> def.load(this));
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
 
         skillDefinitions = Seq.with(
             new SkillDefinition("hyperspeed-2") {
@@ -282,7 +290,6 @@ public class LightningUnitType extends UnitType implements SkilledUnitType {
             }
         );
     }
-
 
     @Override
     public Seq<SkillDefinition> getSkillDefinitions() {

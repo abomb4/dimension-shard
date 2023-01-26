@@ -30,20 +30,19 @@ public class Wrek extends Planet {
         alwaysUnlocked = true;
         landCloudColor = Color.valueOf("4265ed");
         atmosphereColor = Color.valueOf("213159");
-        startSector = 15;
         atmosphereRadIn = 0.06f;
-        atmosphereRadOut = 0.1f;
-        tidalLock = true;
+        atmosphereRadOut = 0.3f;
         orbitSpacing = 2f;
         totalRadius += 2.6f;
         lightSrcTo = 0.5f;
         lightDstFrom = 0.2f;
-        clearSectorOnLose = true;
+        clearSectorOnLose = false;
         defaultCore = DsBlocks.dimensionTechnologyCore5;
         iconColor = Color.valueOf("5a97cc");
         hiddenItems.addAll(Vars.content.items()).removeAll(Items.serpuloItems);
         hiddenItems.removeAll(DsItems.dimensionShardItems);
 
+        tidalLock = true;
         updateLighting = false;
 
         ruleSetter = r -> {
@@ -57,7 +56,8 @@ public class Wrek extends Planet {
             r.onlyDepositCore = true;
         };
 
-        unlockedOnLand.add(DsBlocks.dimensionTechnologyCore5, DsBlocks.dimensionTechnologyCore6);
+        startSector = 15;
+        unlockedOnLand.add(DsBlocks.dimensionTechnologyCore5);
         this.techTree = Planets.serpulo.techTree;
     }
 

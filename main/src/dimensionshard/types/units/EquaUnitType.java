@@ -90,6 +90,14 @@ public class EquaUnitType extends UnitType implements SkilledUnitType {
             cooldown2 / 60,
             range2 / Vars.tilesize
         );
+        if (this.skillDefinitions != null) {
+            this.skillDefinitions.forEach(def -> def.load(this));
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
 
         skillDefinitions = Seq.with(
             new SkillDefinition("teleport") {

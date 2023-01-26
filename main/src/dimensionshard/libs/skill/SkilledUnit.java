@@ -47,6 +47,15 @@ public interface SkilledUnit extends Unitc {
     void activeSkill(int skillId, SkillData data, boolean fromRemote);
 
     /**
+     * 强制触发可重复触发的技能
+     *
+     * @param skillId    技能 id
+     * @param data       技能数据
+     * @param fromRemote 是否远程触发
+     */
+    void activeSkillAgain(int skillId, SkillData data, boolean fromRemote);
+
+    /**
      * 获取所有技能列表
      *
      * @return 技能列表

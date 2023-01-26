@@ -58,6 +58,20 @@ public class SkillFragment {
                     Core.input.mouseWorldX(),
                     Core.input.mouseWorldY()
                 ));
+
+                // try active all selected units on command mode
+                if (Vars.control.input.commandMode) {
+                    Vars.control.input.selectedUnits.each(u -> {
+                        if (u.getClass() != unit.getClass()) {
+                            return;
+                        }
+                        SkilledUnit selected = (SkilledUnit) u;
+                        selected.tryActiveSkill(skill.def.getSkillId(), new DirectiveSkillData(
+                            Core.input.mouseWorldX(),
+                            Core.input.mouseWorldY()
+                        ));
+                    });
+                }
             }
         }
         selectSkill = -1;
@@ -66,7 +80,8 @@ public class SkillFragment {
     public void trySelectSkill(int index) {
         if (skillList != null && skillList.size > index) {
             final SkillStatus skill = skillList.get(index);
-            if (skill.reload >= skill.def.cooldown) {
+            if (skill.reload >= skill.def.cooldown
+                || skill.active && skill.def.canActiveAgain(skill, (SkilledUnit) Vars.player.unit())) {
                 if (skill.def.directive) {
                     selectSkill = selectSkill == index ? -1 : index;
                 } else {
@@ -148,7 +163,7 @@ public class SkillFragment {
                     imageStyle.disabled = disabled;
 
                     int finalIndex = index;
-                    var skillButton = new ImageButton(skill.def.icon, imageStyle) {
+                    var skillButton = new ImageButton(skill.def.getIcon(skill), imageStyle) {
                         @Override
                         public void draw() {
                             super.draw();
@@ -169,6 +184,9 @@ public class SkillFragment {
                     full.add(skillButton).update(v -> {
                         v.setChecked(selectSkill == finalIndex);
                         v.setDisabled(() -> {
+                            if (skill.active && skill.def.canActiveAgain(skill, (SkilledUnit) Vars.player.unit())) {
+                                return false;
+                            }
                             if (skill.reload < skill.def.cooldown) {
                                 return true;
                             }
@@ -249,6 +267,12 @@ public class SkillFragment {
                 } else {
                     skillList = null;
                 }
+                rebuild();
+            }
+        }));
+        Events.on(SkillEvents.ActiveSkillFinishedEvent.class, (event -> {
+            // Build fragments by unit
+            if (!Vars.headless && Vars.player != null && Vars.player.unit() == event.unit) {
                 rebuild();
             }
         }));

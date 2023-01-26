@@ -255,6 +255,15 @@ public class CollapseUnitType extends UnitType implements SkilledUnitType {
             maxRange / Vars.tilesize,
             maxRangeDmg
         );
+        if (this.skillDefinitions != null) {
+            this.skillDefinitions.forEach(def -> def.load(this));
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
         skillDefinitions = Seq.with(
 
             // num1: absorbed damage, num2: activi state, num3: health snapshot for ai dps check, num4:

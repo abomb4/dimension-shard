@@ -24,12 +24,15 @@ import dimensionshard.types.bullets.ElectricStormBulletType;
 import dimensionshard.types.bullets.IonBoltBulletType;
 import dimensionshard.types.bullets.IonLaserBulletType;
 import mindustry.Vars;
+import mindustry.ai.UnitCommand;
+import mindustry.ai.types.CommandAI;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.UnitSorts;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.LaserBulletType;
 import mindustry.gen.Sounds;
+import mindustry.gen.Teamc;
 import mindustry.gen.Unit;
 import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
@@ -166,6 +169,14 @@ public class RhapsodyUnitType extends UnitType implements SkilledUnitType {
             laserBullet.lightningDamage,
             laserBullet.statusDuration / 60
         );
+        if (this.skillDefinitions != null) {
+            this.skillDefinitions.forEach(def -> def.load(this));
+        }
+    }
+
+    @Override
+    public void init() {
+        super.init();
 
         this.skillDefinitions = Seq.with(new SkillDefinition("ion-laser-large") {
             {
@@ -180,6 +191,23 @@ public class RhapsodyUnitType extends UnitType implements SkilledUnitType {
             @Override
             public void aiCheck(SkillStatus status, SkilledUnit skilledUnit) {
                 final Unit unit = (Unit) skilledUnit;
+
+                CommandAI ai = unit.command();
+                if (ai.targetPos != null && ai.command == UnitCommand.moveCommand) {
+                    // 正在接受移动指令的，不进行检查
+                    // 如果有攻击目标的，要检查
+                    Teamc target = ai.attackTarget;
+                    if (target != null) {
+                        var bullet = weapons.get(0).bullet;
+                        var mainWeaponRange = bullet.lifetime * bullet.speed;
+                        float dst = unit.dst(target);
+                        if (dst < laserBullet.length - 10 && dst > mainWeaponRange) {
+                            skilledUnit.tryActiveSkill(this.getSkillId(),
+                                new DirectiveSkillData(target.x(), target.y()));
+                        }
+                    }
+                    return;
+                }
                 var target = Units.bestTarget(unit.team(), unit.x(), unit.y(), laserBullet.length - 10,
                     (e -> !e.dead), (b -> true), UnitSorts.closest);
                 if (target != null) {

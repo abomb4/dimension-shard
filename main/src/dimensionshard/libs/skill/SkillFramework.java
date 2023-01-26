@@ -47,11 +47,11 @@ public class SkillFramework {
 
     /** load */
     public static void load() {
-        SkilledUnitEntity.load();
-        SkilledMechUnit.load();
-        SkilledLegsUnit.load();
-        SkilledUnitWaterMove.load();
-        SkilledPayloadUnit.load();
+        SkilledUnitEntity.loadStatic();
+        SkilledMechUnit.loadStatic();
+        SkilledLegsUnit.loadStatic();
+        SkilledUnitWaterMove.loadStatic();
+        SkilledPayloadUnit.loadStatic();
 
         skillFragment = new SkillFragment();
         skillFragment.load();
