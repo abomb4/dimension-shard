@@ -47,7 +47,7 @@ public class DsOverride {
         ((ItemTurret) Blocks.cyclone).ammoTypes.put(
             DsItems.dimensionShard, new FlakBulletType(4.2F, 15F) {{
                 lifetime = 60;
-                ammoMultiplier = 2;
+                ammoMultiplier = 3;
                 shootEffect = Fx.shootSmall;
                 width = 8;
                 height = 10;
@@ -98,7 +98,7 @@ public class DsOverride {
 
         BasicBulletType spectreThorium = (BasicBulletType) ((ItemTurret) Blocks.spectre).ammoTypes.get(Items.thorium);
         ((ItemTurret) Blocks.spectre).ammoTypes.put(
-            DsItems.hardThoriumAlloy, new BasicBulletType(8, 125) {{
+            DsItems.hardThoriumAlloy, new BasicBulletType(8, 135) {{
                 lifetime = spectreThorium.lifetime;
                 knockback = spectreThorium.knockback;
                 shootEffect = spectreThorium.shootEffect;

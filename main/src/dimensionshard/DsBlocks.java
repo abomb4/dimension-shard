@@ -168,29 +168,30 @@ public final class DsBlocks {
 
             {
                 final int turretRange = 32 * 8;
-                cooldownTime = 0.04F;
+                cooldownTime = 20F;
                 recoil = 1.5F;
                 liquidCapacity = 10;
                 buildVisibility = BuildVisibility.shown;
                 category = Category.turret;
                 health = 1800;
                 size = 3;
-                reload = 45 - 1;
+                reload = 45;
                 range = turretRange;
                 rotateSpeed = 10;
                 inaccuracy = 2;
                 xRand = 0;
                 shootEffect = DsFx.fxTeleporterShoot;
                 shootSound = Lib.loadSound("bomb-teleport");
+                shootCone = 2f;
                 heatColor = DsColors.teleportColor;
                 requirements = ItemStack.with(
-                    Items.copper, 200,
+                    Items.copper, 220,
                     Items.silicon, 120,
                     Items.thorium, 100,
-                    spaceCrystal, 20
+                    spaceCrystal, 30
                 );
                 coolant = consumeCoolant(0.3f);
-                this.consumePower(1F);
+                this.consumePower(0.5F);
 
                 ammo(
                     Items.coal, new PointBulletType() {{
@@ -335,7 +336,7 @@ public final class DsBlocks {
 
         dc = new PowerTurret("dc") {
             {
-                cooldownTime = 0.04F;
+                cooldownTime = 20F;
                 recoil = 1;
                 liquidCapacity = 10;
                 buildVisibility = BuildVisibility.shown;
@@ -475,7 +476,7 @@ public final class DsBlocks {
             {
                 buildVisibility = BuildVisibility.shown;
                 size = 1;
-                health = 300;
+                health = 350;
                 liquidCapacity = 24;
                 liquidPressure = 1.05F;
                 requirements(Category.liquid, ItemStack.with(
@@ -1356,6 +1357,7 @@ public final class DsBlocks {
             unitCapModifier = 22;
             researchCostMultiplier = 0.07F;
             unitType = DsUnits.electron;
+            alwaysUnlocked = true;
             requirements(Category.effect, ItemStack.with(
                 Items.copper, 7000,
                 Items.lead, 7000,

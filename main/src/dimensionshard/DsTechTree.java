@@ -6,13 +6,15 @@ import arc.struct.Seq;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.Planets;
-import mindustry.content.SectorPresets;
 import mindustry.content.SerpuloTechTree;
 import mindustry.content.TechTree;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.EventType;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
+import mindustry.type.SectorPreset;
+
+import java.util.Iterator;
 
 import static dimensionshard.DsBlocks.*;
 import static dimensionshard.DsSectorPresets.darkGuard;
@@ -104,6 +106,35 @@ public class DsTechTree {
         Events.on(EventType.ClientLoadEvent.class, ev ->
             newTree.icon = new TextureRegionDrawable(dimensionTechnologyCore5.uiIcon));
 
+        // remove sectors node, remove sector objectives
+        // try not to recursive
+        Seq<Iterator<TechTree.TechNode>> stack = new Seq<>(true);
+        stack.add(newTree.children.iterator());
+        outer:
+        while (!stack.isEmpty()) {
+            Iterator<TechTree.TechNode> it = stack.peek();
+            while (it.hasNext()) {
+                TechTree.TechNode child = it.next();
+                if (child.content instanceof SectorPreset) {
+                    // remove sector node
+                    it.remove();
+                    continue;
+                }
+                Iterator<Objectives.Objective> objectiveIt = child.objectives.iterator();
+                while (objectiveIt.hasNext()) {
+                    Objectives.Objective objective = objectiveIt.next();
+                    if (objective instanceof Objectives.SectorComplete) {
+                        objectiveIt.remove();
+                    }
+                }
+                if (child.children != null && !child.children.isEmpty()) {
+                    stack.add(child.children.iterator());
+                    continue outer;
+                }
+            }
+            stack.pop();
+        }
+
         // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
         addToTree(phaseSpaceBridge, Blocks.phaseConveyor);
         addToTree(shardWall, Blocks.phaseWallLarge);
@@ -120,15 +151,15 @@ public class DsTechTree {
             Items.surgeAlloy, 100 * 30
         ));
         addToTree(spaceCrystallizer, dimensionTechnologyCore5, null,
-            Seq.with(new Objectives.SectorComplete(dimensionFall)));
-        addToTree(hardThoriumAlloySmelter, spaceCrystallizer, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
-        addToTree(timeCondenser, hardThoriumAlloySmelter, null, Seq.with(new Objectives.SectorComplete(timeRiver)));
-        addToTree(timeCrystallizer, timeCondenser, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
+            Seq.with(new Objectives.OnSector(dimensionFall)));
+        addToTree(hardThoriumAlloySmelter, spaceCrystallizer, null, Seq.with(new Objectives.OnSector(hardStuff)));
+        addToTree(timeCondenser, hardThoriumAlloySmelter, null, Seq.with(new Objectives.OnSector(timeRiver)));
+        addToTree(timeCrystallizer, timeCondenser, null, Seq.with(new Objectives.OnSector(hardStuff)));
         addToTree(radioisotopeWeaver, hardThoriumAlloySmelter, null,
-            Seq.with(new Objectives.SectorComplete(dimensionOutpost)));
-        addToTree(ionCollector, timeCondenser, null, Seq.with(new Objectives.SectorComplete(whiteFlame)));
+            Seq.with(new Objectives.OnSector(dimensionOutpost)));
+        addToTree(ionCollector, timeCondenser, null, Seq.with(new Objectives.OnSector(whiteFlame)));
         addToTree(dimensionAlloySmelter, ionCollector, null,
-            Seq.with(new Objectives.SectorComplete(dimensionShackles)));
+            Seq.with(new Objectives.OnSector(dimensionShackles)));
 
         // distribution line
         addToTree(hardPhaseSpaceBridge, phaseSpaceBridge);
@@ -156,19 +187,19 @@ public class DsTechTree {
         addToTree(bombTeleporter, dimensionTechnologyCore5);
         addToTree(dc, bombTeleporter);
         addToTree(ionBoltTurret, bombTeleporter);
-        addToTree(darkLightTurret, ionBoltTurret, null, Seq.with(new Objectives.SectorComplete(darkGuard)));
-        addToTree(electricStormTurret, ionBoltTurret, null, Seq.with(new Objectives.SectorComplete(thunderLightning)));
+        addToTree(darkLightTurret, ionBoltTurret, null, Seq.with(new Objectives.OnSector(darkGuard)));
+        addToTree(electricStormTurret, ionBoltTurret, null, Seq.with(new Objectives.OnSector(thunderLightning)));
 
         // effect line
         addToTree(deflectForceProjector, dimensionTechnologyCore5, null,
-            Seq.with(new Objectives.SectorComplete(dimensionOutpost)));
-        addToTree(spaceVault, dimensionTechnologyCore5, null, Seq.with(new Objectives.SectorComplete(dimensionFall)));
+            Seq.with(new Objectives.OnSector(dimensionOutpost)));
+        addToTree(spaceVault, dimensionTechnologyCore5, null, Seq.with(new Objectives.OnSector(dimensionFall)));
         // addToTree(unitTeleporter, deflectForceProjector);
         addToTree(timeOverdrive, deflectForceProjector);
 
         // unit line
         addToTree(dimensionT4Reconstructor, dimensionTechnologyCore5, null,
-            Seq.with(new Objectives.SectorComplete(whiteFlame)));
+            Seq.with(new Objectives.OnSector(whiteFlame)));
         addToTree(dimensionT5Reconstructor, dimensionT4Reconstructor);
 
         addToTree(formula, dimensionT4Reconstructor);
@@ -180,12 +211,12 @@ public class DsTechTree {
         addToTree(beat, dimensionT4Reconstructor);
         addToTree(rhapsody, beat, null, Seq.with(
             new Objectives.Research(dimensionT5Reconstructor),
-            new Objectives.SectorComplete(darkGuard),
-            new Objectives.SectorComplete(thunderLightning)
+            new Objectives.OnSector(darkGuard),
+            new Objectives.OnSector(thunderLightning)
         ));
 
         // zones
-        addToTree(dimensionFall, SectorPresets.planetaryTerminal);
+        addToTree(dimensionFall, Blocks.coreShard);
         addToTree(hardStuff, dimensionFall, null, Seq.with(new Objectives.SectorComplete(dimensionFall)));
         addToTree(dimensionOutpost, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
         addToTree(timeRiver, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));

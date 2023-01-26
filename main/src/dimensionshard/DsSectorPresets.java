@@ -17,14 +17,14 @@ public class DsSectorPresets {
         darkGuard, thunderLightning, theBerserker;
 
     public static void load() {
-
-        dimensionFall = new SectorPreset("dimensionFall", wrek, 89);
-        dimensionFall.captureWave = 50;
+        dimensionFall = new SectorPreset("dimensionFall", wrek, 15);
+        dimensionFall.captureWave = 20;
         dimensionFall.difficulty = 6;
+        dimensionFall.alwaysUnlocked = true;
 
         hardStuff = new SectorPreset("hardStuff", wrek, 3);
-        hardStuff.captureWave = 45;
-        hardStuff.difficulty = 6;
+        hardStuff.captureWave = 20;
+        hardStuff.difficulty = 7;
 
         dimensionOutpost = new SectorPreset("dimensionOutpost", wrek, 160);
         dimensionOutpost.difficulty = 7;

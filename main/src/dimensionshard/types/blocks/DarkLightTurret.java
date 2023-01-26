@@ -53,7 +53,7 @@ public class DarkLightTurret extends PowerTurret {
         this.chargeEffect = DsFx.fxDarkLightCharge;
         this.recoil = 2;
         this.reload = 60 * 7.5F;
-        this.cooldownTime = 0.04F;
+        this.cooldownTime = 60F;
         this.consumePower(90);
         this.shake = 3;
         this.shootEffect = Fx.hitLancer;

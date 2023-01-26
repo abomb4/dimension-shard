@@ -75,6 +75,7 @@ public class LightningUnitType extends UnitType implements SkilledUnitType {
         super(name);
         this.constructor = SkilledUnitEntity::new;
         this.aiController = BuilderAI::new;
+        coreUnitDock = true;
         flying = true;
         lowAltitude = true;
         mineSpeed = 10;

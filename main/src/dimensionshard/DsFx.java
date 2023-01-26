@@ -8,7 +8,6 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import mindustry.entities.Effect;
 import mindustry.graphics.Drawf;
-import mindustry.graphics.Pal;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.stroke;
@@ -202,7 +201,7 @@ public final class DsFx {
 
     /** 过载动画 */
     public static Effect hyperSpeed1Effect = new Effect(40, e -> {
-        Draw.color(Pal.accent);
+        Draw.color(DsColors.teleportColor);
 
         Fill.square(e.x, e.y, e.fslope() * 2, 45);
         Fill.square(e.x, e.y, e.fslope() * 2, 35);
@@ -210,7 +209,7 @@ public final class DsFx {
 
     /** 过载动画 */
     public static Effect hyperSpeed2Effect = new Effect(40, e -> {
-        Draw.color(Pal.accent);
+        Draw.color(DsColors.teleportColor);
 
         Fill.square(e.x, e.y, e.fslope() * 2, 45);
         Fill.square(e.x, e.y, e.fslope() * 2.1F, 35);

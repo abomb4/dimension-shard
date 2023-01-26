@@ -1,11 +1,13 @@
 package dimensionshard.libs.skill;
 
 import arc.struct.ObjectMap;
+import dimensionshard.annotation.SkillFrameworkAnnotationProcessor;
 import dimensionshard.libs.skill.units.SkilledLegsUnit;
 import dimensionshard.libs.skill.units.SkilledMechUnit;
 import dimensionshard.libs.skill.units.SkilledPayloadUnit;
 import dimensionshard.libs.skill.units.SkilledUnitEntity;
 import dimensionshard.libs.skill.units.SkilledUnitWaterMove;
+import dimensionshard.libs.skill.units.SkilledUnits;
 
 /**
  * Skill Framework.
@@ -28,6 +30,10 @@ import dimensionshard.libs.skill.units.SkilledUnitWaterMove;
  * - Create bullets
  * - affect nearby units
  * </pre>
+ * <p>
+ * 技能框架的所有逻辑实现都放在了 {@link SkillFrameworkAnnotationProcessor} ，采用代码生成器的方式生成 UnitEntity 类。
+ * <p>
+ * 支持的单位类型定义在 {@link SkilledUnits} ，里面定义了 classId ；如果将来游戏更新后发生了冲突，应该修改这里。
  *
  * @author abomb4 2022-10-20
  */

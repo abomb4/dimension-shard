@@ -101,6 +101,7 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("import dimensionshard.libs.skill.SkillStatus;");
         w.l("import dimensionshard.libs.skill.SkilledUnit;");
         w.l("import dimensionshard.libs.skill.SkilledUnitType;");
+        w.l("import mindustry.Vars;");
         w.l("import mindustry.ai.types.LogicAI;");
         w.l("import mindustry.game.EventType;");
         w.l("import mindustry.gen.EntityMapping;");
@@ -201,7 +202,11 @@ public class SkillFrameworkAnnotationProcessor extends AbstractProcessor {
         w.l("                    s.def.postUpdate(s, this, last);");
         w.l("                    s.active = !last;");
         w.l("                } else {");
-        w.l("                    s.reload = Math.min(s.def.cooldown, s.reload + Time.delta);");
+        w.l("                    if (Vars.state.rules.editor) {");
+        w.l("                        s.reload = s.def.cooldown;");
+        w.l("                    } else {");
+        w.l("                        s.reload = Math.min(s.def.cooldown, s.reload + Time.delta);");
+        w.l("                    }");
         w.l("                }");
         w.l("            }");
         w.l("        }");

@@ -53,7 +53,7 @@ public class DsStatusEffects {
             super.update(unit, time);
             // mine speed
             if (unit.mining()) {
-                unit.mineTimer += unit.type.mineSpeed * (this.reloadMultiplier - 1);
+                unit.mineTimer += unit.type.mineSpeed * (this.buildSpeedMultiplier - 1);
             }
         }
     };
@@ -76,7 +76,7 @@ public class DsStatusEffects {
             super.update(unit, time);
             // mine speed
             if (unit.mining()) {
-                unit.mineTimer += unit.type.mineSpeed * (this.reloadMultiplier - 1);
+                unit.mineTimer += unit.type.mineSpeed * (this.buildSpeedMultiplier - 1);
             }
         }
     };
