@@ -3,8 +3,6 @@
 
 (Would anyone be willing to take over development of this mod? It's hard for me to go on.)
 
-（有人有意愿接手这个 mod 吗？我已经很难继续开发下去了）
-
 English | [中文](README_cn.md)
 
 A Mindustry Mod with time and space technology as the story background.

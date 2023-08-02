@@ -13,7 +13,6 @@ import arc.struct.EnumSet;
 import arc.util.Strings;
 import dimensionshard.libs.Lib;
 import dimensionshard.libs.LiquidUtils;
-import dimensionshard.types.blocks.ArmoredWall;
 import dimensionshard.types.blocks.DarkLightTurret;
 import dimensionshard.types.blocks.DeflectForceProjector;
 import dimensionshard.types.blocks.ElectricStormTurret;
@@ -122,8 +121,8 @@ public final class DsBlocks {
     // Defence
     public static Wall shardWall;
     public static Wall shardWallLarge;
-    public static ArmoredWall hardThoriumAlloyWall;
-    public static ArmoredWall hardThoriumAlloyWallLarge;
+    public static Wall hardThoriumAlloyWall;
+    public static Wall hardThoriumAlloyWallLarge;
 
     // Drill
     public static Drill hardThoriumDrill;
@@ -638,7 +637,7 @@ public final class DsBlocks {
             requirements(Category.defense, ItemStack.mult(shardWall.requirements, 4));
         }};
 
-        hardThoriumAlloyWall = new ArmoredWall("hard-thorium-alloy-wall") {
+        hardThoriumAlloyWall = new Wall("hard-thorium-alloy-wall") {
             {
                 armor = 7;
                 size = 1;
@@ -664,9 +663,9 @@ public final class DsBlocks {
             }
         };
 
-        hardThoriumAlloyWallLarge = new ArmoredWall("hard-thorium-alloy-wall-large") {
+        hardThoriumAlloyWallLarge = new Wall("hard-thorium-alloy-wall-large") {
             {
-                armor = 10;
+                armor = 11;
                 size = 2;
                 health = hardThoriumAlloyWall.health * 4;
                 requirements = ItemStack.mult(hardThoriumAlloyWall.requirements, 4);
