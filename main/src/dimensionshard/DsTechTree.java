@@ -46,28 +46,36 @@ public class DsTechTree {
      * @param requirements 物品需求
      * @param objectives   目标
      */
-    public static void addToTree(UnlockableContent content, UnlockableContent parent,
+    public static void addToTree(TechTree.TechNode tree,
+                                 UnlockableContent content,
+                                 UnlockableContent parent,
                                  ItemStack[] requirements,
                                  Seq<Objectives.Objective> objectives) {
-        TechTree.all.each(t -> t.content == content, TechTree.TechNode::remove);
+        tree.each(t -> {
+            if (t.content == content) {
+                t.remove();
+            }
+        });
 
         // find parent node
-        TechTree.all.each(t -> t.content == parent, parentNode -> {
-            final TechTree.TechNode node = new TechTree.TechNode(null, content,
-                requirements == null ? content.researchRequirements() : requirements);
+        tree.each(t -> {
+            if (t.content == parent) {
+                final TechTree.TechNode node = new TechTree.TechNode(null, content,
+                    requirements == null ? content.researchRequirements() : requirements);
 
-            if (objectives != null) {
-                node.objectives.addAll(objectives);
-            }
+                if (objectives != null) {
+                    node.objectives.addAll(objectives);
+                }
 
-            if (node.parent != null) {
-                node.parent.children.remove(node);
-            }
+                if (node.parent != null) {
+                    node.parent.children.remove(node);
+                }
 
-            if (!parentNode.children.contains(node)) {
-                parentNode.children.add(node);
+                if (!t.children.contains(node)) {
+                    t.children.add(node);
+                }
+                node.parent = t;
             }
-            node.parent = parentNode;
         });
     }
 
@@ -78,9 +86,9 @@ public class DsTechTree {
      * @param parent       爹
      * @param requirements 物品需求
      */
-    public static void addToTree(UnlockableContent content, UnlockableContent parent,
+    public static void addToTree(TechTree.TechNode tree, UnlockableContent content, UnlockableContent parent,
                                  ItemStack[] requirements) {
-        addToTree(content, parent, requirements, null);
+        addToTree(tree, content, parent, requirements, null);
     }
 
     /**
@@ -89,8 +97,8 @@ public class DsTechTree {
      * @param content 内容
      * @param parent  爹
      */
-    public static void addToTree(UnlockableContent content, UnlockableContent parent) {
-        addToTree(content, parent, null, null);
+    public static void addToTree(TechTree.TechNode tree, UnlockableContent content, UnlockableContent parent) {
+        addToTree(tree, content, parent, null, null);
     }
 
     public static void load() {
@@ -100,6 +108,7 @@ public class DsTechTree {
         final TechTree.TechNode newTree = Planets.serpulo.techTree;
         Planets.serpulo.techTree = tmp;
 
+        DsPlanets.wrek.techTree = newTree;
         newTree.name = DsPlanets.wrek.name;
         newTree.planet = DsPlanets.wrek;
         newTree.planet.techTree = newTree;
@@ -136,96 +145,102 @@ public class DsTechTree {
         }
 
         // -=-=-=-=-=-=-=-=-=-=-=- No core needed -=-=-=-=-=-=-=-=-=-=-=-
-        addToTree(phaseSpaceBridge, Blocks.phaseConveyor);
-        addToTree(shardWall, Blocks.phaseWallLarge);
-        addToTree(shardWallLarge, shardWall);
-        addToTree(dimensionTechnologyCore5, Blocks.coreShard);
-        addToTree(dimensionTechnologyCore6, dimensionTechnologyCore5);
+        addToTree(newTree, phaseSpaceBridge, Blocks.phaseConveyor);
+        addToTree(newTree, shardWall, Blocks.phaseWallLarge);
+        addToTree(newTree, shardWallLarge, shardWall);
+        addToTree(newTree, dimensionTechnologyCore5, Blocks.coreShard);
+        addToTree(newTree, dimensionTechnologyCore6, dimensionTechnologyCore5);
 
         // -=-=-=-=-=-=-=-=-=-=-=- After core -=-=-=-=-=-=-=-=-=-=-=-
         // factory line
-        addToTree(DsBlocks.shardReceiver, Blocks.phaseWeaver, ItemStack.with(
+        addToTree(newTree, DsBlocks.shardReceiver, Blocks.phaseWeaver, ItemStack.with(
             Items.silicon, 200 * 30,
             Items.thorium, 320 * 30,
             Items.phaseFabric, 330 * 30,
             Items.surgeAlloy, 100 * 30
         ));
-        addToTree(spaceCrystallizer, dimensionTechnologyCore5, null,
+        addToTree(newTree, spaceCrystallizer, dimensionTechnologyCore5, null,
             Seq.with(new Objectives.OnSector(dimensionFall)));
-        addToTree(hardThoriumAlloySmelter, spaceCrystallizer, null, Seq.with(new Objectives.OnSector(hardStuff)));
-        addToTree(timeCondenser, hardThoriumAlloySmelter, null, Seq.with(new Objectives.OnSector(timeRiver)));
-        addToTree(timeCrystallizer, timeCondenser, null, Seq.with(new Objectives.OnSector(hardStuff)));
-        addToTree(radioisotopeWeaver, hardThoriumAlloySmelter, null,
+        addToTree(newTree, hardThoriumAlloySmelter, spaceCrystallizer, null,
+            Seq.with(new Objectives.OnSector(hardStuff)));
+        addToTree(newTree, timeCondenser, hardThoriumAlloySmelter, null, Seq.with(new Objectives.OnSector(timeRiver)));
+        addToTree(newTree, timeCrystallizer, timeCondenser, null, Seq.with(new Objectives.OnSector(hardStuff)));
+        addToTree(newTree, radioisotopeWeaver, hardThoriumAlloySmelter, null,
             Seq.with(new Objectives.OnSector(dimensionOutpost)));
-        addToTree(ionCollector, timeCondenser, null, Seq.with(new Objectives.OnSector(whiteFlame)));
-        addToTree(dimensionAlloySmelter, ionCollector, null,
+        addToTree(newTree, ionCollector, timeCondenser, null, Seq.with(new Objectives.OnSector(whiteFlame)));
+        addToTree(newTree, dimensionAlloySmelter, ionCollector, null,
             Seq.with(new Objectives.OnSector(dimensionShackles)));
 
         // distribution line
-        addToTree(hardPhaseSpaceBridge, phaseSpaceBridge);
-        addToTree(spaceUnloader, dimensionTechnologyCore5);
-        addToTree(resourcesDispatchingCenter, spaceUnloader);
+        addToTree(newTree, hardPhaseSpaceBridge, phaseSpaceBridge);
+        addToTree(newTree, spaceUnloader, dimensionTechnologyCore5);
+        addToTree(newTree, resourcesDispatchingCenter, spaceUnloader);
 
         // power line
-        addToTree(dimensionCrystalBattery, dimensionTechnologyCore5);
-        addToTree(timeCompressedRtg, dimensionCrystalBattery);
+        addToTree(newTree, dimensionCrystalBattery, dimensionTechnologyCore5);
+        addToTree(newTree, timeCompressedRtg, dimensionCrystalBattery);
+        addToTree(newTree, powerNetNode, timeCompressedRtg);
+        addToTree(newTree, powerNetTower, powerNetNode);
 
         // defence line
-        addToTree(hardThoriumAlloyWall, dimensionTechnologyCore5);
-        addToTree(hardThoriumAlloyWallLarge, hardThoriumAlloyWall);
+        addToTree(newTree, hardThoriumAlloyWall, dimensionTechnologyCore5);
+        addToTree(newTree, hardThoriumAlloyWallLarge, hardThoriumAlloyWall);
 
         // liquid line
-        addToTree(hardThoriumConduit, dimensionTechnologyCore5);
-        addToTree(hardThoriumLiquidRouter, hardThoriumConduit);
-        addToTree(spaceLiquidTank, hardThoriumLiquidRouter);
-        addToTree(spacePump, hardThoriumLiquidRouter);
+        addToTree(newTree, hardThoriumConduit, dimensionTechnologyCore5);
+        addToTree(newTree, hardThoriumLiquidRouter, hardThoriumConduit);
+        addToTree(newTree, spaceLiquidTank, hardThoriumLiquidRouter);
+        addToTree(newTree, spacePump, hardThoriumLiquidRouter);
 
         // drill line
-        addToTree(hardThoriumDrill, dimensionTechnologyCore5);
+        addToTree(newTree, hardThoriumDrill, dimensionTechnologyCore5);
 
         // turret line
-        addToTree(bombTeleporter, dimensionTechnologyCore5);
-        addToTree(dc, bombTeleporter);
-        addToTree(ionBoltTurret, bombTeleporter);
-        addToTree(darkLightTurret, ionBoltTurret, null, Seq.with(new Objectives.OnSector(darkGuard)));
-        addToTree(electricStormTurret, ionBoltTurret, null, Seq.with(new Objectives.OnSector(thunderLightning)));
+        addToTree(newTree, bombTeleporter, dimensionTechnologyCore5);
+        addToTree(newTree, dc, bombTeleporter);
+        addToTree(newTree, ionBoltTurret, bombTeleporter);
+        addToTree(newTree, darkLightTurret, ionBoltTurret, null, Seq.with(new Objectives.OnSector(darkGuard)));
+        addToTree(newTree, electricStormTurret, ionBoltTurret, null,
+            Seq.with(new Objectives.OnSector(thunderLightning)));
 
         // effect line
-        addToTree(deflectForceProjector, dimensionTechnologyCore5, null,
+        addToTree(newTree, deflectForceProjector, dimensionTechnologyCore5, null,
             Seq.with(new Objectives.OnSector(dimensionOutpost)));
-        addToTree(spaceVault, dimensionTechnologyCore5, null, Seq.with(new Objectives.OnSector(dimensionFall)));
-        // addToTree(unitTeleporter, deflectForceProjector);
-        addToTree(timeOverdrive, deflectForceProjector);
+        addToTree(newTree, spaceVault, dimensionTechnologyCore5, null,
+            Seq.with(new Objectives.OnSector(dimensionFall)));
+        // addToTree(newTree, unitTeleporter, deflectForceProjector);
+        addToTree(newTree, timeOverdrive, deflectForceProjector);
 
         // unit line
-        addToTree(dimensionT4Reconstructor, dimensionTechnologyCore5, null,
+        addToTree(newTree, dimensionT4Reconstructor, dimensionTechnologyCore5, null,
             Seq.with(new Objectives.OnSector(whiteFlame)));
-        addToTree(dimensionT5Reconstructor, dimensionT4Reconstructor);
+        addToTree(newTree, dimensionT5Reconstructor, dimensionT4Reconstructor);
 
-        addToTree(formula, dimensionT4Reconstructor);
-        addToTree(equa, formula, null, Seq.with(new Objectives.Research(dimensionT5Reconstructor)));
+        addToTree(newTree, formula, dimensionT4Reconstructor);
+        addToTree(newTree, equa, formula, null, Seq.with(new Objectives.Research(dimensionT5Reconstructor)));
 
-        addToTree(burn, dimensionT4Reconstructor);
-        addToTree(collapse, burn, null, Seq.with(new Objectives.Research(dimensionT5Reconstructor)));
+        addToTree(newTree, burn, dimensionT4Reconstructor);
+        addToTree(newTree, collapse, burn, null, Seq.with(new Objectives.Research(dimensionT5Reconstructor)));
 
-        addToTree(beat, dimensionT4Reconstructor);
-        addToTree(rhapsody, beat, null, Seq.with(
+        addToTree(newTree, beat, dimensionT4Reconstructor);
+        addToTree(newTree, rhapsody, beat, null, Seq.with(
             new Objectives.Research(dimensionT5Reconstructor),
             new Objectives.OnSector(darkGuard),
             new Objectives.OnSector(thunderLightning)
         ));
 
         // zones
-        addToTree(dimensionFall, Blocks.coreShard);
-        addToTree(hardStuff, dimensionFall, null, Seq.with(new Objectives.SectorComplete(dimensionFall)));
-        addToTree(dimensionOutpost, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
-        addToTree(timeRiver, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
-        addToTree(whiteFlame, timeRiver, null, Seq.with(new Objectives.SectorComplete(timeRiver)));
-        addToTree(dimensionShackles, whiteFlame, null, Seq.with(new Objectives.SectorComplete(whiteFlame)));
-        addToTree(darkGuard, dimensionShackles, null, Seq.with(new Objectives.SectorComplete(dimensionShackles)));
-        addToTree(thunderLightning, dimensionShackles, null,
+        addToTree(newTree, dimensionFall, Blocks.coreShard);
+        addToTree(newTree, hardStuff, dimensionFall, null, Seq.with(new Objectives.SectorComplete(dimensionFall)));
+        addToTree(newTree, dimensionOutpost, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
+        addToTree(newTree, timeRiver, hardStuff, null, Seq.with(new Objectives.SectorComplete(hardStuff)));
+        addToTree(newTree, whiteFlame, timeRiver, null, Seq.with(new Objectives.SectorComplete(timeRiver)));
+        addToTree(newTree, dimensionShackles, whiteFlame, null, Seq.with(new Objectives.SectorComplete(whiteFlame)));
+        addToTree(newTree, darkGuard, dimensionShackles, null,
             Seq.with(new Objectives.SectorComplete(dimensionShackles)));
-        addToTree(theBerserker, thunderLightning, null, Seq.with(new Objectives.Research(rhapsody)));
+        addToTree(newTree, thunderLightning, dimensionShackles, null,
+            Seq.with(new Objectives.SectorComplete(dimensionShackles)));
+        addToTree(newTree, theBerserker, thunderLightning, null, Seq.with(new Objectives.Research(rhapsody)));
 
     }
 }

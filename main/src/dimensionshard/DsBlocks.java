@@ -167,7 +167,7 @@ public final class DsBlocks {
 
             {
                 final int turretRange = 32 * 8;
-                cooldownTime = 20F;
+                cooldownTime = 15F;
                 recoil = 1.5F;
                 liquidCapacity = 10;
                 buildVisibility = BuildVisibility.shown;
@@ -203,7 +203,7 @@ public final class DsBlocks {
                         hitSound = Sounds.explosion;
                         damage = 0;
                         splashDamageRadius = 30;
-                        splashDamage = 30;
+                        splashDamage = 36;
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 120;
@@ -223,7 +223,7 @@ public final class DsBlocks {
                         hitSound = Sounds.explosion;
                         damage = 0;
                         splashDamageRadius = 24;
-                        splashDamage = 10;
+                        splashDamage = 16;
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 150;
@@ -243,7 +243,7 @@ public final class DsBlocks {
                         hitSound = Sounds.explosion;
                         damage = 0;
                         splashDamageRadius = 32;
-                        splashDamage = 50;
+                        splashDamage = 60;
                         makeFire = true;
                         status = StatusEffects.burning;
                         statusDuration = 240;
@@ -263,7 +263,7 @@ public final class DsBlocks {
                         hitSound = Sounds.explosion;
                         damage = 0;
                         splashDamageRadius = 45;
-                        splashDamage = 105;
+                        splashDamage = 125;
                         status = StatusEffects.blasted;
                         speed = 999999999F;
                         hitShake = 2;
@@ -281,7 +281,7 @@ public final class DsBlocks {
                         hitSound = Sounds.explosion;
                         damage = 0;
                         splashDamageRadius = 38;
-                        splashDamage = 70;
+                        splashDamage = 90;
                         speed = 999999999F;
                         hitShake = 1.6F;
                         reflectable = false;
@@ -299,7 +299,7 @@ public final class DsBlocks {
                             hitSound = Sounds.explosion;
                             damage = 0;
                             splashDamageRadius = 80;
-                            splashDamage = 15;
+                            splashDamage = 18;
                             speed = 999999999F;
                             hitShake = 2;
                             knockback = -0.55F;
@@ -342,7 +342,7 @@ public final class DsBlocks {
                 category = Category.turret;
                 health = 1700;
                 size = 3;
-                reload = 50 - 1;
+                reload = 60;
                 range = 170;
                 inaccuracy = 0;
                 shoot = new ShootSpread(4, 1);
@@ -362,6 +362,7 @@ public final class DsBlocks {
                 );
                 consumePower(10F);
                 coolant = consumeCoolant(0.3f);
+                coolantMultiplier = 4f;
                 shootType = new LightningBulletType() {
                     {
                         damage = 35;
@@ -697,6 +698,7 @@ public final class DsBlocks {
                 buildVisibility = BuildVisibility.shown;
                 size = 4;
                 health = 800;
+                itemCapacity = 50;
                 liquidCapacity = 300;
                 requirements = ItemStack.with(
                     Items.copper, 200,
@@ -721,7 +723,7 @@ public final class DsBlocks {
                 heatColor = Color.valueOf("9a48ff");
                 hardnessDrillMultiplier = 25;
                 liquidBoostIntensity = 3;
-                consumePower(8F);
+                consumePower(4F);
                 consumeLiquid(Liquids.water, 2F).boost();
             }
 
@@ -880,7 +882,7 @@ public final class DsBlocks {
             ));
             consumePowerBuffered(5000f);
             health = 900;
-            range = 15;
+            range = 17;
             size = 3;
         }};
 

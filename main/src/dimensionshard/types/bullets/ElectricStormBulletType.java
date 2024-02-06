@@ -49,7 +49,7 @@ public class ElectricStormBulletType extends BasicBulletType {
         this.lifetime = 180;
         this.pierceCap = 10;
         this.pierce = true;
-        this.pierceBuilding = false;
+        this.pierceBuilding = true;
         this.width = 20;
         this.height = 20;
         this.shrinkY = 0;

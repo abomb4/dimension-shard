@@ -271,12 +271,11 @@ public class SpaceUnloader extends StorageBlock {
             this.links = linkSeq;
             for (int i = this.links.size - 1; i >= 0; i--) {
                 final int link = this.links.get(i);
-                final Building linkTarget = Vars.world.build(link);
-                if (!linkValidTarget(this, linkTarget)) {
-                    this.links.removeIndex(i);
-                } else {
-                    this.links.set(i, linkTarget.pos());
-                }
+                this.links.set(i, link);
+                // final Building linkTarget = Vars.world.build(link);
+                // if (linkValidTarget(this, linkTarget)) {
+                //     this.links.set(i, linkTarget.pos());
+                // }
             }
         }
 
@@ -411,7 +410,7 @@ public class SpaceUnloader extends StorageBlock {
         @Override
         public void display(Table table) {
             super.display(table);
-            if (this.items != null) {
+            if (this.team == Vars.player.team() && this.items != null) {
                 table.row();
                 table.left();
                 table.table(l -> {

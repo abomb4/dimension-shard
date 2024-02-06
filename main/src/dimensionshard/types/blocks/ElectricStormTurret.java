@@ -11,6 +11,7 @@ import mindustry.content.Items;
 import mindustry.entities.Mover;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.pattern.ShootSpread;
+import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.type.Category;
 import mindustry.type.ItemStack;
@@ -69,9 +70,9 @@ public class ElectricStormTurret extends ItemTurret {
             speedStart = 0.8F;
             homingDelay = 30;
             lifetime = 150;
-            homingRange = 4000;
+            homingRange = 480;
             ammoMultiplier = 2;
-            buildingDamageMultiplier = 0.3F;
+            buildingDamageMultiplier = 0.2F;
         }});
         consumePowerDynamic(building -> ((ElectricStormTurretBuild) building).isActive() ? 75 : 0);
     }
@@ -123,9 +124,12 @@ public class ElectricStormTurret extends ItemTurret {
         @Override
         protected void handleBullet(Bullet bullet, float offsetX, float offsetY, float angleOffset) {
             if ((targetPos != null && targetPos.getX() != 0 && targetPos.getY() != 0)
-                && (this.isControlled() || this.logicShooting)
                 && bullet.type instanceof ElectricStormBulletType ebullet) {
-                ((ElectricStormBulletType.ElectricStormBulletData) bullet.data).target = targetPos;
+                if (this.isControlled() || this.logicShooting) {
+                    ((ElectricStormBulletType.ElectricStormBulletData) bullet.data).target = targetPos;
+                } else if (this.target instanceof Building) {
+                    ((ElectricStormBulletType.ElectricStormBulletData) bullet.data).target = this.target;
+                }
             }
         }
     }

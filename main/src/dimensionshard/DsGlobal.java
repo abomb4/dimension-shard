@@ -2,6 +2,7 @@ package dimensionshard;
 
 import dimensionshard.libs.Lib;
 import mindustry.Vars;
+import mindustry.core.GameState;
 
 /**
  * @author abomb4 2022-10-07
@@ -18,6 +19,7 @@ public final class DsGlobal {
      */
     public static boolean techDsAvailable() {
         return Vars.state == null
+            || Vars.state.getState() == GameState.State.menu
             || Vars.state.rules.infiniteResources
             || Vars.player == null
             ||

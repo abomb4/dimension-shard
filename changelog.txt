@@ -1,9 +1,10 @@
-0.25:
-Switch to java;
+0.30:
+Switch to java and v145;
 Add a connection limit to the Space Unloader;
 Optimize the performance of the Space Unloader and Resource Dispatching Center;
 Space Unloader and Resource Dispatching can be connected to the core like a vault;
 Add 8 campagin maps and adjust the technology tree;
+... many changes
 
 0.24.2 (2021-05-01):
 Fix Dark Light information dialog crash problem in v126.2

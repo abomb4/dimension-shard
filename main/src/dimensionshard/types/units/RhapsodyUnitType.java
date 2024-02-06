@@ -31,6 +31,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.UnitSorts;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.LaserBulletType;
+import mindustry.entities.units.UnitController;
 import mindustry.gen.Sounds;
 import mindustry.gen.Teamc;
 import mindustry.gen.Unit;
@@ -192,8 +193,10 @@ public class RhapsodyUnitType extends UnitType implements SkilledUnitType {
             public void aiCheck(SkillStatus status, SkilledUnit skilledUnit) {
                 final Unit unit = (Unit) skilledUnit;
 
-                CommandAI ai = unit.command();
-                if (ai.targetPos != null && ai.command == UnitCommand.moveCommand) {
+                UnitController controller = unit.controller();
+                if (controller instanceof CommandAI ai
+                    && ai.targetPos != null
+                    && ai.command == UnitCommand.moveCommand) {
                     // 正在接受移动指令的，不进行检查
                     // 如果有攻击目标的，要检查
                     Teamc target = ai.attackTarget;

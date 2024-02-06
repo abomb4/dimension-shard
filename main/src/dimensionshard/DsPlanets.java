@@ -22,22 +22,33 @@ public class DsPlanets {
     public static Planet wrek;
 
     public static void load() {
-        nus = new Planet("nus", null, 4f) {{
-            bloom = true;
-            accessible = false;
+        nus = new Planet("nus", null, 4f) {
+            {
+                bloom = true;
+                accessible = false;
+                position = new Vec3(0, 0, 100f);
 
-            meshLoader = () -> new SunMesh(
-                this, 4,
-                5, 0.3, 1.7, 1.2, 1,
-                1.1f,
-                Color.valueOf("ff2a08"),
-                Color.valueOf("ff4608"),
-                Color.valueOf("ff760c"),
-                Color.valueOf("ff760c"),
-                Color.valueOf("ff8331"),
-                Color.valueOf("ff8e4e")
-            );
-        }};
+                meshLoader = () -> new SunMesh(
+                    this, 4,
+                    5, 0.3, 1.7, 1.2, 1,
+                    1.1f,
+                    Color.valueOf("ff2a08"),
+                    Color.valueOf("ff4608"),
+                    Color.valueOf("ff760c"),
+                    Color.valueOf("ff760c"),
+                    Color.valueOf("ff8331"),
+                    Color.valueOf("ff8e4e")
+                );
+            }
+
+            @Override
+            public Vec3 addParentOffset(Vec3 in) {
+                float distanceWithSun = Planets.sun.totalRadius + this.totalRadius + 10;
+                Vec3 vec = Planets.sun.position.cpy().add(distanceWithSun, 0, 0);
+                this.position.set(vec);
+                return vec;
+            }
+        };
 
         // update solar system like sun
         Events.run(EventType.Trigger.update, () -> {
@@ -59,7 +70,7 @@ public class DsPlanets {
         planet.position.setZero();
         planet.addParentOffset(planet.position);
         if (planet == nus) {
-            float distanceWithSun = Planets.sun.totalRadius + 32;
+            float distanceWithSun = Planets.sun.totalRadius * 2;
             Vec3 vec = Planets.sun.position.cpy().add(distanceWithSun, 0, 0);
             nus.position.set(vec);
         }

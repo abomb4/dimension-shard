@@ -59,7 +59,7 @@ public class IonBoltTurret extends LiquidTurret {
     public IonBoltTurret(String name) {
         super(name);
         this.recoil = 2;
-        this.liquidCapacity = 10;
+        this.liquidCapacity = 30;
         this.buildVisibility = BuildVisibility.shown;
         this.category = Category.turret;
         this.health = 3000;
@@ -83,7 +83,7 @@ public class IonBoltTurret extends LiquidTurret {
             DsItems.hardThoriumAlloy, 400
         );
         this.ammo(DsItems.ionLiquid, new IonBoltBulletType() {{
-            this.ammoMultiplier = 2;
+            this.ammoMultiplier = 0.5f;
             this.buildingDamageMultiplier = 0.3F;
         }});
     }

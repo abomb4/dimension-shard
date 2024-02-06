@@ -5,12 +5,10 @@ import dimensionshard.DsBlocks;
 import dimensionshard.DsItems;
 import mindustry.Vars;
 import mindustry.content.Items;
-import mindustry.content.Planets;
 import mindustry.game.Team;
 import mindustry.graphics.g3d.HexMesh;
 import mindustry.graphics.g3d.HexSkyMesh;
 import mindustry.graphics.g3d.MultiMesh;
-import mindustry.maps.planet.SerpuloPlanetGenerator;
 import mindustry.type.Planet;
 
 /**
@@ -19,9 +17,8 @@ import mindustry.type.Planet;
 public class Wrek extends Planet {
 
     public Wrek(Planet parent) {
-        super("wrek", parent, 1, 2);
+        super("wrek", parent, 1, 3);
 
-        generator = new SerpuloPlanetGenerator();
         meshLoader = () -> new HexMesh(this, 5);
         cloudMeshLoader = () -> new MultiMesh(
             new HexSkyMesh(this, 2, 0.15f, 0.14f, 5, Color.valueOf("68a7eb").a(0.75f), 2, 0.42f, 1f, 0.43f),
@@ -41,6 +38,10 @@ public class Wrek extends Planet {
         iconColor = Color.valueOf("5a97cc");
         hiddenItems.addAll(Vars.content.items()).removeAll(Items.serpuloItems);
         hiddenItems.removeAll(DsItems.dimensionShardItems);
+        allowLaunchLoadout = true;
+        allowLaunchSchematics = true;
+        allowSectorInvasion = true;
+        allowWaveSimulation = true;
 
         tidalLock = true;
         updateLighting = false;
@@ -58,7 +59,8 @@ public class Wrek extends Planet {
 
         startSector = 15;
         unlockedOnLand.add(DsBlocks.dimensionTechnologyCore5);
-        this.techTree = Planets.serpulo.techTree;
+        // this.techTree = Planets.serpulo.techTree;
+        this.generator = new WrekPlanetGenerator();
     }
 
     @Override
